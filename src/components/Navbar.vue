@@ -2,10 +2,11 @@
 <template>
   <div class="card">
       <Toolbar>
-          <template #start>
-              <Button  class="mr-2 !text-green-600" severity="secondary" to="/" text   > Home</Button>
-              <Button  class="mr-2" severity="secondary" to="/coinflip" text > Coinflip </Button>
-              <Button  severity="secondary" text > Roulette </Button>
+          <template #start >
+              <Button  class="mr-2 !text-green-600" severity="secondary" as="RouterLink" to="/"  text   > Home</Button>
+              <Button  class="mr-2"  text-rgb- severity="secondary" as="RouterLink" to="/coinflip"  text > Coinflip </Button>
+              <Button  severity="secondary" as="RouterLink" to="/roulette"  text > Roulette </Button>
+              
           </template>
 
           <template #end> <img src="/pfp.png" class="w-15 rounded-full"></img></template>
@@ -14,17 +15,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { Button, Toolbar } from 'primevue';
 
-const items = ref([
-  {
-      label: 'Update',
-      icon: 'pi pi-refresh'
-  },
-  {
-      label: 'Delete',
-      icon: 'pi pi-times'
-  }
-])
 </script>
+
+<style scoped>
+
+.p-toolbar{
+  background-color: rgb(41, 32, 45)   !important
+}
+
+</style>
