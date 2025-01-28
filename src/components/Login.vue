@@ -15,9 +15,9 @@
       </div>
 
       <div class="input-group bold">
-        <label for="password">Password</label>
+        <label for="password">Jelszó</label>
         <input
-          type="password"
+          :type="showPassword ? 'text' : 'password'"
           id="password"
           v-model="password"
           placeholder="Add meg a jelszavad"
@@ -25,10 +25,21 @@
         />
       </div>
 
-      <button type="submit" class="login-button bold">Login</button>
+      <div class="show-password float-right">
+        <img
+          :src="showPassword ? '/eye.png' : '/hidden.png'"
+          alt="Toggle Password Visibility"
+          @click="showPassword = !showPassword"
+          class="password-toggle-icon"
+        />
+      </div>
+      
+
+      <button type="submit" class="login-button bold">Bejelentkezés</button>
     </form>
 
     <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
+    <p class="success-message" v-if="successMessage">{{ successMessage }}</p>
   </div>
 </template>
 
@@ -38,6 +49,7 @@ import { ref } from "vue";
 const username = ref("");
 const password = ref("");
 const errorMessage = ref("");
+const showPassword = ref(false);
 
 const handleLogin = () => {
   if (username.value === "admin" && password.value === "1234") {
@@ -47,8 +59,12 @@ const handleLogin = () => {
   }
 };
 </script>
-rgb(41, 32, 45); rgb(253, 32, 93); rgb(255, 93, 57);
+
 <style scoped>
+.float-right {
+  float: right;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -109,8 +125,7 @@ h2 {
 
 .login-button:hover {
   background-color: rgb(255, 121, 159);
-  color: rgb(41, 32, 45)
-;
+  color: rgb(41, 32, 45);
 }
 
 .error-message {
@@ -119,9 +134,22 @@ h2 {
   font-size: 14px;
 }
 
-input#username, input#password  {
-    color: rgb(255, 121, 159);
+input#username,
+input#password {
+  color: rgb(255, 121, 159);
+}
 
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  right: 10px;
+  margin-bottom: 10px;
 }
 </style>
-

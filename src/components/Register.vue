@@ -37,12 +37,12 @@
       </div>
 
       <div class="show-password float-right">
-        <input
-          type="checkbox"
-          id="showPassword"
-          v-model="showPassword"
+        <img
+          :src="showPassword ? '/eye.png' : '/hidden.png'"
+          alt="Toggle Password Visibility"
+          @click="showPassword = !showPassword"
+          class="password-toggle-icon"
         />
-        <label for="showPassword" class="jelszomegjelenites">Jelszavak megjelenítése</label>
       </div>
 
       <button type="submit" class="register-button bold">Regisztrálás</button>
@@ -62,7 +62,6 @@ const confirmPassword = ref("");
 const errorMessage = ref("");
 const successMessage = ref("");
 const showPassword = ref(false);
-const showConfirmPassword = ref(false);
 
 const handleRegister = () => {
   if (password.value !== confirmPassword.value) {
@@ -77,17 +76,11 @@ const handleRegister = () => {
     errorMessage.value = "";
   }
 };
-
 </script>
 
 <style scoped>
-.jelszomegjelenites {
-  color: white;
-  font-weight: 200;
-}
-
 .float-right {
-  float: right
+  float: right;
 }
 
 .bold {
@@ -165,7 +158,17 @@ h2 {
   font-size: 14px;
 }
 
-input#username, input#password, input#confirmPassword {
+input#username,
+input#password,
+input#confirmPassword {
   color: rgb(255, 121, 159);
 }
+
+.password-toggle-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
 </style>
