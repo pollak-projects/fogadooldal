@@ -18,7 +18,25 @@ const router = createRouter({
         name: "Roulette",
         component: import("../components/Roulette.vue"),
       },
-  ],
+    {
+            path: "/register",
+            name: "Register",
+            component:import( "../components/Register.vue"),
+        },
+
+        {
+            path: "/",
+            name: "Openpage",
+            component:import( "../components/Home.vue"),
+        },
+
+        
+        {
+            path: "/login",
+            name: "Login",
+            component:import( "../components/Login.vue"),
+        },
+    ],
 });
 
 export default router;
