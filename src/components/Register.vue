@@ -7,7 +7,26 @@
 
     <div class="register-container bold">
       <h2>Regisztráció</h2>
+  <div class="background-container">
+    <!-- Csillagok a háttérben -->
+    <div class="stars"></div>
+    <div class="stars stars2"></div>
+    <div class="stars stars3"></div>
 
+    <div class="register-container bold">
+      <h2>Regisztráció</h2>
+
+      <form @submit.prevent="handleRegister">
+        <div class="input-group bold">
+          <label for="username">Felhasználónév</label>
+          <input
+            type="text"
+            id="username"
+            v-model="username"
+            placeholder="Add meg a felhasználóneved"
+            required
+          />
+        </div>
       <form @submit.prevent="handleRegister">
         <div class="input-group bold">
           <label for="username">Felhasználónév</label>
@@ -30,7 +49,27 @@
             required
           />
         </div>
+        <div class="input-group bold">
+          <label for="password">Jelszó</label>
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            id="password"
+            v-model="password"
+            placeholder="Add meg a jelszavad"
+            required
+          />
+        </div>
 
+        <div class="input-group bold">
+          <label for="confirmPassword">Jelszó megerősítése</label>
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            v-model="confirmPassword"
+            placeholder="Add meg a jelszavad újra"
+            required
+          />
+        </div>
         <div class="input-group bold">
           <label for="confirmPassword">Jelszó megerősítése</label>
           <input
@@ -50,10 +89,23 @@
             class="password-toggle-icon"
           />
         </div>
+        <div class="show-password float-right">
+          <img
+            :src="showPassword ? '/eye.png' : '/hidden.png'"
+            alt="Toggle Password Visibility"
+            @click="showPassword = !showPassword"
+            class="password-toggle-icon"
+          />
+        </div>
 
         <button type="submit" class="register-button bold">Regisztrálás</button>
       </form>
+        <button type="submit" class="register-button bold">Regisztrálás</button>
+      </form>
 
+      <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
+      <p class="success-message" v-if="successMessage">{{ successMessage }}</p>
+    </div>
       <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
       <p class="success-message" v-if="successMessage">{{ successMessage }}</p>
     </div>
@@ -86,6 +138,7 @@ const handleRegister = () => {
 </script>
 
 <style scoped>
+
 /* Animált háttér */
 .background-container {
   position: relative;
@@ -95,7 +148,7 @@ const handleRegister = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(45deg, rgb(41, 32, 45), rgb(253, 32, 93), rgb(255, 93, 57));
+  background: linear-gradient(140deg, rgb(67, 44, 77), rgb(102, 54, 67), rgb(76, 32, 85));
   background-size: 400% 400%;
   animation: gradientAnimation 10s ease infinite;
 }
