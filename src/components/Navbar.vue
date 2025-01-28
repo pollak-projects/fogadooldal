@@ -8,15 +8,6 @@
               <Button  severity="secondary" text > Roulette </Button>
           </template>
 
-          <template #center>
-              <IconField>
-                  <InputIcon>
-                      <i class="pi pi-search" />
-                  </InputIcon>
-                  <InputText placeholder="Search" />
-              </IconField>
-          </template>
-
           <template #end> <img src="/pfp.png" class="w-15 rounded-full"></img></template>
       </Toolbar>
   </div>
@@ -24,7 +15,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { Button, IconField, InputText, SplitButton, InputIcon, Toolbar } from 'primevue';
+import { Button, Toolbar } from 'primevue';
 
 const items = ref([
   {
