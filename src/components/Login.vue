@@ -1,45 +1,51 @@
 <template>
-  <div class="login-container bold">
-    <h2>Bejelentkezés</h2>
+  <div class="background-container">
+    <!-- Csillagok a háttérben -->
+    <div class="stars"></div>
+    <div class="stars stars2"></div>
+    <div class="stars stars3"></div>
 
-    <form @submit.prevent="handleLogin">
-      <div class="input-group bold">
-        <label for="username">Felhasználónév</label>
-        <input
-          type="text"
-          id="username"
-          v-model="username"
-          placeholder="Add meg a felhasználóneved"
-          required
-        />
-      </div>
+    <div class="login-container bold">
+      <h2>Bejelentkezés</h2>
 
-      <div class="input-group bold">
-        <label for="password">Jelszó</label>
-        <input
-          :type="showPassword ? 'text' : 'password'"
-          id="password"
-          v-model="password"
-          placeholder="Add meg a jelszavad"
-          required
-        />
-      </div>
+      <form @submit.prevent="handleLogin">
+        <div class="input-group bold">
+          <label for="username">Felhasználónév</label>
+          <input
+            type="text"
+            id="username"
+            v-model="username"
+            placeholder="Add meg a felhasználóneved"
+            required
+          />
+        </div>
 
-      <div class="show-password float-right">
-        <img
-          :src="showPassword ? '/eye.png' : '/hidden.png'"
-          alt="Toggle Password Visibility"
-          @click="showPassword = !showPassword"
-          class="password-toggle-icon"
-        />
-      </div>
-      
+        <div class="input-group bold">
+          <label for="password">Jelszó</label>
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            id="password"
+            v-model="password"
+            placeholder="Add meg a jelszavad"
+            required
+          />
+        </div>
 
-      <button type="submit" class="login-button bold">Bejelentkezés</button>
-    </form>
+        <div class="show-password float-right">
+          <img
+            :src="showPassword ? '/eye.png' : '/hidden.png'"
+            alt="Toggle Password Visibility"
+            @click="showPassword = !showPassword"
+            class="password-toggle-icon"
+          />
+        </div>
 
-    <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
-    <p class="success-message" v-if="successMessage">{{ successMessage }}</p>
+        <button type="submit" class="login-button bold">Bejelentkezés</button>
+      </form>
+
+      <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
+      <p class="success-message" v-if="successMessage">{{ successMessage }}</p>
+    </div>
   </div>
 </template>
 
@@ -61,23 +67,94 @@ const handleLogin = () => {
 </script>
 
 <style scoped>
-.float-right {
-  float: right;
-}
 
-.bold {
+.boldd {
   font-weight: bold;
 }
 
+/* Animált háttér */
+.background-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(45deg, rgb(41, 32, 45), rgb(192, 29, 75), rgb(66, 39, 49));
+  background-size: 400% 400%;
+  animation: gradientAnimation 10s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Csillagok a háttérben */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='1' fill='%23ffffff'/%3E%3C/svg%3E");
+  animation: moveStars 50s linear infinite;
+  filter: blur(1px);
+  z-index: 0;
+}
+
+.stars2 {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='1' fill='%23ffffff'/%3E%3C/svg%3E");
+  animation: moveStars 80s linear infinite;
+  filter: blur(2px);
+}
+
+.stars3 {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='1' fill='%23ffffff'/%3E%3C/svg%3E");
+  animation: moveStars 120s linear infinite;
+  filter: blur(3px);
+}
+
+@keyframes moveStars {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* Blur effekt a háttérre */
+.background-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+/* Form középre igazítása */
 .login-container {
   width: 100%;
   max-width: 400px;
-  margin: auto;
   padding: 20px;
-  background-color: rgb(41, 32, 45);
+  background-color: rgba(41, 32, 45, 0.8); /* Átlátszó háttér */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  z-index: 1;
 }
 
 h2 {
@@ -137,12 +214,6 @@ h2 {
 input#username,
 input#password {
   color: rgb(255, 121, 159);
-}
-
-.password-input-container {
-  position: relative;
-  display: flex;
-  align-items: center;
 }
 
 .password-toggle-icon {
