@@ -1,5 +1,6 @@
 <script setup></script>
 <template>
-    coinflip
+    <div class="text-teal-900">coinflip</div>
+    
 </template>
 <style scoped></style>
