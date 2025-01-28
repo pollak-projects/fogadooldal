@@ -3,8 +3,8 @@
   <div class="card">
       <Toolbar>
           <template #start>
-              <Button  class="mr-2 !text-green-600" severity="secondary" text   > Home</Button>
-              <Button  class="mr-2" severity="secondary" text > Coinflip </Button>
+              <Button  class="mr-2 !text-green-600" severity="secondary" to="/" text   > Home</Button>
+              <Button  class="mr-2" severity="secondary" to="/coinflip" text > Coinflip </Button>
               <Button  severity="secondary" text > Roulette </Button>
           </template>
 
