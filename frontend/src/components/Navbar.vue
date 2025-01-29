@@ -4,7 +4,11 @@
       <template #start>
         <Button
           class="mr-2 home-button"
-          :class="{ 'active-button': isActive('/'), 'current-page': isActive('/'), 'fixszin': !isActive('/') }"
+          :class="{
+            'active-button': isActive('/'),
+            'current-page': isActive('/'),
+            fixszin: !isActive('/'),
+          }"
           severity="secondary"
           as="RouterLink"
           to="/"
@@ -16,7 +20,11 @@
 
         <Button
           class="mr-2 coinflip-button"
-          :class="{ 'active-button': isActive('/coinflip'), 'current-page': isActive('/coinflip'), 'fixszin': !isActive('/coinflip') }"
+          :class="{
+            'active-button': isActive('/coinflip'),
+            'current-page': isActive('/coinflip'),
+            fixszin: !isActive('/coinflip'),
+          }"
           severity="secondary"
           as="RouterLink"
           to="/coinflip"
@@ -28,7 +36,11 @@
 
         <Button
           class="mr-2 roulette-button"
-          :class="{ 'active-button': isActive('/roulette'), 'current-page': isActive('/roulette'), 'fixszin': !isActive('/roulette') }"
+          :class="{
+            'active-button': isActive('/roulette'),
+            'current-page': isActive('/roulette'),
+            fixszin: !isActive('/roulette'),
+          }"
           severity="secondary"
           as="RouterLink"
           to="/roulette"
@@ -53,7 +65,11 @@
       </template>
 
       <template #end>
-        <img src="/pfp.png" class="w-15 rounded-full cursor-pointer" @click="toggleMenu" />
+        <img
+          src="/pfp.png"
+          class="w-15 rounded-full cursor-pointer"
+          @click="toggleMenu"
+        />
         <Menu ref="menu" :model="menuItems" :popup="true" />
       </template>
     </Toolbar>
@@ -61,9 +77,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { Button, Toolbar, Menu } from 'primevue';
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { Button, Toolbar, Menu } from "primevue";
 
 const route = useRoute();
 const router = useRouter();
@@ -71,32 +87,31 @@ const menu = ref(null);
 
 const menuItems = ref([
   {
-    label: 'Segítség',
-    icon: 'pi pi-question-circle',
+    label: "Segítség",
+    icon: "pi pi-question-circle",
     command: () => {
-      router.push('/help');
+      router.push("/help");
     },
   },
   {
-    label: 'Fiók adatok',
-    icon: 'pi pi-user',
+    label: "Fiók adatok",
+    icon: "pi pi-user",
     command: () => {
       router.push('/profile');
     },
   },
   {
-    label: 'Beállítások',
-    icon: 'pi pi-cog',
+    label: "Beállítások",
+    icon: "pi pi-cog",
     command: () => {
-      router.push('/settings');
+      router.push("/settings");
     },
   },
   {
-    label: 'Kijelentkezés',
-    icon: 'pi pi-sign-out',
+    label: "Kijelentkezés",
+    icon: "pi pi-sign-out",
     command: () => {
-      
-      router.push('/logout');
+      router.push("/logout");
     },
   },
 ]);
@@ -148,7 +163,7 @@ const isActive = (path) => {
 }
 
 .active-button {
-  color: rgb(253, 32, 93) !important; 
+  color: rgb(253, 32, 93) !important;
   transition: color 0.3s ease;
 }
 
@@ -163,7 +178,7 @@ const isActive = (path) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgb(247, 233, 233); 
+  color: rgb(247, 233, 233);
 }
 
 .home-text {
@@ -173,7 +188,7 @@ const isActive = (path) => {
 
 .coinflip-text,
 .roulette-text {
-  font-size: 1rem; 
+  font-size: 1rem;
 }
 
 .logo {
@@ -204,7 +219,7 @@ const isActive = (path) => {
 }
 
 .p-button:hover {
-  color: rgb(253, 32, 93) !important; 
+  color: white !important; /* Itt állítjuk be a fehér színt */
   transition: color 0.3s ease;
 }
 
@@ -212,7 +227,6 @@ const isActive = (path) => {
   color: rgb(200, 20, 70) !important;
   transition: color 0.3s ease;
 }
-
 
 .p-menu {
   background-color: rgb(41, 32, 45) !important;
@@ -225,5 +239,17 @@ const isActive = (path) => {
 .p-menuitem-link:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
   color: rgb(253, 32, 93) !important;
+}
+
+.home-button:hover,
+.coinflip-button:hover,
+.roulette-button:hover {
+  color: white !important;
+}
+
+.home-button:hover .logo,
+.coinflip-button:hover .coinflip-icon,
+.roulette-button:hover .roulette-icon {
+  transform: scale(1.1);
 }
 </style>
