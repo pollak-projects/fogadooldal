@@ -4,7 +4,7 @@
       <template #start>
         <Button
           class="mr-2 home-button"
-          :class="{ 'active-button': isActive('/'), 'current-page': isActive('/') }"
+          :class="{ 'active-button': isActive('/'), 'current-page': isActive('/'), 'fixszin': !isActive('/') }"
           severity="secondary"
           as="RouterLink"
           to="/"
@@ -16,7 +16,7 @@
 
         <Button
           class="mr-2 coinflip-button"
-          :class="{ 'active-button': isActive('/coinflip'), 'current-page': isActive('/coinflip') }"
+          :class="{ 'active-button': isActive('/coinflip'), 'current-page': isActive('/coinflip'), 'fixszin': !isActive('/coinflip') }"
           severity="secondary"
           as="RouterLink"
           to="/coinflip"
@@ -28,7 +28,7 @@
 
         <Button
           class="mr-2 roulette-button"
-          :class="{ 'active-button': isActive('/roulette'), 'current-page': isActive('/roulette') }"
+          :class="{ 'active-button': isActive('/roulette'), 'current-page': isActive('/roulette'), 'fixszin': !isActive('/roulette') }"
           severity="secondary"
           as="RouterLink"
           to="/roulette"
@@ -49,28 +49,42 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { Button, Toolbar, Menu } from 'primevue';
 
 const route = useRoute();
+const router = useRouter();
 const menu = ref(null);
 
 const menuItems = ref([
   {
     label: 'Segítség',
     icon: 'pi pi-question-circle',
+    command: () => {
+      router.push('/help');
+    },
   },
   {
     label: 'Fiók adatok',
     icon: 'pi pi-user',
+    command: () => {
+      router.push('/account');
+    },
   },
   {
     label: 'Beállítások',
     icon: 'pi pi-cog',
+    command: () => {
+      router.push('/settings');
+    },
   },
   {
     label: 'Kijelentkezés',
     icon: 'pi pi-sign-out',
+    command: () => {
+      
+      router.push('/logout');
+    },
   },
 ]);
 
@@ -84,6 +98,11 @@ const isActive = (path) => {
 </script>
 
 <style scoped>
+
+.fixszin {
+  color: rgb(247, 233, 233) !important;
+}
+
 .p-toolbar {
   background-color: rgb(41, 32, 45) !important;
 }
@@ -98,7 +117,7 @@ const isActive = (path) => {
 }
 
 .current-page {
-  color: rgb(255, 121, 159) !important;
+  color: rgb(255, 121, 159);
 }
 
 .home-button,
@@ -158,7 +177,7 @@ const isActive = (path) => {
   transition: color 0.3s ease;
 }
 
-/* Menü elemek színe */
+
 .p-menu {
   background-color: rgb(41, 32, 45) !important;
 }
