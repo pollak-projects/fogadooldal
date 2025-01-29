@@ -9,11 +9,6 @@
             'current-page': isActive('/'),
             fixszin: !isActive('/'),
           }"
-          :class="{
-            'active-button': isActive('/'),
-            'current-page': isActive('/'),
-            fixszin: !isActive('/'),
-          }"
           severity="secondary"
           as="RouterLink"
           to="/"
@@ -25,11 +20,6 @@
 
         <Button
           class="mr-2 coinflip-button"
-          :class="{
-            'active-button': isActive('/coinflip'),
-            'current-page': isActive('/coinflip'),
-            fixszin: !isActive('/coinflip'),
-          }"
           :class="{
             'active-button': isActive('/coinflip'),
             'current-page': isActive('/coinflip'),
@@ -51,11 +41,6 @@
             'current-page': isActive('/roulette'),
             fixszin: !isActive('/roulette'),
           }"
-          :class="{
-            'active-button': isActive('/roulette'),
-            'current-page': isActive('/roulette'),
-            fixszin: !isActive('/roulette'),
-          }"
           severity="secondary"
           as="RouterLink"
           to="/roulette"
@@ -65,10 +50,13 @@
           <span class="roulette-text">Roulette</span>
         </Button>
 
-     
         <Button
           class="mr-2 crash-button"
-          :class="{ 'active-button': isActive('/crash'), 'current-page': isActive('/crash'), 'fixszin': !isActive('/crash') }"
+          :class="{
+            'active-button': isActive('/crash'),
+            'current-page': isActive('/crash'),
+            fixszin: !isActive('/crash'),
+          }"
           severity="secondary"
           as="RouterLink"
           to="/crash"
@@ -85,11 +73,6 @@
           class="w-15 rounded-full cursor-pointer"
           @click="toggleMenu"
         />
-        <img
-          src="/pfp.png"
-          class="w-15 rounded-full cursor-pointer"
-          @click="toggleMenu"
-        />
         <Menu ref="menu" :model="menuItems" :popup="true" />
       </template>
     </Toolbar>
@@ -97,9 +80,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { Button, Toolbar, Menu } from "primevue";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Button, Toolbar, Menu } from "primevue";
@@ -125,7 +105,7 @@ const menuItems = ref([
     label: "Fiók adatok",
     icon: "pi pi-user",
     command: () => {
-      router.push('/profile');
+      router.push("/profile");
     },
   },
   {
@@ -160,18 +140,16 @@ const isActive = (path) => {
 </script>
 
 <style scoped>
-
-
 .crash-button {
   font-size: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgb(247, 233, 233); 
+  color: rgb(247, 233, 233);
 }
 
 .crash-text {
-  font-size: 1rem; 
+  font-size: 1rem;
 }
 
 .crash-icon {
@@ -279,12 +257,6 @@ const isActive = (path) => {
   color: rgb(253, 32, 93) !important;
 }
 
-.home-button:hover,
-.coinflip-button:hover,
-.roulette-button:hover {
-  color: white !important;
-}
-
 .home-button:hover .logo,
 .coinflip-button:hover .coinflip-icon,
 .roulette-button:hover .roulette-icon {
@@ -295,12 +267,5 @@ const isActive = (path) => {
 .coinflip-button:hover,
 .roulette-button:hover {
   color: white !important;
-}
-
-.home-button:hover .logo,
-.coinflip-button:hover .coinflip-icon,
-.roulette-button:hover .roulette-icon {
-  transform: scale(1.1);
 }
 </style>
-
