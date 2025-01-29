@@ -55,6 +55,12 @@ const router = createRouter({
       name: "Profile",
       component:import( "../components/Profile.vue"),
     },
+
+    {
+      path: "/crash",
+      name: "Crash",
+      component:import( "../components/Crash.vue"),
+    },
     ],
 });
 

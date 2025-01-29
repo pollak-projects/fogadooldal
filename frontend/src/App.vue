@@ -1,6 +1,7 @@
 <script setup>
 import {RouterView} from "vue-router";
 import Navbar from "./components/Navbar.vue";
+import Footer from './components/Footer.vue';
 import { useRoute } from "vue-router";
 
 const route = useRoute()
@@ -10,6 +11,7 @@ const route = useRoute()
 <template>
   <Navbar v-if="route.path != '/login' && route.path != '/register'" />
   <RouterView/>
+  <Footer v-if="route.path != '/login' && route.path != '/register'"  />
 </template>
 
 <style>

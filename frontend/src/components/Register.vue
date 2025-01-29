@@ -5,6 +5,13 @@
     <div class="stars stars2"></div>
     <div class="stars stars3"></div>
 
+    <div class="logo-container">
+      <img src="/logo.png" alt="BetWise Logo" class="logo" />
+      <h1 class="app-name">BetWise</h1>
+    </div>
+
+
+
     <div class="register-container bold">
       <h2>Regisztráció</h2>
   <div class="background-container">
@@ -39,6 +46,7 @@
           />
         </div>
 
+
         <div class="input-group bold">
           <label for="password">Jelszó</label>
           <input
@@ -102,6 +110,10 @@
       </form>
         <button type="submit" class="register-button bold">Regisztrálás</button>
       </form>
+
+            <RouterLink to="/login" class="text-center float-right login-link">
+        Van már fiókod? Jelentkezz be!
+      </RouterLink>
 
       <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
       <p class="success-message" v-if="successMessage">{{ successMessage }}</p>
@@ -139,6 +151,39 @@ const handleRegister = () => {
 
 <style scoped>
 
+.login-link {
+  display: block;
+  margin-top: 15px;
+  color: rgb(253, 32, 93);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  z-index: 1;
+}
+.logo {
+  width: 100px; 
+  height: 100px; 
+  margin-right: 20px; 
+}
+
+.app-name {
+  font-size: 64px; 
+  color: rgb(253, 32, 93);
+  margin: 0;
+  font-weight: bold; 
+  letter-spacing: 10px;
+}
 
 .background-container {
   position: relative;
@@ -200,18 +245,19 @@ const handleRegister = () => {
 }
 
 
-.background-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  filter: blur(10px);
-  z-index: -1;
+.background-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(140deg, rgb(67, 44, 77), rgb(102, 54, 67), rgb(76, 32, 85));
+  background-size: 400% 400%;
+  animation: gradientAnimation 5s ease infinite;
 }
-
 
 .register-container {
   width: 100%;

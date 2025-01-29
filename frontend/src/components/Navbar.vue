@@ -37,6 +37,19 @@
           <img src="/roulette1.png" class="roulette-icon" alt="Roulette Icon" />
           <span class="roulette-text">Roulette</span>
         </Button>
+
+     
+        <Button
+          class="mr-2 crash-button"
+          :class="{ 'active-button': isActive('/crash'), 'current-page': isActive('/crash'), 'fixszin': !isActive('/crash') }"
+          severity="secondary"
+          as="RouterLink"
+          to="/crash"
+          text
+        >
+          <img src="/crash.png" class="crash-icon" alt="Crash Icon" />
+          <span class="crash-text">Crash</span>
+        </Button>
       </template>
 
       <template #end>
@@ -98,6 +111,29 @@ const isActive = (path) => {
 </script>
 
 <style scoped>
+
+
+.crash-button {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgb(247, 233, 233); 
+}
+
+.crash-text {
+  font-size: 1rem; 
+}
+
+.crash-icon {
+  width: 35px;
+  height: 35px;
+  transition: transform 0.3s ease;
+}
+
+.crash-button:hover .crash-icon {
+  transform: scale(1.1);
+}
 
 .fixszin {
   color: rgb(247, 233, 233) !important;
