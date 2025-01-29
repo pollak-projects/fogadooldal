@@ -1,0 +1,12 @@
+model User {
+    id             Int      @id @default(autoincrement())
+    username       String   @unique
+    password       String         
+    email          String   @unique
+    created_at     DateTime
+    updated_at     DateTime
+    full_name      String   @unique
+    admin          Int
+
+
+}
