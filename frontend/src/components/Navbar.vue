@@ -9,6 +9,11 @@
             'current-page': isActive('/'),
             fixszin: !isActive('/'),
           }"
+          :class="{
+            'active-button': isActive('/'),
+            'current-page': isActive('/'),
+            fixszin: !isActive('/'),
+          }"
           severity="secondary"
           as="RouterLink"
           to="/"
@@ -25,6 +30,11 @@
             'current-page': isActive('/coinflip'),
             fixszin: !isActive('/coinflip'),
           }"
+          :class="{
+            'active-button': isActive('/coinflip'),
+            'current-page': isActive('/coinflip'),
+            fixszin: !isActive('/coinflip'),
+          }"
           severity="secondary"
           as="RouterLink"
           to="/coinflip"
@@ -36,6 +46,11 @@
 
         <Button
           class="mr-2 roulette-button"
+          :class="{
+            'active-button': isActive('/roulette'),
+            'current-page': isActive('/roulette'),
+            fixszin: !isActive('/roulette'),
+          }"
           :class="{
             'active-button': isActive('/roulette'),
             'current-page': isActive('/roulette'),
@@ -70,6 +85,11 @@
           class="w-15 rounded-full cursor-pointer"
           @click="toggleMenu"
         />
+        <img
+          src="/pfp.png"
+          class="w-15 rounded-full cursor-pointer"
+          @click="toggleMenu"
+        />
         <Menu ref="menu" :model="menuItems" :popup="true" />
       </template>
     </Toolbar>
@@ -77,6 +97,9 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { Button, Toolbar, Menu } from "primevue";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Button, Toolbar, Menu } from "primevue";
@@ -89,11 +112,16 @@ const menuItems = ref([
   {
     label: "Segítség",
     icon: "pi pi-question-circle",
+    label: "Segítség",
+    icon: "pi pi-question-circle",
     command: () => {
+      router.push("/help");
       router.push("/help");
     },
   },
   {
+    label: "Fiók adatok",
+    icon: "pi pi-user",
     label: "Fiók adatok",
     icon: "pi pi-user",
     command: () => {
@@ -103,14 +131,20 @@ const menuItems = ref([
   {
     label: "Beállítások",
     icon: "pi pi-cog",
+    label: "Beállítások",
+    icon: "pi pi-cog",
     command: () => {
+      router.push("/settings");
       router.push("/settings");
     },
   },
   {
     label: "Kijelentkezés",
     icon: "pi pi-sign-out",
+    label: "Kijelentkezés",
+    icon: "pi pi-sign-out",
     command: () => {
+      router.push("/logout");
       router.push("/logout");
     },
   },
@@ -164,6 +198,7 @@ const isActive = (path) => {
 
 .active-button {
   color: rgb(253, 32, 93) !important;
+  color: rgb(253, 32, 93) !important;
   transition: color 0.3s ease;
 }
 
@@ -179,6 +214,7 @@ const isActive = (path) => {
   align-items: center;
   gap: 0.5rem;
   color: rgb(247, 233, 233);
+  color: rgb(247, 233, 233);
 }
 
 .home-text {
@@ -188,6 +224,7 @@ const isActive = (path) => {
 
 .coinflip-text,
 .roulette-text {
+  font-size: 1rem;
   font-size: 1rem;
 }
 
@@ -219,6 +256,7 @@ const isActive = (path) => {
 }
 
 .p-button:hover {
+  color: white !important; /* Itt állítjuk be a fehér színt */
   color: white !important; /* Itt állítjuk be a fehér színt */
   transition: color 0.3s ease;
 }
@@ -252,4 +290,17 @@ const isActive = (path) => {
 .roulette-button:hover .roulette-icon {
   transform: scale(1.1);
 }
+
+.home-button:hover,
+.coinflip-button:hover,
+.roulette-button:hover {
+  color: white !important;
+}
+
+.home-button:hover .logo,
+.coinflip-button:hover .coinflip-icon,
+.roulette-button:hover .roulette-icon {
+  transform: scale(1.1);
+}
 </style>
+
