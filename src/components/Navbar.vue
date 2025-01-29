@@ -68,7 +68,7 @@ const menuItems = ref([
     label: 'Fiók adatok',
     icon: 'pi pi-user',
     command: () => {
-      router.push('/account');
+      router.push('/profile');
     },
   },
   {
