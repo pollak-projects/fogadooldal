@@ -1,11 +1,17 @@
 <template>
   <div class="background-container">
-    <!-- Csillagok a háttérben -->
+    
     <div class="stars"></div>
     <div class="stars stars2"></div>
     <div class="stars stars3"></div>
 
-    <div class="login-container bold">
+    
+    <div class="logo-container">
+      <img src="/logo.png" alt="BetWise Logo" class="logo" />
+      <h1 class="app-name">BetWise</h1>
+    </div>
+
+    <div class="login-container">
       <h2>Bejelentkezés</h2>
 
       <form @submit.prevent="handleLogin">
@@ -72,7 +78,7 @@ const handleLogin = () => {
 </script>
 
 <style scoped>
-/* Animált háttér */
+
 .background-container {
   position: relative;
   width: 100vw;
@@ -99,7 +105,7 @@ const handleLogin = () => {
   }
 }
 
-/* Csillagok a háttérben */
+
 .stars {
   position: absolute;
   top: 0;
@@ -135,7 +141,7 @@ const handleLogin = () => {
 .bold {
   font-weight: 700;
 }
-/* Blur effekt a háttérre */
+
 .background-container::before {
   content: "";
   position: absolute;
@@ -244,12 +250,12 @@ const handleLogin = () => {
 
 /* Form középre igazítása */
 /* Form középre igazítása */
+
 .login-container {
   width: 100%;
   max-width: 400px;
   padding: 20px;
-  background-color: rgba(41, 32, 45, 0.8); /* Átlátszó háttér */
-  background-color: rgba(41, 32, 45, 0.8); /* Átlátszó háttér */
+  background-color: rgba(41, 32, 45, 0.8); 
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -323,7 +329,7 @@ input#password {
   margin-bottom: 10px;
 }
 
-/* Regisztrációs link stílusa */
+
 .register-link {
   display: block;
   margin-top: 15px;

@@ -1,6 +1,6 @@
 <template>
   <div class="background-container">
-    <!-- Csillagok a háttérben -->
+   
     <div class="stars"></div>
     <div class="stars stars2"></div>
     <div class="stars stars3"></div>
@@ -130,7 +130,7 @@ const handleRegister = () => {
     errorMessage.value = "Kérlek töltsd ki az összes mezőt!";
     successMessage.value = "";
   } else {
-    // Simulálhatjuk a regisztráció sikerét
+    
     successMessage.value = "Sikeres regisztráció!";
     errorMessage.value = "";
   }
@@ -139,7 +139,7 @@ const handleRegister = () => {
 
 <style scoped>
 
-/* Animált háttér */
+
 .background-container {
   position: relative;
   width: 100vw;
@@ -165,7 +165,7 @@ const handleRegister = () => {
   }
 }
 
-/* Csillagok a háttérben */
+
 .stars {
   position: absolute;
   top: 0;
@@ -199,7 +199,7 @@ const handleRegister = () => {
   }
 }
 
-/* Blur effekt a háttérre */
+
 .background-container::before {
   content: "";
   position: absolute;
@@ -212,12 +212,12 @@ const handleRegister = () => {
   z-index: -1;
 }
 
-/* Form középre igazítása */
+
 .register-container {
   width: 100%;
   max-width: 400px;
   padding: 20px;
-  background-color: rgba(41, 32, 45, 0.8); /* Átlátszó háttér */
+  background-color: rgba(41, 32, 45, 0.8); 
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
