@@ -1,0 +1,4 @@
+model Coin {
+    id             Int      @id @default(autoincrement())
+    mennyiseg Int
+}
