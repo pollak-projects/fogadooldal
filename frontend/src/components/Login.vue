@@ -149,7 +149,6 @@ const handleLogin = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: inherit;
   filter: blur(10px);
   z-index: -1;
 }

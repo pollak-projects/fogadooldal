@@ -70,7 +70,7 @@
       <template #end>
         <img
           src="/pfp.png"
-          class="w-15 rounded-full cursor-pointer"
+          class="w-15 rounded-full cursor-pointer profile-border"
           @click="toggleMenu"
         />
         <Menu ref="menu" :model="menuItems" :popup="true" />
@@ -140,6 +140,10 @@ const isActive = (path) => {
 </script>
 
 <style scoped>
+
+.profile-border {
+  border: 2px solid rgb(255, 121, 159); 
+}
 .crash-button {
   font-size: 1.25rem;
   display: flex;
@@ -163,7 +167,7 @@ const isActive = (path) => {
 }
 
 .fixszin {
-  color: rgb(247, 233, 233) !important;
+  color: rgb(239, 233, 247) !important;
 }
 
 .p-toolbar {
@@ -195,15 +199,23 @@ const isActive = (path) => {
   color: rgb(247, 233, 233);
 }
 
-.home-text {
-  font-weight: bold;
-  font-size: 1.25rem;
+.home-button:hover .home-text,
+.coinflip-button:hover .coinflip-text,
+.roulette-button:hover .roulette-text,
+.crash-button:hover .crash-text {
+  color: rgb(253, 32, 93) !important;
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
 }
 
-.coinflip-text,
-.roulette-text {
-  font-size: 1rem;
-  font-size: 1rem;
+.home-text {
+  font-size: 30px;
+  transition: transform 0.3s ease;
+}
+
+.coinflip-text, .roulette-text, .crash-text {
+  font-size: 18px;
+  transition: transform 0.3s ease;
 }
 
 .logo {
@@ -265,7 +277,8 @@ const isActive = (path) => {
 
 .home-button:hover,
 .coinflip-button:hover,
-.roulette-button:hover {
-  color: white !important;
+.roulette-button:hover,
+.crash-button:hover {
+  color: rgb(253, 32, 93);
 }
 </style>
