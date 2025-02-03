@@ -1,4 +1,8 @@
 model Coin {
     id             Int      @id @default(autoincrement())
     mennyiseg Int
+
+    userid Int
+
+    user User @relation(references: [id], fields: [userid]) 
 }
