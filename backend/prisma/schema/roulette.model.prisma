@@ -1,0 +1,7 @@
+model Roulette {
+    id             Int      @id @default(autoincrement())
+    piros Boolean
+    fekete Boolean
+    zold Boolean
+    date DateTime
+}

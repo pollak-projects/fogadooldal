@@ -19,7 +19,6 @@ import { router as userRouter }  from './controller/user.controller.js';
 import { router as chatRouter }  from './controller/chat.controller.js';
 import { router as authRouter }  from './controller/auth.controller.js';
 import { listAllUsers } from './services/user.service.js'
-import { listAllMessages } from './services/chat.service.js'
 import { verifyApiKey } from './middleware/auth.middleware.js'
 
 const app = express()

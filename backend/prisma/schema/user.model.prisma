@@ -7,6 +7,4 @@ model User {
     updated_at     DateTime
     full_name      String   @unique
     admin          Int
-
-
 }
