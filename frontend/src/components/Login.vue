@@ -69,11 +69,20 @@ const errorMessage = ref("");
 const showPassword = ref(false);
 
 const handleLogin = () => {
-  if (username.value === "admin" && password.value === "1234") {
-    alert("Sikeres bejelentkezés!");
-  } else {
-    errorMessage.value = "Hibás felhasználónév vagy jelszó!";
+fetch("http://localhost:3300/user/login", {
+  method: "POST",
+  
+  headers: {
+    "Content-Type": "application/json"
+  },
+
+  body :{
+    username: username.value,
+    password: password.value
   }
+}).then(async(res)=>{
+  console.log(await res.json())
+})
 };
 </script>
 
