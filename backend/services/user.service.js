@@ -27,14 +27,16 @@ export async function login(username, password) {
     }
 }
 
-export async function addUser(username, password, email, birth_date) {
+export async function addUser(username, password, email, admin, full_name) {
     const hashedPwd = await encrypt(password)
     await prisma.user.create({
         data: {
             username: username,
             password: hashedPwd,
+            admin: admin,
+            full_name: full_name,
             email: email,
-            birth_date: new Date(birth_date),
+            admin: admin,
             created_at: new Date(),
             updated_at: new Date()
         }

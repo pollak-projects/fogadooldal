@@ -16,10 +16,7 @@ app.listen(port, () => {
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import { router as userRouter }  from './controller/user.controller.js';
-import { router as chatRouter }  from './controller/chat.controller.js';
-import { router as authRouter }  from './controller/auth.controller.js';
 import { listAllUsers } from './services/user.service.js'
-import { verifyApiKey } from './middleware/auth.middleware.js'
 
 const app = express()
 const port = 3300
@@ -29,8 +26,6 @@ app.use(cookieParser())
 
 app.set("view engine", "ejs")
 app.use("/user", userRouter)
-app.use("/chat", verifyApiKey, chatRouter)
-app.use("/auth", authRouter)
 
 app.get("/", async (req, res) => {
     const userData = await listAllUsers();

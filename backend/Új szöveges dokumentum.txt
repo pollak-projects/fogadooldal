@@ -1,0 +1,17 @@
+{
+    "username": "martin",
+    "password": "Martin01",
+    "email": "martin@martin.com",
+    "admin": "true",
+    "full_name": "Szilasi Martin",
+    "created_at": "2025-02-03T14:30:00Z",
+    "updated_at" : "2025-02-03T14:30:00Z"
+}
+
+{
+    "username": "martin",
+    "password": "Martin01",
+    "admin": 1,
+    "full_name": "Szilasi Martin",
+    "email": "martin@martin.martin"
+}

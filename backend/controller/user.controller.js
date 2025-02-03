@@ -1,6 +1,5 @@
 import express from 'express';
-import { listAllUsers, addUser, deleteUser, updateUser, login, logout } from '../services/user.service.js';
-import { genAPIKey } from '../services/auth.service.js'
+import { listAllUsers, addUser, deleteUser, updateUser, login } from '../services/user.service.js';
 
 const router = express.Router();
 
@@ -13,13 +12,9 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
     console.log(req.body)
     const data = await login(username, password);
-
-    if(data) {
-        const apiKey = await genAPIKey(data)
-        console.log("user", apiKey)
-        res.cookie('apiKey', apiKey, { maxAge: 3_600_000, httpOnly: true })
+    
         res.status(200).json({ message: data })
-    } else {
+    {
         res.status(401).json({ message: "Bad Request" })
     }
 })
@@ -35,9 +30,9 @@ router.delete("/logout", async (req, res) => {
 })
 
 router.post("/add", async (req, res) => {
-    const { username, password, email, birth_date } = req.body;
+    const { username, password, email, admin, full_name } = req.body;
 
-    await addUser(username, password, email, birth_date).then(() => {
+    await addUser(username, password, email, admin, full_name   ).then(() => {
         res.status(201).json({
             message: "Data successfully inserted"
         })
