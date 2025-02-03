@@ -8,67 +8,76 @@ import {RouterLink} from "vue-router"
   <div class="stars"></div>
   <div class="stars stars2"></div>
   <div class="stars stars3"></div>
-  <div class="test">
-    <img src="/welcome.png" alt="welcome" />
-    <div class="text-overlay">
-      Üdvözlünk a <br />
-      BetWise oldalán!
+
+  <div class="kartyakok">
+    <div class="test">
+      <img src="/welcome.png" alt="welcome" />
+      <div class="text-overlay">
+        Üdvözlünk a <br />
+        BetWise oldalán!
+      </div>
     </div>
-  </div>
+    <div class="kartya-container">
+      <Card style="overflow: hidden" class="kartya">
+        <template #header>
+          <img alt="Coinflip" src="/coinflip.png" />
+        </template>
+        <template #title>Coinflip</template>
+        <template #content>
+          <p class="m-0">
+            A coinflip egy egyszerű játék, ahol egy érme feldobásával döntünk,
+            hogy fej vagy írás lesz-e. Az esélyek 50-50%-osak, és a végeredmény
+            véletlenszerű.
+          </p>
+        </template>
+        <template #footer>
+          <div class="flex gap-4 mt-1">
+            <Button
+              label="Játék!"
+              severity="danger"
+              class="gomb"
+              as="RouterLink"
+              to="/coinflip"
+            />
+          </div>
+        </template>
+      </Card>
 
-  <div class="kartya-container">
-    <Card style="overflow: hidden" class="kartya">
-      <template #header>
-        <img alt="Coinflip" src="/coinflip.png" />
-      </template>
-      <template #title>Coinflip</template>
-      <template #content>
-        <p class="m-0">
-          A coinflip egy egyszerű játék, ahol egy érme feldobásával döntünk,
-          hogy fej vagy írás lesz-e. Az esélyek 50-50%-osak, és a végeredmény
-          véletlenszerű.
-        </p>
-      </template>
-      <template #footer>
-        <div class="flex gap-4 mt-1">
-          <Button
-            label="Játék!"
-            severity="danger"
-            class="gomb"
-            as="RouterLink"
-            to="/coinflip"
-          />
-        </div>
-      </template>
-    </Card>
-
-    <Card style="overflow: hidden" class="kartya">
-      <template #header>
-        <img alt="Roulette" src="/roulette.jpg" />
-      </template>
-      <template #title>Roulette</template>
-      <template #content>
-        <p class="m-0">
-          A roulette egy klasszikus kaszinó játék, ahol a szerencsén múlik, hogy
-          a golyó melyik számra esik. <br /><br />
-        </p>
-      </template>
-      <template #footer>
-        <div class="flex gap-4 mt-1">
-          <Button
-            label="Játék!"
-            severity="danger"
-            class="gomb"
-            as="RouterLink"
-            to="/roulette"
-          />
-        </div>
-      </template>
-    </Card>
+      <Card style="overflow: hidden" class="kartya">
+        <template #header>
+          <img alt="Roulette" src="/roulette.jpg" />
+        </template>
+        <template #title>Roulette</template>
+        <template #content>
+          <p class="m-0">
+            A roulette egy klasszikus kaszinó játék, ahol a szerencsén múlik,
+            hogy a golyó melyik számra esik. <br /><br />
+          </p>
+        </template>
+        <template #footer>
+          <div class="flex gap-4 mt-1">
+            <Button
+              label="Játék!"
+              severity="danger"
+              class="gomb"
+              as="RouterLink"
+              to="/roulette"
+            />
+          </div>
+        </template>
+      </Card>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.kartyakok {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Alap háttér beállítások */
 .background-container {
   position: absolute;
@@ -140,15 +149,11 @@ import {RouterLink} from "vue-router"
 
 /* A képet és szöveget tartalmazó div beállításai */
 .test {
-  position: absolute;
-  top: 150px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
   width: 50%;
-  height: 50vh; /* A kép és szöveg magasságának beállítása */
+  height: 60vh; /* A kép és szöveg magasságának beállítása */
   z-index: 1; /* Kép és szöveg a kártyák előtt legyen */
   flex-direction: column;
 }
@@ -174,7 +179,6 @@ import {RouterLink} from "vue-router"
 
 /* A kártyák konténerének beállításai */
 .kartya-container {
-  position: absolute;
   top: 65%; /* Kártyák elhelyezése a háttér fölött */
   left: 50%;
   transform: translateX(-50%);
