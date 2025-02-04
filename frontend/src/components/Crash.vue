@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 const betAmount = ref(0);
 const currentMultiplier = ref(1.0);
@@ -10,7 +13,7 @@ const history = ref([]);
 
 const startGame = () => {
   if (betAmount.value <= 0) {
-    alert('Kérlek adj meg egy érvényes tétet!');
+    toast.error('Kérlek adj meg egy érvényes tétet!');
     return;
   }
 
@@ -39,7 +42,7 @@ const crashGame = () => {
 const cashOut = () => {
   if (!crashed.value) {
     const winnings = betAmount.value * currentMultiplier.value;
-    alert(`Sikeresen kivetted: ${winnings.toFixed(2)}`);
+    toast.success(`Sikeresen kivetted: ${winnings.toFixed(2)}`);
     crashGame();
   }
 };

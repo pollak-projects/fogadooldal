@@ -5,10 +5,11 @@ import Aura from '@primevue/themes/aura';
 import PrimeVue from 'primevue/config';
 import router from './config/routes';
 import ToastService from 'primevue/toastservice';
-
+import Toast from 'primevue/toast';
 
 
 const app = createApp(App);
+app.use(Toast);
 app.use(ToastService);
 app.use(router)
 app.use(PrimeVue , {
@@ -19,3 +20,5 @@ app.use(PrimeVue , {
 app.mount('#app');
 
 /** TAILWIND TELEPITES */
+
+
