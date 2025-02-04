@@ -20,13 +20,13 @@ const startGame = () => {
 
   const interval = setInterval(() => {
     if (isRunning.value) {
-      currentMultiplier.value += 0.1;
+      currentMultiplier.value += 0.01;
       if (Math.random() < 0.02) {
         crashGame();
         clearInterval(interval);
       }
     }
-  }, 100);
+  }, 40);
 };
 
 const crashGame = () => {
@@ -46,14 +46,16 @@ const cashOut = () => {
 </script>
 
 <template>
-  <div>
+  <div class="game-container">
     <h1>Crash Játék</h1>
-    <div>
+    <div class="bet-input">
       <label for="betAmount">Tét:</label>
       <input type="number" id="betAmount" v-model.number="betAmount" :disabled="isRunning" />
     </div>
-    <button @click="startGame" :disabled="isRunning">Start</button>
-    <button @click="cashOut" :disabled="!isRunning || crashed">Cash Out</button>
+    <div class="buttons">
+      <button class="start-button" @click="startGame" :disabled="isRunning">Start</button>
+      <button class="cash-out-button" @click="cashOut" :disabled="!isRunning || crashed">Cash Out</button>
+    </div>
 
     <div class="multiplier-display">
       <div class="multiplier-bar" :style="{ width: `${currentMultiplier * 10}%` }"></div>
@@ -74,12 +76,84 @@ const cashOut = () => {
 </template>
 
 <style scoped>
+.game-container {
+  width: 100%;
+  min-height: 85vh;
+  padding: 20px;
+  text-align: center;
+  background-color: rgb(46, 40, 54);
+  color: rgb(247, 233, 233);
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bet-input {
+  margin-bottom: 20px;
+}
+
+.bet-input label {
+  font-size: 1.1em;
+  margin-right: 10px;
+}
+
+.bet-input input {
+  padding: 10px;
+  font-size: 1em;
+  border: 2px solid #4caf50;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 200px;
+  margin-top: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.start-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.start-button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.cash-out-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.cash-out-button:disabled {
+  background-color: #ef9a9a;
+  cursor: not-allowed;
+}
+
 .multiplier-display {
   width: 100%;
   height: 50px;
   background-color: #f0f0f0;
   position: relative;
   margin-top: 20px;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .multiplier-bar {
@@ -108,5 +182,6 @@ const cashOut = () => {
 
 .history li {
   margin: 5px 0;
+  font-size: 1.1em;
 }
 </style>

@@ -141,6 +141,8 @@ const isActive = (path) => {
 
 <style scoped>
 
+
+
 .profile-border {
   border: 2px solid rgb(255, 121, 159); 
 }
@@ -172,6 +174,9 @@ const isActive = (path) => {
 
 .p-toolbar {
   background-color: rgb(41, 32, 45) !important;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cursor-pointer {

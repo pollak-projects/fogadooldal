@@ -18,6 +18,10 @@
 
 <style scoped>
 .main-footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  height: 8vh;
   background-color: rgb(41, 32, 45);
   padding: 1.5rem 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
