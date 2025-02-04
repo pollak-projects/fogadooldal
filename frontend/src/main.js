@@ -4,8 +4,12 @@ import App from './App.vue';
 import Aura from '@primevue/themes/aura';
 import PrimeVue from 'primevue/config';
 import router from './config/routes';
+import ToastService from 'primevue/toastservice';
+
+
 
 const app = createApp(App);
+app.use(ToastService);
 app.use(router)
 app.use(PrimeVue , {
     theme: {

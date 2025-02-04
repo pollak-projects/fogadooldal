@@ -2,17 +2,18 @@
   <div class="settings-page">
     <div class="settings-container">
       <h1>Profil Beállítások</h1>
-
-      <div class="profile-picture-section">
+      <Toast />
+            <div class="profile-picture-section">
         <div class="avatar-wrapper">
           <img 
-            :src="profileImage || 'https://via.placeholder.com/150'" 
+            :src="profileImage" 
             alt="Profilkép"
             class="profile-avatar"
           >
           <label for="avatar-upload" class="upload-button">
             <input
               type="file"
+              ref="imgs"
               id="avatar-upload"
               accept="image/*"
               @change="handleImageUpload"
@@ -49,17 +50,25 @@
       </div>
 
       
-      <div class="form-section">
-        <h2>Jelszó módosítás</h2>
-        
-        <div class="form-group">
-          <label>Új jelszó:</label>
-          <input :type="showPassword ? 'text' : 'password'" v-model="userData.newPassword">
-          <button type="button" @click="showPassword = !showPassword" class="toggle-password">
-            {{ showPassword ? '👁️' : '👁️' }}
-          </button>
-        </div>
-      </div>
+<div class="form-section">
+  <h2>Jelszó módosítás</h2>
+  
+  <div class="form-group">
+    <label>Új jelszó:</label>
+    <input :type="showPassword ? 'text' : 'password'" v-model="userData.newPassword">
+    
+    <div class="show-password float-right">
+      <img
+        :src="showPassword ? '/eye.png' : '/hidden.png'"
+        alt="Toggle Password Visibility"
+        @click="showPassword = !showPassword"
+        class="password-toggle-icon"
+      />
+    </div>
+  </div>
+</div>
+
+
 
 
 
@@ -84,48 +93,86 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      profileImage: null,
-      showPassword: false,
-      userData: {
-        name: '',
-        email: '',
-        bio: '',
-        newPassword: '',
-        notifications: {
-          email: true,
-          sms: false
-        },
-        language: 'hu'
-      }
-    }
+
+
+
+<script setup>
+import { ref, reactive } from 'vue';
+import { useToast } from 'primevue/usetoast';
+import Toast from 'primevue/toast';
+
+const toast = useToast();
+
+// Reactive state
+const rawImg = ref(null);
+const imgs = ref(null);
+const reader = ref(new FileReader());
+const profileImage = ref(null);
+const showPassword = ref(false);
+const userData = reactive({
+  name: '',
+  email: '',
+  bio: '',
+  newPassword: '',
+  notifications: {
+    email: true,
+    sms: false
   },
-  methods: {
-    handleImageUpload(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.profileImage = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    saveSettings() {
-      console.log('Mentett adatok:', {
-        ...this.userData,
-        profileImage: this.profileImage
-      });
-      alert('Beállítások sikeresen mentve!');
-    }
+  language: 'hu'
+});
+
+// Template refs
+const imgRef = ref(null);
+
+// Methods
+const save = () => {
+  reader.value.onload = () => {
+    rawImg.value = reader.value.result;
+    console.log(rawImg.value);
+  };
+  
+  const fileInput = imgRef.value;
+  if(fileInput?.files?.length) {
+    reader.value.readAsDataURL(fileInput.files[0]);
   }
-}
+};
+
+const handleImageUpload = (e) => {
+  const file = e.target.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      profileImage.value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const saveSettings = () => {
+  console.log('Saved data:', {
+    ...userData,
+    profileImage: profileImage.value
+  });
+  
+  toast.add({
+    severity: 'success',
+    summary: 'Sikeres mentés',
+    life: 3000
+  });
+};
 </script>
 
 <style scoped>
+.password-toggle-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  right: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+
 .Mentesgomb {
     width: 100%;
     display: flex;
