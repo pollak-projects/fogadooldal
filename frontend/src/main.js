@@ -5,7 +5,8 @@ import Aura from '@primevue/themes/aura';
 import PrimeVue from 'primevue/config';
 import router from './config/routes';
 import ToastService from 'primevue/toastservice';
-import Toast from 'primevue/toast';
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
 
 
 const app = createApp(App);
