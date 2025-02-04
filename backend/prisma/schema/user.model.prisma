@@ -10,4 +10,7 @@ model User {
 
     coin Coin[]
 
+    Groups  Groups @relation(fields: [groupsNeve], references: [name])
+    groupsNeve String @default("user")
+
 }
