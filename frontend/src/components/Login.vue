@@ -75,11 +75,12 @@ fetch("http://localhost:3300/user/login", {
   headers: {
     "Content-Type": "application/json"
   },
-
-  body :{
+  
+  body :JSON.stringify({ 
+    
     username: username.value,
     password: password.value
-  }
+  })
 }).then(async(res)=>{
   console.log(await res.json())
 })
