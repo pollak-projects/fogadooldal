@@ -13,7 +13,7 @@
           <label for="avatar-upload" class="upload-button">
             <input
               type="file"
-              ref="imgs"
+              ref="imgRef"
               id="avatar-upload"
               accept="image/*"
               @change="handleImageUpload"
