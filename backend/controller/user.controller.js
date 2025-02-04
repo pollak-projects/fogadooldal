@@ -9,9 +9,9 @@ router.get("/getAll", async (req, res) => {
 })
 
 router.post("/register", async (req, res) => {
-    const { username, email, password, nev, om, groupsNeve } = req.body;
+    const { username, email, password, nev, groupsNeve } = req.body;
     try {
-      const user = await register(username, email, password, nev, om, groupsNeve);
+      const user = await register(username, email, password, nev, groupsNeve);
       res.status(201).json(user);
     } catch (error) {
       console.error(error);
@@ -34,7 +34,6 @@ router.post("/login", async (req, res) => {
         sameSite: "none",
         secure: true,
         httpOnly: false,
-        domain: "localhost:5173",
         path: "/",
       });
       res.cookie("refresh_token", user.refresh_token, {
@@ -42,7 +41,6 @@ router.post("/login", async (req, res) => {
         httpOnly: false,
         sameSite: "none",
         secure: true,
-        domain: "localhost:5173",
         path: "/",
       });
   
@@ -58,15 +56,12 @@ router.post("/login", async (req, res) => {
 
   router.post("/logout", (req, res) => {
     res.clearCookie("access_token", {
-      domain: "pollak.info",
       path: "/",
     });
     res.clearCookie("refresh_token", {
-      domain: "pollak.info",
       path: "/",
     });
     res.clearCookie("sid", {
-      domain: "pollak.info",
       path: "/",
     });
     res.status(200).json({ message: "Logged out successfully" });
