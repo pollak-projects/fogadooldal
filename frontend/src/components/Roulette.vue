@@ -2,9 +2,11 @@
 import { ref, computed } from "vue";
 import Button from "primevue/button";
 
+// Frissített színek és mezők: 37 mező, zöld (0), piros és fekete váltakozik
 const colors = Array.from({ length: 37 }, (_, i) =>
   i === 0 ? "zold" : i % 2 === 0 ? "piros" : "fekete"
 );
+
 const isSpinning = ref(false);
 const result = ref(null);
 const rotation = ref(0);
@@ -30,13 +32,13 @@ const spin = () => {
 <template>
   <h1 class="cim">Roulette</h1>
   <div class="min-h-screen flex flex-col items-center justify-center p-4">
+    <img src="/nyilacska.png" alt="Nyíl" class="nyilkep" />
     <div class="relative w-96 h-96 mb-8">
       <!-- Roulette Wheel -->
       <div
         class="roulette-wheel absolute w-full h-full rounded-full border-4 border-gray-800 overflow-hidden shadow-xl transition-transform duration-5000 ease-out"
         :style="{ transform: `rotate(${rotation}deg)` }"
       >
-        <div>csao</div>
         <div
           v-for="(color, index) in colors"
           :key="index"
@@ -46,14 +48,12 @@ const spin = () => {
             'bg-red-500': color === 'piros',
             'bg-gray-800': color === 'fekete',
           }"
-          :style="{ transform: `rotate(${index * (360 / 37)}deg)` }"
+          :style="{ transform: `rotate(${index * (360 / 50)}deg)` }"
         ></div>
         <div class="absolute inset-4 bg-white rounded-full shadow-inner"></div>
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gold-500 rounded-full"
-        >
-          <h1 class="kerekfelirat">BetWise</h1>
-        </div>
+        ></div>
       </div>
 
       <!-- Pointer -->
@@ -80,7 +80,7 @@ const spin = () => {
         :class="{
           'text-red-500': colors[result] === 'piros',
           'text-gray-800': colors[result] === 'fekete',
-          'text-green-500': colors[result] === 'zöld',
+          'text-green-500': colors[result] === 'zold',
         }"
       >
         {{ colors[result] }}
@@ -90,10 +90,9 @@ const spin = () => {
 </template>
 
 <style scoped>
-.kerekfelirat {
-  font-size: 25px;
+.nyilkep {
+  width: 100px;
 }
-
 .eredmenykartyacska {
   background-color: #fccb7c;
   outline: 1px solid black;

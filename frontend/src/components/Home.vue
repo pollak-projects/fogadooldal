@@ -77,6 +77,7 @@ import {RouterLink} from "vue-router"
   justify-content: center;
   align-items: center;
   z-index: -1;
+  margin-top: 100px;
 }
 
 /* Alap háttér beállítások */
