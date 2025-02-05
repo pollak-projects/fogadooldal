@@ -69,7 +69,7 @@ const errorMessage = ref("");
 const showPassword = ref(false);
 
 const handleLogin = () => {
-fetch("http://localhost:3300/user/login", {
+fetch("http://localhost:3300/auth/login", {
   method: "POST",
   
   headers: {
