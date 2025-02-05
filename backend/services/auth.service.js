@@ -97,16 +97,19 @@ async function createNewToken(id, nev, email, groupsNeve) {
   );
 }
 
-export async function register(username, password, email, full_name, groupsNeve ) {
+export async function register(username, password, email, admin, full_name, groupsNeve ) {
   const pwdEncrypted = await encrypt(password);
 
   await prisma.user.create({
     data: {
       username: username,
-      email: email,
       password: pwdEncrypted,
+      email: email,
+      admin: admin,
       full_name: full_name,
-      groupsNeve: groupsNeve
+      groupsNeve: groupsNeve,
+      created_at: new Date(),
+      updated_at: new Date()
     },
   });
 }
@@ -128,13 +131,7 @@ export async function login(username, password) {
   if (!(await bcrypt.compare(password, user.password))) {
     return { message: "Hibás felhasználónév vagy jelszó" };
   }
-
-  const data = await prisma.maindata.findFirst();
-
-  if (!data) {
-    return { message: "Hiba történt" };
-  }
-
+  const secret = process.env.JWT_SECRET;
   const token = jwt.sign(
     {
       sub: user.id,
@@ -142,10 +139,10 @@ export async function login(username, password) {
       email: user.email,
       userGroup: user.groupsNeve,
     },
-    data.JWTSecret,
+    secret, 
     {
-      expiresIn: data.JWTExpiration,
-      algorithm: data.JWTAlgorithm,
+      expiresIn: 20 * 60 * 1000,
+      algorithm: "HS512"
     }
   );
 
@@ -153,10 +150,10 @@ export async function login(username, password) {
     {
       sub: user.id,
     },
-    data.RefreshTokenSecret,
+    secret,
     {
-      expiresIn: data.RefreshTokenExpiration,
-      algorithm: data.RefreshTokenAlgorithm,
+      expiresIn: 20 * 60 * 1000,
+      algorithm: "HS512"
     }
   );
 
@@ -167,38 +164,7 @@ export async function login(username, password) {
   };
 }
 
-export async function updateMainData(
-  JWTAlgorithm,
 
-  JWTExpiration,
-
-  JWTSecret,
-
-  RefreshTokenAlgorithm,
-
-  RefreshTokenExpiration,
-
-  RefreshTokenSecret
-) {
-  try {
-    await prisma.maindata.update({
-      where: {
-        id: "5a97ea0a-a19f-11ef-95f3-0a0027000007",
-      },
-      data: {
-        JWTAlgorithm: JWTAlgorithm,
-        JWTExpiration: Number(JWTExpiration),
-        JWTSecret: JWTSecret,
-        RefreshTokenAlgorithm: RefreshTokenAlgorithm,
-        RefreshTokenExpiration: Number(RefreshTokenExpiration),
-        RefreshTokenSecret: RefreshTokenSecret,
-      },
-    });
-    return "az adat sikeresen frissítve";
-  } catch (err) {
-    return err;
-  }
-}
 
 export async function listAllTokens() {
   const data = await prisma.maindata.findUnique({

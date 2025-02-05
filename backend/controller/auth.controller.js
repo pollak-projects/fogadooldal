@@ -1,7 +1,7 @@
 import express from "express";
 import {
   verifyJwt,
-  updateMainData,
+
   listAllTokens,
   pwdChange,
   login,
@@ -49,9 +49,9 @@ router.get("/verify", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { username, email, password, nev, om, groupsNeve } = req.body;
+  const { username, password, email, admin, full_name, groupsNeve } = req.body;
   try {
-    const user = await register(username, email, password, nev, om, groupsNeve);
+    const user = await register(username, password, email, admin, full_name, groupsNeve);
     res.status(201).json(user);
   } catch (error) {
     console.error(error);
@@ -62,6 +62,8 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
+
+  console.log(username, password)
   try {
     const user = await login(username, password);
 
@@ -84,7 +86,7 @@ router.post("/login", async (req, res) => {
       path: "/",
     });
 
-    req.session.user_id = user.user_id;
+
 
     res.status(200).json(user);
   } catch (error) {

@@ -3,7 +3,7 @@ model User {
     username       String   @unique
     password       String         
     email          String   @unique
-    created_at     DateTime
+    created_at     DateTime @default(now())
     updated_at     DateTime
     full_name      String   @unique
     admin          Int
