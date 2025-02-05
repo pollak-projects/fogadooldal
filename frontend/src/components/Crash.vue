@@ -14,7 +14,7 @@ const history = ref([]);
 const startGame = () => {
   if (betAmount.value <= 0) {
     toast.error('Kérlek adj meg egy érvényes tétet!', {
-      position: "top-center" 
+      position: "top-right" 
     });
     return;
   }
