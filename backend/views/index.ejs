@@ -62,13 +62,13 @@
             openModal(
               "Üdvözöljük ADMIN!",
               "belépés ADMIN-ként",
-              "https://auth.pollak.info/table"
+              "http://localhost:5173/table"
             );
           } else {
             openModal(
               "Üdvözöljük USER!",
               "belépés USER-ként",
-              "https://pollak.info/"
+              "http://localhost:5173/"
             );
           }
         }
@@ -117,7 +117,7 @@
       }
 
       function Login() {
-        fetch(`/auth/login`, {
+        fetch(`/user/login`, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -135,13 +135,13 @@
             openModal(
               "Üdvözöljük ADMIN!",
               "belépés ADMIN-ként",
-              "https://auth.pollak.info/table"
+              "http://localhost:5173/table"
             );
           } else {
             openModal(
               "Üdvözöljük USER!",
               "belépés USER-ként",
-              "https://pollak.info/"
+              "http://localhost:5173/"
             );
           }
         });
