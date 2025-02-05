@@ -98,7 +98,7 @@ fetch("http://localhost:3300/auth/login", {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(140deg, rgb(67, 44, 77), rgb(102, 54, 67), rgb(76, 32, 85));
+  background: linear-gradient(140deg, rgb(136, 84, 143), rgb(102, 54, 67), rgb(76, 32, 85));
   background-size: 400% 400%;
   animation: gradientAnimation 5s ease infinite;
 }
