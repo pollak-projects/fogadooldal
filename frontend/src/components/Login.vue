@@ -7,7 +7,7 @@
 
     
     <div class="logo-container">
-      <img src="/logo.png" alt="BetWise Logo" class="logo" />
+      <img src="/logo2.png" alt="BetWise Logo" class="logo" />
       <h1 class="app-name">BetWise</h1>
     </div>
 
