@@ -114,7 +114,7 @@
               <label for="torlendo">Melyiket szeretnéd törölni?</label>
               <select id="torlendo" class="form-select">
                 <% groups.forEach(element => { %>
-                <option value="<%= element.neve %>"><%= element.neve %></option>
+                <option value="<%= element.name %>"><%= element.name %></option>
                 <% }); %>
               </select>
             </div>
@@ -161,7 +161,7 @@
               >
               <select id="modositando" class="form-select">
                 <% groups.forEach(element => { %>
-                <option value="<%= element.neve %>"><%= element.neve %></option>
+                <option value="<%= element.name %>"><%= element.name %></option>
                 <% }); %>
               </select>
               <br />
@@ -197,15 +197,15 @@
               class="accordion-button collapsed"
               type="button"
               data-bs-toggle="collapse"
-              data-bs-target="#flush-collapse<%= element.neve %>"
+              data-bs-target="#flush-collapse<%= element.name %>"
               aria-expanded="false"
-              aria-controls="flush-collapse<%= element.neve %>"
+              aria-controls="flush-collapse<%= element.name %>"
             >
-              <%= element.neve %>
+              <%= element.name %>
             </button>
           </h2>
           <div
-            id="flush-collapse<%= element.neve %>"
+            id="flush-collapse<%= element.name %>"
             class="accordion-collapse collapse"
             data-bs-parent="#accordionFlushExample"
           >
@@ -227,7 +227,7 @@
                     <td><%= user.id %></td>
                     <td><%= user.username %></td>
                     <td><%= user.email %></td>
-                    <td><%= user.om %></td>
+                    <td><%= user.full_name %></td>
                     <td><%= user.groupsNeve %></td>
                     <td>
                       <img
