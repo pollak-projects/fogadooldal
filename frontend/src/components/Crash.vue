@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useToast } from 'vue-toastification';
+import { ref, onMounted } from "vue";
+import { useToast } from "vue-toastification";
 
 const toast = useToast();
 
@@ -52,19 +52,37 @@ const cashOut = () => {
 
 <template>
   <div class="game-container">
-    <h1>Crash Játék</h1>
+    <h1 class="cim">Crash</h1>
     <div class="bet-input">
       <label for="betAmount">Tét:</label>
-      <input type="number" id="betAmount" v-model.number="betAmount" :disabled="isRunning" />
+      <input
+        type="number"
+        id="betAmount"
+        v-model.number="betAmount"
+        :disabled="isRunning"
+      />
     </div>
     <div class="buttons">
-      <button class="start-button" @click="startGame" :disabled="isRunning">Start</button>
-      <button class="cash-out-button" @click="cashOut" :disabled="!isRunning || crashed">Cash Out</button>
+      <button class="start-button" @click="startGame" :disabled="isRunning">
+        Start
+      </button>
+      <button
+        class="cash-out-button"
+        @click="cashOut"
+        :disabled="!isRunning || crashed"
+      >
+        Cash Out
+      </button>
     </div>
 
     <div class="multiplier-display">
-      <div class="multiplier-bar" :style="{ width: `${currentMultiplier * 10}%` }"></div>
-      <div class="multiplier-text">Szorzó: {{ currentMultiplier.toFixed(2) }}x</div>
+      <div
+        class="multiplier-bar"
+        :style="{ width: `${currentMultiplier * 10}%` }"
+      ></div>
+      <div class="multiplier-text">
+        Szorzó: {{ currentMultiplier.toFixed(2) }}x
+      </div>
     </div>
 
     <div v-if="crashed">
@@ -81,8 +99,17 @@ const cashOut = () => {
 </template>
 
 <style scoped>
-
-
+.cim {
+  text-align: center;
+  font-size: 80px;
+  font-weight: bold;
+  color: #f39c12;
+  text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.6);
+  letter-spacing: 3px;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
 .game-container {
   width: 100%;
   min-height: 85vh;

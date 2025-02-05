@@ -12,9 +12,7 @@
   </footer>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 
 <style scoped>
 .main-footer {
@@ -26,6 +24,7 @@
   padding: 1.5rem 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: auto;
+  z-index: 1;
 }
 
 .footer-content {
@@ -74,7 +73,7 @@
     flex-direction: row;
     justify-content: space-between;
   }
-  
+
   .legal-info {
     gap: 1rem;
   }

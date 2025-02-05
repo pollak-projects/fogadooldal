@@ -12,7 +12,7 @@ const ermeKlikk = () => {
     eredmeny.value = Math.random() < 0.5 ? "Fej" : "Írás";
     console.log(eredmeny.value); // Az eredmény kiíratása a konzolra
     forog.value = false; // Leállítjuk a forgatást
-  }, 2000); // A forgatás 2 másodpercig tartson
+  }, 2500); // A forgatás 2 másodpercig tartson
 };
 </script>
 
@@ -53,6 +53,13 @@ const ermeKlikk = () => {
 .cim {
   text-align: center;
   font-size: 80px;
+  font-weight: bold;
+  color: #f39c12;
+  text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.6);
+  letter-spacing: 3px;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
 }
 
 .gomb {
@@ -105,7 +112,7 @@ button {
   color: white;
   text-align: center;
   transform-style: preserve-3d;
-  animation: flip 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+  animation: flip 2.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   position: absolute;
 }
