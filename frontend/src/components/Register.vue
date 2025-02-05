@@ -46,6 +46,17 @@
           />
         </div>
 
+              <div class="input-group bold">
+        <label for="email">Email cím</label>
+        <input
+          type="email"
+          id="email"
+          v-model="email"
+          placeholder="Add meg az email címed"
+          required
+        />
+      </div>
+
 
         <div class="input-group bold">
           <label for="password">Jelszó</label>
@@ -128,6 +139,7 @@
 import { ref } from "vue";
 
 const username = ref("");
+const email = ref(""); 
 const password = ref("");
 const confirmPassword = ref("");
 const errorMessage = ref("");
@@ -138,15 +150,17 @@ const handleRegister = () => {
   if (password.value !== confirmPassword.value) {
     errorMessage.value = "A jelszavak nem egyeznek!";
     successMessage.value = "";
-  } else if (username.value === "" || password.value === "") {
+  } else if (username.value === "" || password.value === "" || email.value === "") {
     errorMessage.value = "Kérlek töltsd ki az összes mezőt!";
     successMessage.value = "";
   } else {
-    
+
     successMessage.value = "Sikeres regisztráció!";
     errorMessage.value = "";
   }
 };
+
+
 </script>
 
 <style scoped>
@@ -332,7 +346,8 @@ h2 {
 
 input#username,
 input#password,
-input#confirmPassword {
+input#confirmPassword,
+input#email {
   color: rgb(255, 121, 159);
 }
 
