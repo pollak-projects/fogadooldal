@@ -1,100 +1,77 @@
 <template>
   <div class="settings-page">
     <div class="settings-container">
-      <h1>Profil Beállítások</h1>
+      <h1 class="h1">Profil Beállítások</h1>
+      <br>
       <Toast />
-            <div class="profile-picture-section">
-        <div class="avatar-wrapper">
-          <img 
-            :src="profileImage" 
-            alt="Profilkép"
-            class="profile-avatar"
-          >
-          <label for="avatar-upload" class="upload-button">
-            <input
-              type="file"
-              ref="imgRef"
-              id="avatar-upload"
-              accept="image/*"
-              @change="handleImageUpload"
-              hidden
-            >
-            <span class="upload-content">
-              <img src="/kepfeltolto.png" alt="Kép feltöltése" class="upload-icon">
-              <span class="upload-text">Kép módosítása</span>
-            </span>
-          </label>
-        </div>
-      </div>
-
-   
-    <form @submit.prevent="saveSettings" class="settings-form">
-    
-      <div class="form-section">
-        <h2>Személyes adatok</h2>
-        
-        <div class="form-group">
-          <label>Teljes név:</label>
-          <input type="text" v-model="userData.name" required>
-        </div>
-
-        <div class="form-group">
-          <label>Email cím:</label>
-          <input type="email" v-model="userData.email" required>
-        </div>
-
-        <div class="form-group">
-          <label>Bio:</label>
-          <textarea v-model="userData.bio" rows="4"></textarea>
-        </div>
-      </div>
-
-      
-<div class="form-section">
-  <h2>Jelszó módosítás</h2>
-  
-  <div class="form-group">
-    <label>Új jelszó:</label>
-    <input :type="showPassword ? 'text' : 'password'" v-model="userData.newPassword">
-    
-    <div class="show-password float-right">
-      <img
-        :src="showPassword ? '/eye.png' : '/hidden.png'"
-        alt="Toggle Password Visibility"
-        @click="showPassword = !showPassword"
-        class="password-toggle-icon"
-      />
-    </div>
+      <div class="profile-picture-section">
+  <div class="avatar-wrapper">
+    <img 
+      :src="profileImage" 
+      alt=""
+      class="profile-avatar"
+    >
   </div>
+  <label for="avatar-upload" class="upload-button">
+    <input
+      type="file"
+      ref="imgRef"
+      id="avatar-upload"
+      accept="image/*"
+      @change="handleImageUpload"
+      hidden
+    >
+    <span class="upload-content">
+      <img src="/kepfeltolto.png" alt="Kép feltöltése" class="upload-icon">
+      <span class="upload-text">Kép módosítása</span>
+    </span>
+  </label>
 </div>
 
+      <form @submit.prevent="saveSettings" class="settings-form">
+        <div class="form-section">
+          <h1 class="h1">Személyes adatok</h1>
+          <br>
+          <div class="form-group">
+            <label>Teljes név:</label>
+            <input type="text" v-model="userData.name" required>
+          </div>
 
+          <div class="form-group">
+            <label>Email cím:</label>
+            <input type="email" v-model="userData.email" required>
+          </div>
 
-
-
-     
-      <div class="form-section">
-        <h2>Nyelvi beállítások</h2>
-        
-        <div class="form-group">
-          <label>Előnyben részesített nyelv:</label>
-          <select v-model="userData.language">
-            <option value="hu">Magyar</option>
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-          </select>
+          <div class="form-group">
+            <label>Bio:</label>
+            <textarea v-model="userData.bio" rows="4"></textarea>
+          </div>
         </div>
-      </div>
-      <div class="Mentesgomb">
-      <button type="submit" class="save-button">Beállítások mentése</button>
+
+        <div class="form-section">
+          <h1 class="h1">Jelszó módosítás</h1>
+          <br>
+          <div class="form-group">
+            <label>Új jelszó:</label>
+            <input :type="showPassword ? 'text' : 'password'" v-model="userData.newPassword">
+            <div class="show-password float-right">
+              <img
+                :src="showPassword ? '/eye2.png' : '/hidden2.png'"
+                alt="Toggle Password Visibility"
+                @click="showPassword = !showPassword"
+                class="password-toggle-icon"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="Mentesgomb">
+          <button type="submit" class="save-button">Beállítások mentése</button>
+        </div>
+      </form>
     </div>
-    </form>
-  </div>
   </div>
 </template>
-
-
-
 
 <script setup>
 import { ref, reactive } from 'vue';
@@ -117,8 +94,7 @@ const userData = reactive({
   notifications: {
     email: true,
     sms: false
-  },
-  language: 'hu'
+  }
 });
 
 // Template refs
@@ -163,6 +139,14 @@ const saveSettings = () => {
 </script>
 
 <style scoped>
+.h1 {
+  font-weight: 800;
+  font-size: 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
 .password-toggle-icon {
   width: 24px;
   height: 24px;
@@ -172,11 +156,11 @@ const saveSettings = () => {
   margin-top: 10px;
 }
 
-
 .Mentesgomb {
-    width: 100%;
-    display: flex;
-    justify-content: right;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  margin-bottom: 60px;
 }
 
 .upload-content {
@@ -189,15 +173,12 @@ const saveSettings = () => {
   width: 20px;
   height: 20px;
   position: relative;
-  
 }
 
 .settings-page {
   background-color: rgb(46, 40, 54);
   color: rgb(247, 233, 233);
 }
-
-
 
 .settings-container {
   max-width: 800px;
@@ -206,6 +187,10 @@ const saveSettings = () => {
 }
 
 .profile-picture-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem; 
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -237,6 +222,7 @@ const saveSettings = () => {
 }
 
 .form-section {
+  margin-top: -40px;
   margin-bottom: 2rem;
   padding: 1.5rem;
   background: rgb(46, 40, 54);
@@ -292,8 +278,6 @@ select {
   cursor: pointer;
   font-size: 1rem;
   transition: background 0.3s;
-  
-  
 }
 
 .save-button:hover {
