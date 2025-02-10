@@ -133,6 +133,7 @@
       <p class="success-message" v-if="successMessage">{{ successMessage }}</p>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
