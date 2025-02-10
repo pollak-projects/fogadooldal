@@ -21,47 +21,50 @@ const router = createRouter({
     {
       path: "/register",
       name: "Register",
-      component:import( "../components/Register.vue"),
+      component: import("../components/Register.vue"),
     },
 
     {
       path: "/",
       name: "Openpage",
-      component:import( "../components/Home.vue"),
+      component: import("../components/Home.vue"),
     },
 
-        
     {
       path: "/login",
       name: "Login",
-      component:import( "../components/Login.vue"),
+      component: import("../components/Login.vue"),
     },
-
 
     {
       path: "/help",
       name: "Help",
-      component:import( "../components/Help.vue"),
+      component: import("../components/Help.vue"),
     },
 
     {
       path: "/settings",
       name: "Settings",
-      component:import( "../components/Settings.vue"),
+      component: import("../components/Settings.vue"),
     },
 
     {
       path: "/profile",
       name: "Profile",
-      component:import( "../components/Profile.vue"),
+      component: import("../components/Profile.vue"),
     },
 
     {
       path: "/crash",
       name: "Crash",
-      component:import( "../components/Crash.vue"),
+      component: import("../components/Crash.vue"),
     },
-    ],
+    {
+      path: "/logout",
+      name: "Logout",
+      component: import("../components/Login.vue"),
+    },
+  ],
 });
 
 export default router;

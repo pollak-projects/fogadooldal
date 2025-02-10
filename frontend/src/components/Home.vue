@@ -1,7 +1,6 @@
 <script setup>
-import {RouterLink} from "vue-router"
+import { Card, Button } from "primevue";
 </script>
-
 
 <template>
   <div class="background-container"></div>

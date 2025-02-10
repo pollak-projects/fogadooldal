@@ -7,9 +7,9 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 </script>
 <template>
-  <Navbar v-if="route.path != '/login' && route.path != '/register'" />
+  <Navbar v-if="route.path != '/login' && route.path != '/register'  && route.path != '/logout'"/>
   <RouterView />
-  <Footer v-if="route.path != '/login' && route.path != '/register'" />
+  <Footer v-if="route.path != '/login' && route.path != '/register' && route.path != '/logout'" </Footer>
 </template>
 
 <style>
