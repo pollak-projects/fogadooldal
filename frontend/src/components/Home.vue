@@ -65,6 +65,29 @@ import { Card, Button } from "primevue";
           </div>
         </template>
       </Card>
+
+      <Card style="overflow: hidden" class="kartya">
+        <template #header>
+          <img alt="Crash" src="/crash.jpg" />
+        </template>
+        <template #title>Crash</template>
+        <template #content>
+          <p class="m-0">
+            A Crash egy online szerencsejáték, ahol a játékosok egy növekvő szorzónál próbálnak kivenni a tétjüket, mielőtt a szorzó "összeomlik". Minél később lépnek ki, annál nagyobb a nyeremény, de ha túl későn teszik, elveszítik a tétjüket. <br /><br />
+          </p>
+        </template>
+        <template #footer>
+          <div class="flex gap-4 mt-1">
+            <Button
+              label="Játék!"
+              severity="danger"
+              class="gomb"
+              as="RouterLink"
+              to="/crash"
+            />
+          </div>
+        </template>
+      </Card>
     </div>
   </div>
 </template>
@@ -185,6 +208,9 @@ import { Card, Button } from "primevue";
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
   gap: 20px;
   z-index: 1; /* Kártyák a háttér előtt */
 }

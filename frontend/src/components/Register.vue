@@ -27,6 +27,17 @@
           />
         </div>
 
+        <div class="input-group bold">
+          <label for="full_name">Teljes név</label>
+          <input
+            type="text"
+            id="full_name"
+            v-model="full_name"
+            placeholder="Add meg a teljes neved"
+            required
+          />
+        </div>
+
               <div class="input-group bold">
         <label for="email">Email cím</label>
         <input
@@ -49,7 +60,6 @@
             required
           />
         </div>
-
         <div class="input-group bold">
           <label for="confirmPassword">Jelszó megerősítése</label>
           <input
@@ -292,6 +302,7 @@ h2 {
   font-size: 14px;
 }
 
+input#full_name,
 input#username,
 input#password,
 input#confirmPassword,
