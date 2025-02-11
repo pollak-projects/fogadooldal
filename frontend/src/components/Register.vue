@@ -95,9 +95,11 @@
 
 <script setup>
 import { ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 
+const router = useRouter();
 const username = ref("");
-const email = ref(""); 
+const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const errorMessage = ref("");
@@ -108,17 +110,47 @@ const handleRegister = () => {
   if (password.value !== confirmPassword.value) {
     errorMessage.value = "A jelszavak nem egyeznek!";
     successMessage.value = "";
-  } else if (username.value === "" || password.value === "" || email.value === "") {
+    return;
+  }
+
+  if (username.value === "" || full_name.value === "" || password.value === "" || email.value === "") {
     errorMessage.value = "Kérlek töltsd ki az összes mezőt!";
     successMessage.value = "";
-  } else {
-
-    successMessage.value = "Sikeres regisztráció!";
-    errorMessage.value = "";
+    return;
   }
+
+  fetch("http://localhost:3300/auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username.value,
+      full_name: full_name.value,
+      email: email.value,
+      password: password.value,
+    }),
+  })
+    .then(async (res) => {
+      const data = await res.json();
+      if (res.ok) {
+        successMessage.value = "Sikeres regisztráció!";
+        errorMessage.value = "";
+        
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      } else {
+        errorMessage.value = data.message || "Hiba történt a regisztráció során";
+        successMessage.value = "";
+      }
+    })
+    .catch((err) => {
+      errorMessage.value = "Hiba történt a regisztráció során";
+      successMessage.value = "";
+      console.error(err);
+    });
 };
-
-
 </script>
 
 <style scoped>
