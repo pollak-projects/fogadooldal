@@ -7,7 +7,7 @@ const newMessage = ref("");
 const errorMessage = ref("");
 
 const forbiddenWords = [
-  "csúnya", "rossz", "tiltott", "f@sz", "b@szd", "kurva", "dög", "szar", "büdös", "rohad"
+  "fasz", "geci"
 ]; // Tiltott szavak listája
 
 const sendMessage = () => {
