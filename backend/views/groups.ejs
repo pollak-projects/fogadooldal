@@ -214,10 +214,13 @@
                 <thead>
                   <tr>
                     <th>id</th>
-                    <th>Nev</th>
-                    <th>Email</th>
-                    <th>OM</th>
-                    <th>Groupsneve</th>
+                    <th>username</th>
+                    <th>email</th>
+                    <th>created_at</th>
+                    <th>updated_at</th>
+                    <th>full_name</th>
+                    <th>admin</th>
+                    <th>groupsNeve</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -227,7 +230,10 @@
                     <td><%= user.id %></td>
                     <td><%= user.username %></td>
                     <td><%= user.email %></td>
+                    <td><%= user.created_at %></td>
+                    <td><%= user.updated_at %></td>
                     <td><%= user.full_name %></td>
+                    <td><%= user.admin %></td>
                     <td><%= user.groupsNeve %></td>
                     <td>
                       <img
@@ -248,3 +254,39 @@
     </div>
   </body>
 </html>
+
+<script>
+  function letrehozas() {
+    const csoportnev = document.getElementById("csoportnev").value;
+
+    // Ellenőrizzük, hogy a csoportnév nem üres
+    if (csoportnev.trim() === "") {
+      alert("Kérlek add meg a csoport nevét!");
+      return;
+    }
+
+    fetch("/group/add", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        groupsNeve: csoportnev,
+      }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (res.ok) {
+          alert("Csoport sikeresen létrehozva!");
+          // Itt hozzáadhatod a logikát, hogy frissítsd az oldalt vagy listát.
+          window.location.reload(); // Ezzel újratölthetjük az oldalt a frissített csoportokkal.
+        } else {
+          alert("Hiba történt a csoport létrehozása során.");
+        }
+      })
+      .catch((error) => {
+        console.error("Hiba:", error);
+        alert("Hiba történt a csoport létrehozása során.");
+      });
+  }
+</script>
