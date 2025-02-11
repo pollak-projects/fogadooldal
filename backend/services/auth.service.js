@@ -108,8 +108,6 @@ export async function register(username, password, email, admin, full_name, grou
       admin: admin,
       full_name: full_name,
       groupsNeve: groupsNeve,
-      created_at: new Date(),
-      updated_at: new Date()
     },
   });
 }
