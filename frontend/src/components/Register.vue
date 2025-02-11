@@ -96,26 +96,26 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast();
+
 const username = ref("");
+const full_name = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
-const errorMessage = ref("");
-const successMessage = ref("");
 const showPassword = ref(false);
 
 const handleRegister = () => {
   if (password.value !== confirmPassword.value) {
-    errorMessage.value = "A jelszavak nem egyeznek!";
-    successMessage.value = "";
+    toast.error("A jelszavak nem egyeznek!");
     return;
   }
 
   if (username.value === "" || full_name.value === "" || password.value === "" || email.value === "") {
-    errorMessage.value = "Kérlek töltsd ki az összes mezőt!";
-    successMessage.value = "";
+    toast.error("Kérlek töltsd ki az összes mezőt!");
     return;
   }
 
@@ -132,22 +132,22 @@ const handleRegister = () => {
     }),
   })
     .then(async (res) => {
-      const data = await res.json();
       if (res.ok) {
-        successMessage.value = "Sikeres regisztráció!";
-        errorMessage.value = "";
-        
+        toast.success("Sikeres regisztráció!");
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       } else {
-        errorMessage.value = data.message || "Hiba történt a regisztráció során";
-        successMessage.value = "";
+        const data = await res.json();
+        if (data.message.includes("User_username_key")) {
+          toast.error("A felhasználónév már foglalt!");
+        } else {
+          toast.error(data.message || "Hiba történt a regisztráció során");
+        }
       }
     })
     .catch((err) => {
-      errorMessage.value = "Hiba történt a regisztráció során";
-      successMessage.value = "";
+      toast.error("Hiba történt a regisztráció során");
       console.error(err);
     });
 };
