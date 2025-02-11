@@ -44,7 +44,7 @@ import { Card, Button } from "primevue";
 
       <Card style="overflow: hidden" class="kartya">
         <template #header>
-          <img alt="Roulette" src="/roulette.jpg" />
+          <img alt="Roulette" src="/roulette.png" />
         </template>
         <template #title>Roulette</template>
         <template #content>
@@ -68,12 +68,13 @@ import { Card, Button } from "primevue";
 
       <Card style="overflow: hidden" class="kartya">
         <template #header>
-          <img alt="Crash" src="/crash.jpg" />
+          <img alt="Crash" src="/crash.png" />
         </template>
         <template #title>Crash</template>
         <template #content>
           <p class="m-0">
-            A Crash egy online szerencsejáték, ahol a játékosok egy növekvő szorzónál próbálnak kivenni a tétjüket, mielőtt a szorzó "összeomlik". Minél később lépnek ki, annál nagyobb a nyeremény, de ha túl későn teszik, elveszítik a tétjüket. <br /><br />
+            A Crash egy olyan szerencsejáték, ahol a cél minél magasabb szorzónál kiszállni,
+            mielőtt a szorzó összeomlik. <br /><br />
           </p>
         </template>
         <template #footer>
@@ -100,6 +101,7 @@ import { Card, Button } from "primevue";
   align-items: center;
   z-index: -1;
   margin-top: 100px;
+  height: 100vh; /* Kényszeríti, hogy a teljes magasságot kitöltse */
 }
 
 /* Alap háttér beállítások */
@@ -201,18 +203,17 @@ import { Card, Button } from "primevue";
   text-align: center;
 }
 
-/* A kártyák konténerének beállításai */
 .kartya-container {
-  top: 65%; /* Kártyák elhelyezése a háttér fölött */
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  text-align: center;
-  gap: 20px;
+  justify-content: center; /* Kártyák vízszintes középre igazítása */
+  align-items: center; /* Kártyák függőleges középre igazítása */
+  gap: 20px; /* Kártyák közötti távolság */
+  flex-wrap: wrap; /* Ha több kártya van, törhetnek sorba */
+  width: 100%; /* Legyen teljes szélesség */
   z-index: 1; /* Kártyák a háttér előtt */
+  position: relative; /* Biztosítja, hogy a kártyák relatív helyzetben legyenek */
+  top: 0;
+  padding-top: 20px; /* További margó a kártyák fölött */
 }
 
 /* A kártyák stílusa */
