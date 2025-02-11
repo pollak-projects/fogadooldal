@@ -49,9 +49,9 @@ router.get("/verify", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { username, password, email, admin, full_name, groupsNeve } = req.body;
+  const { username, password, email, full_name } = req.body;
   try {
-    const user = await register(username, password, email, admin, full_name, groupsNeve);
+    const user = await register(username, password, email, full_name);
     res.status(201).json(user);
   } catch (error) {
     console.error(error);
