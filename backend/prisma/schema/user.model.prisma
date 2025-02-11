@@ -1,16 +1,16 @@
 model User {
     id             Int      @id @default(autoincrement())
-    username       String   @unique
+    username       String  @unique
     password       String         
     email          String   @unique
-    created_at     DateTime @default(now())
-    updated_at     DateTime
+    created_at     DateTime? @default(now()) 
+    updated_at     DateTime? @default(now()) @updatedAt
     full_name      String   @unique
-    admin          Int  @default(0)
+    admin          Int? @default(0)
 
     coin Coin[]
 
-    Groups  Groups @relation(fields: [groupsNeve], references: [name])
-    groupsNeve String @default("user")
+    Groups  Groups? @relation(fields: [groupsNeve], references: [name])
+    groupsNeve String? @default("user")
 
 }
