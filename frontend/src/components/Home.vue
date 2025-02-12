@@ -7,8 +7,8 @@ const newMessage = ref("");
 const errorMessage = ref("");
 
 const forbiddenWords = [
-  "fasz", "geci"
-]; // Tiltott szavak listája
+  "fasz", "geci", "nigger", "niga", 
+]; 
 
 const sendMessage = () => {
   if (newMessage.value.trim() !== "") {

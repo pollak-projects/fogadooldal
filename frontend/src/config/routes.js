@@ -27,7 +27,7 @@ const router = createRouter({
     {
       path: "/",
       name: "Openpage",
-      component: import("../components/Home.vue"),
+      component: import("../components/Login.vue"),
     },
 
     {
