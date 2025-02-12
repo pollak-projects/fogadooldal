@@ -64,12 +64,21 @@
             </div>
             <div class="modal-body">
               <label for="csoportnev">Csoport neve:</label>
+
               <input
                 type="text"
                 id="csoportnev"
                 class="form-control"
                 required
               />
+              <label for="irasjog">Write: </label>
+              <input type="checkbox" id="irasjog" required />
+              <label for="olvasjog">Read: </label>
+              <input type="checkbox" id="olvasjog" required />
+              <label for="updatejog">Update: </label>
+              <input type="checkbox" id="updatejog" required />
+              <label for="deletejog">Delete: </label>
+              <input type="checkbox" id="deletejog" required />
             </div>
             <div class="modal-footer">
               <button
@@ -167,6 +176,14 @@
               <br />
               <label for="ujnev">Mi legyen az új neve?</label>
               <input type="text" id="ujnev" class="form-control" required />
+              <label for="writeUjJog">Write:</label>
+              <input type="checkbox" id="writeUjJog" required />
+              <label for="readUjJog">Read:</label>
+              <input type="checkbox" id="readUjJog" required />
+              <label for="updateUjJog">Update:</label>
+              <input type="checkbox" id="updateUjJog" required />
+              <label for="deleteUjJog">Delete:</label>
+              <input type="checkbox" id="deleteUjJog" required />
             </div>
             <div class="modal-footer">
               <button
@@ -219,7 +236,6 @@
                     <th>created_at</th>
                     <th>updated_at</th>
                     <th>full_name</th>
-                    <th>admin</th>
                     <th>groupsNeve</th>
                     <th></th>
                   </tr>
@@ -233,7 +249,6 @@
                     <td><%= user.created_at %></td>
                     <td><%= user.updated_at %></td>
                     <td><%= user.full_name %></td>
-                    <td><%= user.admin %></td>
                     <td><%= user.groupsNeve %></td>
                     <td>
                       <img
@@ -259,6 +274,13 @@
   function letrehozas() {
     const csoportnev = document.getElementById("csoportnev").value;
 
+    console.log(document.getElementById("irasjog").checked);
+
+    const writejog = document.getElementById("irasjog").checked;
+    const readjog = document.getElementById("olvasjog").checked;
+    const updatejog = document.getElementById("updatejog").checked;
+    const deletejog = document.getElementById("deletejog").checked;
+
     // Ellenőrizzük, hogy a csoportnév nem üres
     if (csoportnev.trim() === "") {
       alert("Kérlek add meg a csoport nevét!");
@@ -271,22 +293,61 @@
       },
       method: "POST",
       body: JSON.stringify({
-        groupsNeve: csoportnev,
+        name: csoportnev,
+        write: writejog,
+        read: readjog,
+        update: updatejog,
+        del: deletejog,
       }),
     })
       .then(async (res) => {
         const data = await res.json();
         if (res.ok) {
-          alert("Csoport sikeresen létrehozva!");
-          // Itt hozzáadhatod a logikát, hogy frissítsd az oldalt vagy listát.
-          window.location.reload(); // Ezzel újratölthetjük az oldalt a frissített csoportokkal.
-        } else {
-          alert("Hiba történt a csoport létrehozása során.");
+          window.location.reload();
         }
       })
       .catch((error) => {
         console.error("Hiba:", error);
         alert("Hiba történt a csoport létrehozása során.");
       });
+  }
+
+  function torles() {
+    const torlendocsopi = document.getElementById("torlendo").value;
+    fetch("/group/delete", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+      body: JSON.stringify({
+        name: torlendocsopi,
+      }),
+    });
+    window.location.reload();
+  }
+
+  function modositas() {
+    const modositandocsopi = document.getElementById("modositando").value;
+    const modositandocsopiUjnev = document.getElementById("ujnev").value;
+    const writeUjJog = document.getElementById("writeUjJog").checked;
+    const readUjJog = document.getElementById("readUjJog").checked;
+    const updateUjJog = document.getElementById("updateUjJog").checked;
+    const deleteUjJog = document.getElementById("deleteUjJog").checked;
+
+    fetch("/group/update", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        name: modositandocsopi,
+        newname: modositandocsopiUjnev,
+        write: writeUjJog,
+        read: readUjJog,
+        update: updateUjJog,
+        del: deleteUjJog,
+      }),
+    });
+    window.location.reload();
   }
 </script>
