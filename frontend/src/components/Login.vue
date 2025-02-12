@@ -81,7 +81,7 @@ const handleLogin = () => {
     .then(async (res) => {
       const data = await res.json();
       if (res.ok) {
-        router.push("/");
+        router.push("/home");
       } else {
         errorMessage.value =
           data.message || "Hiba történt a bejelentkezés során";
