@@ -347,7 +347,11 @@
         update: updateUjJog,
         del: deleteUjJog,
       }),
+    }).then(async (res) => {
+      const data = await res.json();
+      if (res.ok) {
+        window.location.href = window.location.href;
+      }
     });
-    window.location.reload();
   }
 </script>
