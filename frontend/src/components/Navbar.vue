@@ -62,7 +62,7 @@
           to="/crash"
           text
         >
-          <img src="/crash.png" class="crash-icon" alt="Crash Icon" />
+          <img src="/cr4sh.png" class="crash-icon" alt="Crash Icon" />
           <span class="crash-text">Crash</span>
         </Button>
       </template>
