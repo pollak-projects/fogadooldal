@@ -7,7 +7,9 @@ import {
   login,
   register,
 } from "../services/auth.service.js";
-import { Kuldes } from "../services/emailsender.js";
+import { emailMegerosites } from "../services/emailsender.js";
+import { jelszoVisszaallitas } from "../services/emailsender.js";
+
 
 const router = express.Router();
 
@@ -157,10 +159,21 @@ router.put("/pwdChange", async (req, res) => {
   }
 });
 
-router.post("/email", async (req, res) => {
+router.post("/emailMegerosites", async (req, res) => {
   const { email } = req.body;
   try {
-    const data = await Kuldes(email);
+    const data = await emailMegerosites(email);
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("Error sending email:", err);
+    res.status(500).send("Error sending email");
+  }
+});
+
+router.post("/jelszoVisszaallitas", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const data = await jelszoVisszaallitas(email);
     res.status(200).json(data);
   } catch (err) {
     console.error("Error sending email:", err);

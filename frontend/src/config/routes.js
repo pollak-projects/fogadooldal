@@ -9,7 +9,7 @@ const router = createRouter({
       component: import("../components/Coinflip.vue"),
     },
     {
-      path: "/",
+      path: "/home",
       name: "Home",
       component: import("../components/Home.vue"),
     },
@@ -27,14 +27,9 @@ const router = createRouter({
     {
       path: "/",
       name: "Openpage",
-      component: import("../components/Home.vue"),
-    },
-
-    {
-      path: "/login",
-      name: "Login",
       component: import("../components/Login.vue"),
     },
+
 
     {
       path: "/help",
