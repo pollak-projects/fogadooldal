@@ -80,6 +80,15 @@ const handleLogin = () => {
   })
     .then(async (res) => {
       const data = await res.json();
+
+      
+      localStorage.setItem("access_token", data.access_token)
+      localStorage.setItem("refresh_token", data.refresh_token)
+      localStorage.setItem("user_id", data.user_id)
+
+
+      
+
       if (res.ok) {
         router.push("/home");
       } else {
