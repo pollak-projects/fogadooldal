@@ -5,6 +5,8 @@ model User {
     email          String   @unique
     email_verified Boolean @default(false)
     email_verification_token String? 
+    resetToken               String?  
+    resetTokenExpires        DateTime?
     created_at     DateTime? @default(now()) 
     updated_at     DateTime? @default(now()) @updatedAt
     full_name      String   @unique

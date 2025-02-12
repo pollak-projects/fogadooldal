@@ -11,11 +11,11 @@ export const transporter = nodemailer.createTransport({
 });
 
 // async..await is not allowed in global scope, must use a wrapper
-export async function emailMegerosites(useremail) {
+export async function emailMegerosites(useremail, uuid) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
     to: useremail, // list of receivers
-    subject: "E-mail megerősítés", // Subject line
+    subject: "Email megerősítés", // Subject line
     text: "[Jelszo link]", // plain text body
     html:
     "<div style='font-family: Arial, sans-serif; background-color: #fafafa; margin: 0; padding: 0; width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);'>" + 
@@ -26,7 +26,7 @@ export async function emailMegerosites(useremail) {
     "<h2 style='color: #2c3e50;'>E-mail cím megerősítése</h2>" + 
     "<p style='font-size: 16px;'>Üdvözlünk a BetWise-nál! Kérlek erősítsd meg az e-mail címed a fiók aktiválásához.</p>" + 
     "<br>"+
-    "<p style='text-align: center;'><a href='[Email megerősítő link]' style='background-color: rgb(253, 32, 93); display: inline-block; padding: 18px 40px; background-color: rgb(253, 32, 93); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;'>E-mail cím megerősítése</a></p>" +
+    "<p style='text-align: center;'><a href='http://localhost:5173/megerosites?token="+ uuid  +"' style='background-color: rgb(253, 32, 93); display: inline-block; padding: 18px 40px; background-color: rgb(253, 32, 93); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;'>E-mail cím megerősítése</a></p>" +
      "<br>"+
     "<p style='font-size: 16px;'>Ha nem te regisztráltál, kérlek hagyd figyelmen kívül ezt az üzenetet.</p>" + 
     "</div>" + 

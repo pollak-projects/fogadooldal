@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { encrypt } from "../lib/hash.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { emailMegerosites } from "./emailsender.js";
 
 const prisma = new PrismaClient();
 
@@ -100,14 +101,19 @@ async function createNewToken(id, nev, email, groupsNeve) {
 export async function register(username, password, email, full_name ) {
   const pwdEncrypted = await encrypt(password);
 
+  let uuid = crypto.randomUUID();
+
   await prisma.user.create({
     data: {
       username: username,
       password: pwdEncrypted,
       email: email,
       full_name: full_name,
+      email_verification_token: uuid,
     },
   });
+
+  await  emailMegerosites(email, uuid)
 }
 export async function login(username, password) {
   const user = await prisma.user
