@@ -56,9 +56,10 @@ const sendMessage = () => {
     <div class="chat-container">
       <div class="chat-header">Chat</div>
       <div class="chat-messages">
-        <div v-for="(message, index) in messages" :key="index" class="message">
-          <strong>{{ message.user }}:</strong> {{ message.text }}
-        </div>
+          <div v-for="(message, index) in messages" :key="index" class="message">
+            <strong class="username">{{ message.user }}:</strong> 
+            <span class="message-text">{{ message.text }}</span>
+          </div>
       </div>
       <div class="chat-input">
         <input
@@ -153,6 +154,15 @@ const sendMessage = () => {
 </template>
 
 <style scoped>
+.username {
+  font-weight: 900;
+  margin-right: 8px;
+}
+
+.message-text {
+  font-weight: 100;
+}
+
 .home-container {
   display: flex;
   height: 100vh;
