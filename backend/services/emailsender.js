@@ -11,7 +11,7 @@ export const transporter = nodemailer.createTransport({
 });
 
 // async..await is not allowed in global scope, must use a wrapper
-export async function Kuldes(useremail) {
+export async function sikeresReg(useremail) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
     to: useremail, // list of receivers

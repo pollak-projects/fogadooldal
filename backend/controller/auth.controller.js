@@ -7,7 +7,7 @@ import {
   login,
   register,
 } from "../services/auth.service.js";
-import { Kuldes } from "../services/emailsender.js";
+import { sikeresReg } from "../services/emailsender.js";
 
 const router = express.Router();
 
@@ -160,7 +160,7 @@ router.put("/pwdChange", async (req, res) => {
 router.post("/email", async (req, res) => {
   const { email } = req.body;
   try {
-    const data = await Kuldes(email);
+    const data = await sikeresReg(email);
     res.status(200).json(data);
   } catch (err) {
     console.error("Error sending email:", err);
