@@ -141,12 +141,24 @@ router.get("/genToken", async (req, res) => {
 
 router.get("/validate", async (req, res) => {
   try {
-    res.status(200).json(data);
+    const token = req.headers['authorization'];
+    if (!token) {
+      return res.status(400).send("Token is required");
+    }
+
+    const isValid = await validateToken(token);
+    if (isValid) {
+      res.status(200).json({ message: "Token is valid" });
+    } else {
+      res.status(401).send("Invalid token");
+    }
+
   } catch (err) {
     console.error("Error validating token: ", err);
     res.status(500).send("Error validating token");
   }
 });
+
 
 router.put("/pwdChange", async (req, res) => {
   try {
@@ -182,16 +194,15 @@ router.post("/jelszoVisszaallitas", async (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("access_token", {
-    path: "/",
-  });
-  res.clearCookie("refresh_token", {
-    path: "/",
-  });
-  res.clearCookie("sid", {
-    path: "/",
-  });
-  res.status(200).json({ message: "Logged out successfully" });
+  try {
+    res.clearCookie("access_token", { path: "/" });
+    res.clearCookie("refresh_token", { path: "/" });
+    res.clearCookie("sid", { path: "/" });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.error("Error during logout:", err);
+    res.status(500).json({ message: "Error during logout" });
+  }
 });
 
 export { router as authController};
