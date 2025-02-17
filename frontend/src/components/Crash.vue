@@ -99,6 +99,7 @@ const cashOut = () => {
 </template>
 
 <style scoped>
+
 .cim {
   text-align: center;
   font-size: 80px;

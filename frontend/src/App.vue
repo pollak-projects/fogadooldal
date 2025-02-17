@@ -133,4 +133,13 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
+
+.send-button {
+  background-color: rgb(253, 32, 93);
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
 </style>
