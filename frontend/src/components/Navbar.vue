@@ -11,7 +11,7 @@
           }"
           severity="secondary"
           as="RouterLink"
-          to="/"
+          to="/home"
           text
         >
           <img src="/logo.png" class="logo" alt="Logo" />

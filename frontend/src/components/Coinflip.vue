@@ -1,152 +1,217 @@
-<script setup>
-import { ref } from "vue";
-import Button from "primevue/button";
-
-const eredmeny = ref(null); // Az eredmény tárolása változóban
-const forog = ref(false); // Állapot, hogy éppen forog az érem
-
-const ermeKlikk = () => {
-  forog.value = true; // Kezdődik a forgatás
-  setTimeout(() => {
-    // Véletlenszerű eredmény kiválasztása
-    eredmeny.value = Math.random() < 0.5 ? "Fej" : "Írás";
-    console.log(eredmeny.value); // Az eredmény kiíratása a konzolra
-    forog.value = false; // Leállítjuk a forgatást
-  }, 2500); // A forgatás 2 másodpercig tartson
-};
-</script>
-
 <template>
-  <h1 class="cim">Coinflip</h1>
-  <div id="app">
-    <Button
-      label="Dobjuk fel az érmét!"
-      severity="success"
-      rounded
-      @click="ermeKlikk"
-      class="gomb"
-    />
-    <!-- Érme megjelenítése és animáció -->
-    <div v-if="forog" class="ermetarto">
-      <div class="erme">
-        <div class="erme-oldal erme-elso">Fej</div>
-        <!-- Elülső oldal -->
-        <div class="erme-oldal erme-hatso">Írás</div>
-        <!-- Hátsó oldal -->
+  <div id="app" class="container">
+    <div class="coin-container">
+      <div 
+        class="coin" 
+        :class="{ flipping: isFlipping, [result]: true }"
+        @animationend="onAnimationEnd"
+      >
+        <div class="side front">
+          <img src="https://i.ibb.co/7TZ8C7p/image.png" alt="Eagle">
+        </div>
+        <div class="side back">
+          <img src="https://i.ibb.co/VczsqXzc/image.png" alt="Wolf">
+        </div>
       </div>
     </div>
 
-    <!-- Az érem a forgatás után itt marad -->
-    <div v-if="!forog" class="ermetarto">
-      <div class="erme">
-        <!-- A végső eredmény oldalának megjelenítése -->
-        <div class="erme-oldal erme-elso" v-if="eredmeny === 'Fej'">Fej</div>
-        <!-- Fej oldal -->
-        <div class="erme-oldal erme-elso" v-if="eredmeny === 'Írás'">Írás</div>
-        <!-- Írás oldal -->
-      </div>
+    <div class="controls">
+      <button 
+        class="bet-button heads" 
+        @click="chooseHeads" 
+        :disabled="isDisabled"
+      >
+        FEJ
+      </button>
+      <button 
+        class="bet-button tails" 
+        @click="chooseTails" 
+        :disabled="isDisabled"
+      >
+        ÍRÁS
+      </button>
+    </div>
+
+    <div v-if="showResult" class="result">
+      <p :class="['result-text', hasWon ? 'win' : 'lose']">
+        {{ hasWon ? 'NYERTÉL!' : 'VESZTETTÉL' }}
+      </p>
+      <button class="play-again" @click="resetGame">ÚJ JÁTÉK</button>
     </div>
   </div>
 </template>
 
-<style scoped>
-.cim {
+<script>
+export default {
+  data() {
+    return {
+      userChoice: null,
+      result: null,
+      isDisabled: false,
+      isFlipping: false,
+      showResult: false
+    };
+  },
+  methods: {
+    chooseHeads() {
+      this.startFlip('heads');
+    },
+    chooseTails() {
+      this.startFlip('tails');
+    },
+    
+    startFlip(choice) {
+      this.userChoice = choice;
+      this.isDisabled = true;
+      this.isFlipping = true;
+      this.showResult = false;
+      
+      // Determine result after animation
+      setTimeout(() => {
+        this.result = Math.random() < 0.5 ? 'heads' : 'tails';
+      }, 200);
+    },
+
+    onAnimationEnd() {
+      this.isFlipping = false;
+      this.showResult = true;
+    },
+
+    resetGame() {
+      this.userChoice = null;
+      this.result = null;
+      this.isDisabled = false;
+      this.showResult = false;
+    }
+  },
+  computed: {
+    hasWon() {
+      return this.userChoice === this.result;
+    }
+  }
+};
+</script>
+
+<style>
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
   text-align: center;
-  font-size: 80px;
-  font-weight: bold;
-  color: #f39c12;
-  text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.6);
-  letter-spacing: 3px;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 40px;
+  background: #1A1D23;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.gomb {
-  background-color: #1abc9c;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 50px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
+.coin-container {
+  perspective: 1000px;
+  margin: 2rem auto;
 }
 
-.gomb:hover {
-  background-color: #16a085;
-}
-
-#app {
-  text-align: center;
-  margin-top: 60px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 18px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.ermetarto {
-  width: 220px;
-  height: 220px;
-  margin: 20px auto;
-  perspective: 1000px; /* 3D hatás */
-}
-
-.erme {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: linear-gradient(
-    145deg,
-    #f1c40f,
-    #f39c12
-  ); /* Arany szín gradiens */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 100px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
+.coin {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  position: relative;
   transform-style: preserve-3d;
-  animation: flip 2.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  position: absolute;
+  transition: transform 1s;
 }
 
-.erme-oldal {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 50px;
-  font-weight: bold;
-  color: white;
-  backface-visibility: hidden; /* Elrejtjük a hátoldalt, amikor nem látszik */
-}
-
-.erme-elso {
-  transform: rotateY(0deg); /* Elülső oldal */
-}
-
-.erme-hatso {
-  transform: rotateY(180deg); /* Hátsó oldal */
+.coin.flipping {
+  animation: flip 3s ease-out;
 }
 
 @keyframes flip {
-  0% {
-    transform: rotateY(0deg);
-  }
-  50% {
-    transform: rotateY(180deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
+  0% { transform: rotateY(0); }
+  50% { transform: rotateY(1800deg); }
+  100% { transform: rotateY(2160deg); }
+}
+
+.coin.heads { transform: rotateY(0deg); }
+.coin.tails { transform: rotateY(180deg); }
+
+.side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #555, #333);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.side img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.bet-button {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bet-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bet-button.heads {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+}
+
+.bet-button.tails {
+  background: linear-gradient(45deg, #00B4D8, #0077B6);
+}
+
+.result {
+  margin-top: 2rem;
+}
+
+.result-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.win {
+  color: #00FF00;
+}
+
+.lose {
+  color: #FF0000;
+}
+
+.play-again {
+  background: #4CAF50;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.play-again:hover {
+  background: #45a049;
 }
 </style>

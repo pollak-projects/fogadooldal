@@ -49,21 +49,25 @@
         </div>
 
         <div class="form-section">
-          <h1 class="h1">Jelszó módosítás</h1>
-          <br>
-          <div class="form-group">
-            <label>Új jelszó:</label>
-            <input :type="showPassword ? 'text' : 'password'" v-model="userData.newPassword">
-            <div class="show-password float-right">
-              <img
-                :src="showPassword ? '/eye2.png' : '/hidden2.png'"
-                alt="Toggle Password Visibility"
-                @click="showPassword = !showPassword"
-                class="password-toggle-icon"
-              />
-            </div>
-          </div>
-        </div>
+  <h1 class="h1">Jelszó módosítás</h1>
+  <br>
+  <div class="form-group">
+    <label>Új jelszó:</label>
+    <input :type="showPassword ? 'text' : 'password'" v-model="userData.newPassword">
+    <div class="show-password float-right">
+      <img
+        :src="showPassword ? '/eye2.png' : '/hidden2.png'"
+        alt="Toggle Password Visibility"
+        @click="showPassword = !showPassword"
+        class="password-toggle-icon"
+      />
+    </div>
+  </div>
+  <!-- Jelszó visszaállítás gomb -->
+  <div class="form-group">
+    <button type="button" @click="resetPassword" class="reset-password-button">Jelszó visszaállítása</button>
+  </div>
+</div>
 
         <div class="Mentesgomb">
           <button type="submit" class="save-button">Beállítások mentése</button>
@@ -139,6 +143,23 @@ const saveSettings = () => {
 </script>
 
 <style scoped>
+.reset-password-button {
+  background: rgb(255, 121, 191);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.reset-password-button:hover {
+  background: rgb(255, 32, 91);
+}
+
 .h1 {
   font-weight: 800;
   font-size: 25px;
