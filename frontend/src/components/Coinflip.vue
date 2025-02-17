@@ -69,6 +69,8 @@ export default {
       // Determine result after animation
       setTimeout(() => {
         this.result = Math.random() < 0.5 ? 'heads' : 'tails';
+        // Set CSS variable based on result
+        document.documentElement.style.setProperty('--final-rotation', this.result === 'heads' ? 0 : 1);
       }, 200);
     },
 
@@ -124,11 +126,11 @@ export default {
 @keyframes flip {
   0% { transform: rotateY(0); }
   50% { transform: rotateY(1800deg); }
-  100% { transform: rotateY(2160deg); }
+  100% { transform: rotateY(calc(1800deg + (var(--final-rotation, 0) * 180deg))); }
 }
 
-.coin.heads { transform: rotateY(0deg); }
-.coin.tails { transform: rotateY(180deg); }
+.coin.heads { --final-rotation: 0; }
+.coin.tails { --final-rotation: 1; }
 
 .side {
   position: absolute;
