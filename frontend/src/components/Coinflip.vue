@@ -5,28 +5,35 @@
         class="coin" 
         :class="{ flipping: isFlipping, [result]: true }"
         @animationend="onAnimationEnd"
+        ref="coin"
       >
         <div class="side front">
-          <img src="https://i.ibb.co/7TZ8C7p/image.png" alt="Eagle">
+          <img src="https://i.ibb.co/7TZ8C7p/image.png" alt="Iras">
         </div>
         <div class="side back">
-          <img src="https://i.ibb.co/VczsqXzc/image.png" alt="Wolf">
+          <img src="https://i.ibb.co/VczsqXzc/image.png" alt="Fej">
         </div>
       </div>
     </div>
 
     <div class="controls">
+      <input 
+        type="number" 
+        v-model="betAmount" 
+        placeholder="Tét összege" 
+        :disabled="isDisabled"
+      />
       <button 
         class="bet-button heads" 
         @click="chooseHeads" 
-        :disabled="isDisabled"
+        :disabled="isDisabled || betAmount <= 0"
       >
         FEJ
       </button>
       <button 
         class="bet-button tails" 
         @click="chooseTails" 
-        :disabled="isDisabled"
+        :disabled="isDisabled || betAmount <= 0"
       >
         ÍRÁS
       </button>
@@ -34,9 +41,13 @@
 
     <div v-if="showResult" class="result">
       <p :class="['result-text', hasWon ? 'win' : 'lose']">
-        {{ hasWon ? 'NYERTÉL!' : 'VESZTETTÉL' }}
+        {{ hasWon ? `NYERTÉL! ${winAmount} Ft` : `VESZTETTÉL ${betAmount} Ft` }}
       </p>
       <button class="play-again" @click="resetGame">ÚJ JÁTÉK</button>
+    </div>
+
+    <div class="balance">
+      <p>Egyenleg: {{ balance }} Ft</p>
     </div>
   </div>
 </template>
@@ -49,55 +60,89 @@ export default {
       result: null,
       isDisabled: false,
       isFlipping: false,
-      showResult: false
+      showResult: false,
+      betAmount: 0,
+      balance: 1000, // Kezdeti egyenleg
+      winAmount: 0
     };
   },
   methods: {
-    chooseHeads() {
-      this.startFlip('heads');
-    },
-    chooseTails() {
-      this.startFlip('tails');
-    },
+  chooseHeads() {
+    this.startFlip('heads');
+  },
+  chooseTails() {
+    this.startFlip('tails');
+  },
+  startFlip(choice) {
+    if (this.betAmount > this.balance) {
+      alert("Nincs elég pénzed!");
+      return;
+    }
+
+    // Reset coin rotation to initial state
+    const coin = this.$refs.coin;
+    coin.style.transform = 'rotateY(0deg)';
+
+    // Determine result immediately
+    this.result = Math.random() < 0.5 ? 'heads' : 'tails';
+    this.userChoice = choice;
     
-    startFlip(choice) {
-      this.userChoice = choice;
-      this.isDisabled = true;
-      this.isFlipping = true;
-      this.showResult = false;
-      
-      // Determine result after animation
-      setTimeout(() => {
-        this.result = Math.random() < 0.5 ? 'heads' : 'tails';
-        // Set CSS variable based on result
-        document.documentElement.style.setProperty('--final-rotation', this.result === 'heads' ? 0 : 1);
-      }, 200);
-    },
+    this.isDisabled = true;
+    this.isFlipping = true;
+    this.showResult = false;
+  },
+  onAnimationEnd() {
+    this.isFlipping = false;
+    this.showResult = true;
 
-    onAnimationEnd() {
-      this.isFlipping = false;
-      this.showResult = true;
-    },
+    // Calculate win/loss after animation
+    if (this.hasWon) {
+      this.winAmount = this.betAmount * 1.5;
+      this.balance += this.winAmount;
+    } else {
+      this.balance -= this.betAmount;
+    }
 
-    resetGame() {
-      this.userChoice = null;
-      this.result = null;
-      this.isDisabled = false;
-      this.showResult = false;
+    // Set the final rotation of the coin based on the result
+    const coin = this.$refs.coin;
+    if (this.result === 'heads') {
+      coin.style.transform = 'rotateY(1980deg)'; // 1800 + 180 = 1980 (180deg)
+    } else {
+      coin.style.transform = 'rotateY(1800deg)'; // 0deg
     }
   },
-  computed: {
-    hasWon() {
-      return this.userChoice === this.result;
-    }
+  resetGame() {
+    this.userChoice = null;
+    this.result = null;
+    this.isDisabled = false;
+    this.showResult = false;
+    this.betAmount = 0;
+
+    // Reset coin rotation to initial state
+    const coin = this.$refs.coin;
+    coin.style.transform = 'rotateY(0deg)';
   }
+},
 };
 </script>
 
 <style>
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  height: 60px; /* Fix magasság a navbar-nak */
+}
+
 .container {
+  padding-top: 60px; /* A navbar magasságával megegyező padding */
   max-width: 600px;
-  margin: 2rem auto;
+  margin: 0 auto; /* Középre igazítás */
   text-align: center;
   background: #1A1D23;
   padding: 2rem;
@@ -108,6 +153,7 @@ export default {
 .coin-container {
   perspective: 1000px;
   margin: 2rem auto;
+  padding-top: 80px; /* Növelt padding a navbar miatt */
 }
 
 .coin {
@@ -117,20 +163,29 @@ export default {
   position: relative;
   transform-style: preserve-3d;
   transition: transform 1s;
+  z-index: 10; /* Biztosítja, hogy a coin a navbar felett legyen */
 }
 
-.coin.flipping {
-  animation: flip 3s ease-out;
+.coin.flipping.heads {
+  animation: flip-heads 3s ease-out;
 }
 
-@keyframes flip {
-  0% { transform: rotateY(0); }
+.coin.flipping.tails {
+  animation: flip-tails 3s ease-out;
+}
+
+@keyframes flip-heads {
+  0% { transform: rotateY(0deg); }
   50% { transform: rotateY(1800deg); }
-  100% { transform: rotateY(calc(1800deg + (var(--final-rotation, 0) * 180deg))); }
+  100% { transform: rotateY(1980deg); } /* 1800 + 180 = 1980 (180deg) */
 }
 
-.coin.heads { --final-rotation: 0; }
-.coin.tails { --final-rotation: 1; }
+@keyframes flip-tails {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(1800deg); }
+  100% { transform: rotateY(1800deg); } /* 0deg */
+}
+
 
 .side {
   position: absolute;
@@ -215,5 +270,19 @@ export default {
 
 .play-again:hover {
   background: #45a049;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px;
+  }
+
+  .coin-container {
+    padding-top: 100px; /* Nagyobb padding mobilon */
+  }
+}
+
+.balance, input {
+  color: white;
 }
 </style>

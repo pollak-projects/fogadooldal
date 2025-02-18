@@ -1,41 +1,50 @@
 <template>
-  <div class="roulette-container">
-    <div class="casino-ui">
-      <!-- Betting Interface -->
-      <div class="betting-section">
-        <div class="balance-box">Balance: ${{ balance }}</div>
-        <div class="bets-container">
-          <div v-for="(multiplier, color) in multipliers" :key="color" 
-               class="bet-card" :class="color" @click="placeBet(color)">
-            <div class="bet-header">{{ color.toUpperCase() }}</div>
-            <div class="bet-multiplier">{{ multiplier }}x</div>
-            <input type="number" v-model.number="bets[color]" 
-                   min="0" :disabled="!isBettingTime" />
-            <div class="bet-controls">
-              <button @click.stop="adjustBet(color, 5)">+5</button>
-              <button @click.stop="adjustBet(color, -5)">-5</button>
+  <div>
+    <!-- Navbar -->
+    <div class="navbar">
+      <!-- Navbar tartalom -->
+      
+    </div>
+
+    <!-- Roulette tartalom -->
+    <div class="roulette-container">
+      <div class="casino-ui">
+        <!-- Betting Interface -->
+        <div class="betting-section">
+          <div class="balance-box">Balance: ${{ balance }}</div>
+          <div class="bets-container">
+            <div v-for="(multiplier, color) in multipliers" :key="color" 
+                 class="bet-card" :class="color" @click="placeBet(color)">
+              <div class="bet-header">{{ color.toUpperCase() }}</div>
+              <div class="bet-multiplier">{{ multiplier }}x</div>
+              <input type="number" v-model.number="bets[color]" 
+                     min="0" :disabled="!isBettingTime" />
+              <div class="bet-controls">
+                <button @click.stop="adjustBet(color, 5)">+5</button>
+                <button @click.stop="adjustBet(color, -5)">-5</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Roulette Wheel -->
-      <div class="wheel-container">
-        <div class="wheel-mask">
-          <div class="wheel" :style="{ transform: `translateX(${movement}%)` }">
-            <div v-for="(segment, index) in segments" :key="index" class="segment" :class="segment.color"></div>
+        <!-- Roulette Wheel -->
+        <div class="wheel-container">
+          <div class="wheel-mask">
+            <div class="wheel" :style="{ transform: `translateX(${movement}%)` }">
+              <div v-for="(segment, index) in segments" :key="index" class="segment" :class="segment.color"></div>
+            </div>
           </div>
+          <div class="pointer"></div>
         </div>
-        <div class="pointer"></div>
-      </div>
 
-      <!-- Game Controls -->
-      <div class="game-controls">
-        <div class="timer">Time remaining: {{ timer }}s</div>
-        <div class="history">
-          <div v-for="(result, index) in resultHistory" :key="index" 
-               class="history-item" :class="result.color">
-            {{ result.color.charAt(0).toUpperCase() }}
+        <!-- Game Controls -->
+        <div class="game-controls">
+          <div class="timer">Time remaining: {{ timer }}s</div>
+          <div class="history">
+            <div v-for="(result, index) in resultHistory" :key="index" 
+                 class="history-item" :class="result.color">
+              {{ result.color.charAt(0).toUpperCase() }}
+            </div>
           </div>
         </div>
       </div>
@@ -142,11 +151,23 @@ export default {
 </script>
 
 <style scoped>
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+}
+
 .roulette-container {
   background: #1a2b3d;
   min-height: 100vh;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  padding-top: 100px; /* Navbar magassága + egy kis tér */
+  margin-top: 0;
 }
 
 .casino-ui {
@@ -155,6 +176,7 @@ export default {
 }
 
 .betting-section {
+  margin-top: 50px;
   background: #2a3b4d;
   padding: 20px;
   border-radius: 10px;
