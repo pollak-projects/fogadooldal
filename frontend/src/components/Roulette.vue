@@ -3,7 +3,6 @@
     <!-- Navbar -->
     <div class="navbar">
       <!-- Navbar tartalom -->
-      
     </div>
 
     <!-- Roulette tartalom -->
@@ -30,7 +29,7 @@
         <!-- Roulette Wheel -->
         <div class="wheel-container">
           <div class="wheel-mask">
-            <div class="wheel" :style="{ transform: `translateX(${movement}%)` }">
+            <div class="wheel" :style="{ transform: `rotate(${rotation}deg)` }">
               <div v-for="(segment, index) in segments" :key="index" class="segment" :class="segment.color"></div>
             </div>
           </div>
@@ -59,7 +58,7 @@ export default {
       balance: 1000,
       timer: 15,
       isBettingTime: true,
-      movement: 0,  // This will control the horizontal movement of the wheel
+      rotation: 0,  // This will control the rotation of the wheel
       resultHistory: [],
       bets: { red: 0, green: 0, black: 0 },
       multipliers: { red: 2, black: 2, green: 14 },
@@ -86,9 +85,12 @@ export default {
         else {
           this.timer = 15  // Reset timer after countdown
           this.isBettingTime = !this.isBettingTime
-          if (this.isBettingTime) this.startTimer()  // Restart timer during betting phase
+          if (!this.isBettingTime) {
+            this.spinWheel()
+          } else {
+            this.resetRound()
+          }
         }
-        localStorage.setItem('roulette-timer', this.timer)  // Store timer in localStorage
       }, 1000)
     },
 
@@ -112,8 +114,8 @@ export default {
 
     spinWheel() {
       const result = this.calculateResult()
-      const totalMovement = 200  // Set how far the wheel moves (pixels or percentage)
-      this.movement = totalMovement * (Math.random() + 1)  // Random horizontal movement for spin
+      const totalRotation = 360 * 5 + (Math.random() * 360)  // 5 full rotations plus a random angle
+      this.rotation = totalRotation
 
       setTimeout(() => {
         this.processResult(result.color)
@@ -143,8 +145,7 @@ export default {
       this.bets = { red: 0, green: 0, black: 0 }
       this.timer = 15
       this.isBettingTime = true
-      this.movement = 0
-      this.startTimer()
+      this.rotation = 0
     }
   },
 }
@@ -220,6 +221,7 @@ export default {
   background: rgba(255, 255, 255, 0.9);
   text-align: center;
   font-weight: bold;
+  color: black;
 }
 
 .bet-controls button {
@@ -255,7 +257,7 @@ export default {
 
 .wheel {
   display: flex;
-  transition: transform 5s ease-in-out; /* Smooth transition for horizontal movement */
+  transition: transform 5s ease-in-out; /* Smooth transition for rotation */
 }
 
 .segment {
