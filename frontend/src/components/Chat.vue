@@ -6,7 +6,7 @@ const newMessage = ref("");
 const errorMessage = ref("");
 
 const forbiddenWords = [
-  "fasz", "geci", "nigger", "niga", "cigány", "cigánynigger", "cigány nigger", "nigabiga", "cigany", "kurva", "gecis kurva", "cigány kurva", 
+  "fasz", "mocskos", "kutya", "kuvasz", "budos dog", "patkany", "patkány", "puna", "sunci", "n1gger", "nigg3r", "n1ga", "n1g4", "nig4", "megfoglak baszni", "büdös dög", "szétbaszom a fejed", "baszni", "geci", "nigger", "niga", "cigány", "cigánynigger", "cigány nigger", "nigabiga", "cigany", "kurva", "gecis kurva", "cigány kurva", 
   "aberált", "aberrált", "abortuszmaradék", "abszolút hülye", "agyalágyult", "agyatlan", "agybatetovált", "ágybavizelős", "agyfasz", "agyhalott", "agyonkúrt", "agyonvert", "agyrákos", "aids-es", "alapvetően fasz", "animalsex-mániás", "antibarom", "aprófaszú", "arcbarakott", "aszaltfaszú", "aszott", "átbaszott", "azt a kurva de fasz", 
   "balfasz", "balfészek", "baromfifasz", "basz-o-matic", "baszhatatlan", "basznivaló", "bazmeg", "bazdmeg", "bazd meg", "bazzeg", "bebaszott", "befosi", "békapicsa", "bélböfi", "beleiből kiforgatott", "bélszél", "brunya", "büdösszájú", "búvalbaszott", "buzeráns", "buzernyák", "buzi", "buzikurva", 
   "cafat", "cafka", "céda", "cérnafaszú", "cigány", "cottonfej", "cseszett", "csibefasz", "csipszar", "csirkefaszú", "csitri", "csöcs", "csöcsfej", "csöppszar", "csupaszfarkú", "cuncipunci", 
@@ -39,7 +39,7 @@ const sendMessage = () => {
     );
 
     if (containsForbiddenWord) {
-      errorMessage.value = "Tilos szót próbáltál beírni!";
+      errorMessage.value = "Ne írj be csúnya szót!";
     } else {
       messages.value.push({ text: newMessage.value, user: "Felhasználó" });
       newMessage.value = "";
