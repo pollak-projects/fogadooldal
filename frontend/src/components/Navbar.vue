@@ -141,7 +141,11 @@ const isActive = (path) => {
 
 <style scoped>
 
-
+.card {
+  position: fixed;
+  z-index: 1001;
+  width: 100%;
+}
 
 .profile-border {
   border: 2px solid rgb(255, 121, 159); 

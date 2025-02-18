@@ -133,6 +133,7 @@ import Chat from '../components/Chat.vue';
 }
 
 .cards-container {
+  margin-top: 100px;
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -164,7 +165,6 @@ import Chat from '../components/Chat.vue';
   top: 0;
   left: 0;
   width: 100vw;
-  height: 200vh;
   overflow: hidden;
   background: rgb(46, 40, 54);
   background: linear-gradient(

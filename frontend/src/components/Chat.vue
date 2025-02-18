@@ -85,6 +85,7 @@ const sendMessage = () => {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  
 }
 
 .send-button:hover {
@@ -101,7 +102,9 @@ const sendMessage = () => {
 
 .chat-container {
   width: 350px; /*  szelesseg */
-  height: 600px;  /*  magassag  */
+  height: 90vh;  /*  magassag  */
+  top: 100px;
+  bottom: 20px;
   background-color: rgba(41, 32, 45, 0.9);
   border-radius: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -109,6 +112,8 @@ const sendMessage = () => {
   flex-direction: column;
   color: white;
   padding: 10px;
+  position: fixed;
+  z-index: 1001;
 }
 
 .chat-header {
