@@ -134,6 +134,7 @@ import Chat from '../components/Chat.vue';
 
 .cards-container {
   margin-top: 100px;
+  margin-left: 50px;
   display: flex;
   justify-content: center;
   gap: 20px;

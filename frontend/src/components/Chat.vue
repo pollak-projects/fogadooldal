@@ -85,24 +85,24 @@ const sendMessage = () => {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  
 }
 
 .send-button:hover {
-    background-color: rgb(206, 30, 80);
-
+  background-color: rgb(206, 30, 80);
 }
-
 
 .error-message {
   color: rgb(248, 31, 31);
   font-weight: bold;
   margin-top: 10px;
+  position: fixed;
+  bottom: 80px; /* Az input mező felett jelenjen meg */
+  width: 330px; /* A chat-container szélességéhez igazítva */
 }
 
 .chat-container {
-  width: 350px; /*  szelesseg */
-  height: 90vh;  /*  magassag  */
+  width: 350px; /* szélesség */
+  height: 90vh; /* magasság */
   top: 100px;
   bottom: 20px;
   background-color: rgba(41, 32, 45, 0.9);
@@ -127,8 +127,9 @@ const sendMessage = () => {
   flex-grow: 1;
   overflow-y: auto;
   padding: 10px;
-  max-height: 480px; /* Állítsuk be a maximális magasságot, hogy ne törjön össze a szöveg */
+  max-height: calc(90vh - 150px); 
 }
+
 .message {
   margin-bottom: 10px;
 }
@@ -137,6 +138,10 @@ const sendMessage = () => {
   display: flex;
   gap: 10px;
   padding: 10px;
+  position: fixed;
+  bottom: 100px;
+  width: 330px; /* A chat-container szélességéhez igazítva */
+  background-color: rgba(41, 32, 45, 0.9); /* Háttérszín, hogy ne látszódjon át */
 }
 
 .chat-input input {
