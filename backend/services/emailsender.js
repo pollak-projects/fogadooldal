@@ -60,7 +60,7 @@ export async function jelszoVisszaallitas(useremail) {
     "<h2 style='color: #2c3e50;'>Jelszó visszaállítása</h2>" + 
     "<p style='font-size: 16px;'>Kérlek, kattints az alábbi gombra, hogy visszaállíthasd a jelszavad a BetWise fiókhoz.</p>" + 
     "<br>" + 
-    "<p style='text-align: center;'><a href='[Jelszó visszaállító link]' style='background-color: rgb(253, 32, 93); display: inline-block; padding: 18px 40px; background-color: rgb(253, 32, 93); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;'>Jelszó visszaállítása</a></p>" + 
+    "<p style='text-align: center;'><a href='http://localhost:5173/jelszoHandle' style='background-color: rgb(253, 32, 93); display: inline-block; padding: 18px 40px; background-color: rgb(253, 32, 93); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;'>Jelszó visszaállítása</a></p>" + 
     "<br>" + 
     "<p style='font-size: 16px;'>Ha nem kérted a jelszó visszaállítást, kérlek hagyd figyelmen kívül ezt az üzenetet.</p>" + 
     "</div>" + 
