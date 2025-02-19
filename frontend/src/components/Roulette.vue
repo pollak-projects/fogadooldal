@@ -10,14 +10,28 @@
       <div class="casino-ui">
         <!-- Betting Interface -->
         <div class="betting-section">
-          <div class="balance-box">Balance: ${{ balance }}</div>
+          <div class="balance-box">
+            <span class="balance-container">
+              Egyenleg: <span class="balance-amount">{{ balance }}</span>
+              <img src="/coin.svg" alt="coin" class="coinkep" />
+            </span>
+          </div>
           <div class="bets-container">
-            <div v-for="(multiplier, color) in multipliers" :key="color" 
-                 class="bet-card" :class="color" @click="placeBet(color)">
+            <div
+              v-for="(multiplier, color) in multipliers"
+              :key="color"
+              class="bet-card"
+              :class="color"
+              @click="placeBet(color)"
+            >
               <div class="bet-header">{{ color.toUpperCase() }}</div>
               <div class="bet-multiplier">{{ multiplier }}x</div>
-              <input type="number" v-model.number="bets[color]" 
-                     min="0" :disabled="!isBettingTime" />
+              <input
+                type="number"
+                v-model.number="bets[color]"
+                min="0"
+                :disabled="!isBettingTime"
+              />
               <div class="bet-controls">
                 <button @click.stop="adjustBet(color, 5)">+5</button>
                 <button @click.stop="adjustBet(color, -5)">-5</button>
@@ -30,7 +44,12 @@
         <div class="wheel-container">
           <div class="wheel-mask">
             <div class="wheel" :style="{ transform: `rotate(${rotation}deg)` }">
-              <div v-for="(segment, index) in segments" :key="index" class="segment" :class="segment.color"></div>
+              <div
+                v-for="(segment, index) in segments"
+                :key="index"
+                class="segment"
+                :class="segment.color"
+              ></div>
             </div>
           </div>
           <div class="pointer"></div>
@@ -38,10 +57,14 @@
 
         <!-- Game Controls -->
         <div class="game-controls">
-          <div class="timer">Time remaining: {{ timer }}s</div>
+          <div class="timer">Hátralévő idő: {{ timer }}mp</div>
           <div class="history">
-            <div v-for="(result, index) in resultHistory" :key="index" 
-                 class="history-item" :class="result.color">
+            <div
+              v-for="(result, index) in resultHistory"
+              :key="index"
+              class="history-item"
+              :class="result.color"
+            >
               {{ result.color.charAt(0).toUpperCase() }}
             </div>
           </div>
@@ -52,106 +75,124 @@
 </template>
 
 <script>
+import { store } from "../config/store.js";
 export default {
   data() {
     return {
-      balance: 1000,
       timer: 15,
       isBettingTime: true,
-      rotation: 0,  // This will control the rotation of the wheel
+      rotation: 0, // This will control the rotation of the wheel
       resultHistory: [],
       bets: { red: 0, green: 0, black: 0 },
       multipliers: { red: 2, black: 2, green: 14 },
       segments: this.generateSegments(),
-    }
+    };
   },
   mounted() {
-    this.startTimer()
+    this.startTimer();
   },
   methods: {
+    balance() {
+      return store.coins;
+    },
     generateSegments() {
-      const segments = []
+      const segments = [];
       // Add green segment (1 green)
-      segments.push({ color: 'green' })
+      segments.push({ color: "green" });
       // Add 24 black and 24 red segments
-      for(let i = 0; i < 24; i++) segments.push({ color: 'red' })
-      for(let i = 0; i < 24; i++) segments.push({ color: 'black' })
-      return segments
+      for (let i = 0; i < 24; i++) segments.push({ color: "red" });
+      for (let i = 0; i < 24; i++) segments.push({ color: "black" });
+      return segments;
     },
 
     startTimer() {
       const timerInterval = setInterval(() => {
-        if (this.timer > 0) this.timer--
+        if (this.timer > 0) this.timer--;
         else {
-          this.timer = 15  // Reset timer after countdown
-          this.isBettingTime = !this.isBettingTime
+          this.timer = 15; // Reset timer after countdown
+          this.isBettingTime = !this.isBettingTime;
           if (!this.isBettingTime) {
-            this.spinWheel()
+            this.spinWheel();
           } else {
-            this.resetRound()
+            this.resetRound();
           }
         }
-      }, 1000)
+      }, 1000);
     },
 
     adjustBet(color, amount) {
-      if(!this.isBettingTime) return
-      const newBet = Math.max(0, this.bets[color] + amount)
-      const totalBets = Object.values(this.bets).reduce((a, b) => a + b) - this.bets[color] + newBet
-      
-      if(totalBets <= this.balance) {
-        this.bets[color] = newBet
-        this.balance -= amount
+      if (!this.isBettingTime) return;
+      const newBet = Math.max(0, this.bets[color] + amount);
+      const totalBets =
+        Object.values(this.bets).reduce((a, b) => a + b) -
+        this.bets[color] +
+        newBet;
+
+      if (totalBets <= this.balance) {
+        this.bets[color] = newBet;
+        this.balance -= amount;
       }
     },
 
     placeBet(color) {
-      if(this.isBettingTime && this.balance >= this.bets[color] + 5) {
-        this.bets[color] += 5
-        this.balance -= 5
+      if (this.isBettingTime && this.balance >= this.bets[color] + 5) {
+        this.bets[color] += 5;
+        this.balance -= 5;
       }
     },
 
     spinWheel() {
-      const result = this.calculateResult()
-      const totalRotation = 360 * 5 + (Math.random() * 360)  // 5 full rotations plus a random angle
-      this.rotation = totalRotation
+      const result = this.calculateResult();
+      const totalRotation = 360 * 5 + Math.random() * 360; // 5 full rotations plus a random angle
+      this.rotation = totalRotation;
 
       setTimeout(() => {
-        this.processResult(result.color)
-        this.resetRound()
-      }, 5000)
+        this.processResult(result.color);
+        this.resetRound();
+      }, 5000);
     },
 
     calculateResult() {
-      const random = Math.random()
-      let color
+      const random = Math.random();
+      let color;
 
-      if(random < 0.02) color = 'green'  // Green segment is 2% of total segments
-      else if(random < 0.51) color = 'red'  // Red segment covers ~49%
-      else color = 'black'  // Black segment covers ~49%
+      if (random < 0.02)
+        color = "green"; // Green segment is 2% of total segments
+      else if (random < 0.51) color = "red"; // Red segment covers ~49%
+      else color = "black"; // Black segment covers ~49%
 
-      return { color }
+      return { color };
     },
 
     processResult(resultColor) {
-      const winnings = this.bets[resultColor] * this.multipliers[resultColor]
-      this.balance += winnings
-      this.resultHistory.unshift({ color: resultColor })
-      if(this.resultHistory.length > 8) this.resultHistory.pop()
+      const winnings = this.bets[resultColor] * this.multipliers[resultColor];
+      this.balance += winnings;
+      this.resultHistory.unshift({ color: resultColor });
+      if (this.resultHistory.length > 8) this.resultHistory.pop();
     },
 
     resetRound() {
-      this.bets = { red: 0, green: 0, black: 0 }
-      this.timer = 15
-      this.isBettingTime = true
-      this.rotation = 0
-    }
+      this.bets = { red: 0, green: 0, black: 0 };
+      this.timer = 15;
+      this.isBettingTime = true;
+      this.rotation = 0;
+    },
   },
-}
+};
 </script>
 
 <style scoped>
+.balance-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; /* Kis térköz az ikon és az egyenleg között */
+}
+
+.coinkep {
+  width: 20px;
+  height: 20px;
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -164,7 +205,7 @@ export default {
 }
 
 .roulette-container {
-  background: #1a2b3d;
+  background: rgb(46, 40, 54);
   min-height: 100vh;
   padding: 20px;
   padding-top: 100px; /* Navbar magassága + egy kis tér */
@@ -178,14 +219,14 @@ export default {
 
 .betting-section {
   margin-top: 50px;
-  background: #2a3b4d;
+  background: rgb(46, 40, 54);
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 25px;
 }
 
 .balance-box {
-  background: #34495e;
+  background: rgb(76, 67, 88);
   color: #fff;
   padding: 10px;
   border-radius: 5px;
@@ -238,9 +279,15 @@ export default {
   background: #3b5166;
 }
 
-.red { background: #e74c3c; }
-.green { background: #2ecc71; }
-.black { background: #2c3e50; }
+.red {
+  background: #e74c3c;
+}
+.green {
+  background: #2ecc71;
+}
+.black {
+  background: #2c3e50;
+}
 
 .wheel-container {
   position: relative;
@@ -267,9 +314,15 @@ export default {
   margin: 0 5px;
 }
 
-.segment.red { background: #e74c3c; }
-.segment.green { background: #2ecc71; }
-.segment.black { background: #2c3e50; }
+.segment.red {
+  background: #e74c3c;
+}
+.segment.green {
+  background: #2ecc71;
+}
+.segment.black {
+  background: #2c3e50;
+}
 
 .pointer {
   position: absolute;
@@ -283,7 +336,7 @@ export default {
 }
 
 .game-controls {
-  background: #2a3b4d;
+  background: rgb(76, 67, 88);
   padding: 15px;
   border-radius: 10px;
 }
@@ -312,7 +365,13 @@ export default {
   color: white;
 }
 
-.history-item.red { background: #e74c3c; }
-.history-item.green { background: #2ecc71; }
-.history-item.black { background: #2c3e50; }
+.history-item.red {
+  background: #e74c3c;
+}
+.history-item.green {
+  background: #2ecc71;
+}
+.history-item.black {
+  background: #2c3e50;
+}
 </style>

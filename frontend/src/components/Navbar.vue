@@ -68,6 +68,10 @@
       </template>
 
       <template #end>
+        <img src="/coin.svg" class="coinkep" />
+        <div class="coin-balance">
+          {{ store.coins }}
+        </div>
         <img
           src="/pfp.png"
           class="w-15 rounded-full cursor-pointer profile-border"
@@ -83,6 +87,7 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Button, Toolbar, Menu } from "primevue";
+import { store } from "../config/store.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -140,6 +145,17 @@ const isActive = (path) => {
 </script>
 
 <style scoped>
+.coinkep {
+  width: 25px;
+  height: 25px;
+}
+
+.coin-balance {
+  font-size: 1.25rem;
+  color: gold;
+  margin-right: 10px;
+  font-weight: bold;
+}
 
 .card {
   position: fixed;
@@ -148,7 +164,7 @@ const isActive = (path) => {
 }
 
 .profile-border {
-  border: 2px solid rgb(255, 121, 159); 
+  border: 2px solid rgb(255, 121, 159);
 }
 .crash-button {
   font-size: 1.25rem;
@@ -222,7 +238,9 @@ const isActive = (path) => {
   transition: transform 0.3s ease;
 }
 
-.coinflip-text, .roulette-text, .crash-text {
+.coinflip-text,
+.roulette-text,
+.crash-text {
   font-size: 18px;
   transition: transform 0.3s ease;
 }
