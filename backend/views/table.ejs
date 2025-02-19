@@ -41,9 +41,8 @@
             </td>
             <td>
               <select class="form-select" id="<%= element.id %>group">
-                <option selected><%= element.groupsNeve %></option>
                 <% groups.forEach(group => { %>
-                <option value="<%= group.neve %>"><%= group.neve %></option>
+                <option value="<%= group.name %>"><%= group.name %></option>
                 <% }) %>
               </select>
             </td>
@@ -85,14 +84,13 @@
       const email = document.getElementById(id + "email");
       const groupSelect = document.getElementById(id + "group");
 
-      fetch(`/user/update`, {
+      fetch(`/user/update?id=${id}`, {
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
         method: "PUT",
         body: JSON.stringify({
-          id: id,
           username: username.value,
           email: email.value,
           groupId: groupSelect.value,

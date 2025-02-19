@@ -42,9 +42,9 @@ router.delete("/delete", async (req, res) => {
 
 router.put("/update", async (req, res) => {
   const id = Number(req.query.id);
-  const { password, email } = req.body;
+  const { username, password, email, groupsNeve } = req.body;
 
-  await updateUser(id, password, email);
+  await updateUser(id, username, password, email, groupsNeve);
 
   res.status(200).json({
     message: "Data successfully updated",

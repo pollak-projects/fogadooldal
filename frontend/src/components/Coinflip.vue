@@ -1,38 +1,38 @@
 <template>
   <div id="app" class="container">
     <div class="coin-container">
-      <div 
-        class="coin" 
+      <div
+        class="coin"
         :class="{ flipping: isFlipping, [result]: true }"
         @animationend="onAnimationEnd"
         ref="coin"
       >
         <div class="side front">
-          <img src="https://i.ibb.co/7TZ8C7p/image.png" alt="Iras">
+          <img src="/iras.png" alt="Iras" />
         </div>
         <div class="side back">
-          <img src="https://i.ibb.co/VczsqXzc/image.png" alt="Fej">
+          <img src="/fej.png" alt="Fej" />
         </div>
       </div>
     </div>
 
     <div class="controls">
-      <input 
-        type="number" 
-        v-model="betAmount" 
-        placeholder="Tét összege" 
+      <input
+        type="number"
+        v-model="betAmount"
+        placeholder="Tét összege"
         :disabled="isDisabled"
       />
-      <button 
-        class="bet-button heads" 
-        @click="chooseHeads" 
+      <button
+        class="bet-button heads"
+        @click="chooseHeads"
         :disabled="isDisabled || betAmount <= 0"
       >
         FEJ
       </button>
-      <button 
-        class="bet-button tails" 
-        @click="chooseTails" 
+      <button
+        class="bet-button tails"
+        @click="chooseTails"
         :disabled="isDisabled || betAmount <= 0"
       >
         ÍRÁS
@@ -63,66 +63,66 @@ export default {
       showResult: false,
       betAmount: 0,
       balance: 1000, // Kezdeti egyenleg
-      winAmount: 0
+      winAmount: 0,
     };
   },
   methods: {
-  chooseHeads() {
-    this.startFlip('heads');
+    chooseHeads() {
+      this.startFlip("heads");
+    },
+    chooseTails() {
+      this.startFlip("tails");
+    },
+    startFlip(choice) {
+      if (this.betAmount > this.balance) {
+        alert("Nincs elég pénzed!");
+        return;
+      }
+
+      // Reset coin rotation to initial state
+      const coin = this.$refs.coin;
+      coin.style.transform = "rotateY(0deg)";
+
+      // Determine result immediately
+      this.result = Math.random() < 0.5 ? "heads" : "tails";
+      this.userChoice = choice;
+
+      this.isDisabled = true;
+      this.isFlipping = true;
+      this.showResult = false;
+    },
+    onAnimationEnd() {
+      this.isFlipping = false;
+      this.showResult = true;
+
+      // Calculate win/loss after animation
+      if (this.hasWon) {
+        this.winAmount = this.betAmount * 1.5;
+        this.balance += this.winAmount;
+      } else {
+        this.balance -= this.betAmount;
+      }
+
+      // Set the final rotation of the coin based on the result
+      const coin = this.$refs.coin;
+      if (this.result === "heads") {
+        coin.style.transform = "rotateY(1980deg)"; // 1800 + 180 = 1980 (180deg)
+      } else {
+        coin.style.transform = "rotateY(1800deg)"; // 0deg
+      }
+    },
+    resetGame() {
+      this.userChoice = null;
+      this.result = null;
+      this.isDisabled = false;
+      this.showResult = false;
+      this.betAmount = 0;
+
+      // Reset coin rotation to initial state
+      const coin = this.$refs.coin;
+      coin.style.transform = "rotateY(0deg)";
+    },
   },
-  chooseTails() {
-    this.startFlip('tails');
-  },
-  startFlip(choice) {
-    if (this.betAmount > this.balance) {
-      alert("Nincs elég pénzed!");
-      return;
-    }
-
-    // Reset coin rotation to initial state
-    const coin = this.$refs.coin;
-    coin.style.transform = 'rotateY(0deg)';
-
-    // Determine result immediately
-    this.result = Math.random() < 0.5 ? 'heads' : 'tails';
-    this.userChoice = choice;
-    
-    this.isDisabled = true;
-    this.isFlipping = true;
-    this.showResult = false;
-  },
-  onAnimationEnd() {
-    this.isFlipping = false;
-    this.showResult = true;
-
-    // Calculate win/loss after animation
-    if (this.hasWon) {
-      this.winAmount = this.betAmount * 1.5;
-      this.balance += this.winAmount;
-    } else {
-      this.balance -= this.betAmount;
-    }
-
-    // Set the final rotation of the coin based on the result
-    const coin = this.$refs.coin;
-    if (this.result === 'heads') {
-      coin.style.transform = 'rotateY(1980deg)'; // 1800 + 180 = 1980 (180deg)
-    } else {
-      coin.style.transform = 'rotateY(1800deg)'; // 0deg
-    }
-  },
-  resetGame() {
-    this.userChoice = null;
-    this.result = null;
-    this.isDisabled = false;
-    this.showResult = false;
-    this.betAmount = 0;
-
-    // Reset coin rotation to initial state
-    const coin = this.$refs.coin;
-    coin.style.transform = 'rotateY(0deg)';
-  }
-},
 };
 </script>
 
@@ -144,7 +144,7 @@ export default {
   max-width: 600px;
   margin: 0 auto; /* Középre igazítás */
   text-align: center;
-  background: #1A1D23;
+  background: #1a1d23;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -175,17 +175,28 @@ export default {
 }
 
 @keyframes flip-heads {
-  0% { transform: rotateY(0deg); }
-  50% { transform: rotateY(1800deg); }
-  100% { transform: rotateY(1980deg); } /* 1800 + 180 = 1980 (180deg) */
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(1800deg);
+  }
+  100% {
+    transform: rotateY(1980deg);
+  } /* 1800 + 180 = 1980 (180deg) */
 }
 
 @keyframes flip-tails {
-  0% { transform: rotateY(0deg); }
-  50% { transform: rotateY(1800deg); }
-  100% { transform: rotateY(1800deg); } /* 0deg */
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(1800deg);
+  }
+  100% {
+    transform: rotateY(1800deg);
+  } /* 0deg */
 }
-
 
 .side {
   position: absolute;
@@ -233,11 +244,11 @@ export default {
 }
 
 .bet-button.heads {
-  background: linear-gradient(45deg, #FFD700, #FFA500);
+  background: linear-gradient(45deg, #ffd700, #ffa500);
 }
 
 .bet-button.tails {
-  background: linear-gradient(45deg, #00B4D8, #0077B6);
+  background: linear-gradient(45deg, #00b4d8, #0077b6);
 }
 
 .result {
@@ -251,15 +262,15 @@ export default {
 }
 
 .win {
-  color: #00FF00;
+  color: #00ff00;
 }
 
 .lose {
-  color: #FF0000;
+  color: #ff0000;
 }
 
 .play-again {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   padding: 0.8rem 1.5rem;
   border: none;
@@ -282,7 +293,8 @@ export default {
   }
 }
 
-.balance, input {
+.balance,
+input {
   color: white;
 }
 </style>
