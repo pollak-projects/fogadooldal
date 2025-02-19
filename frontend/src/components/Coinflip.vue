@@ -66,6 +66,13 @@ export default {
       winAmount: 0,
     };
   },
+
+  computed: {
+    hasWon() {
+      return this.userChoice === this.result;
+    },
+  },
+
   methods: {
     chooseHeads() {
       this.startFlip("heads");
