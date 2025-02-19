@@ -65,7 +65,8 @@
   </div>
   <!-- Jelszó visszaállítás gomb -->
   <div class="form-group">
-    <button type="button" @click="resetPassword" class="reset-password-button">Jelszó visszaállítása</button>
+    <!--<RouterLink  /RouterLink>-->
+    <RouterLink type="button" @click="jelszoVisszaallitas" to="/jelszovisszaallitas"  class="reset-password-button">Jelszó visszaállítása</RouterLink> 
   </div>
 </div>
 
@@ -81,6 +82,8 @@
 import { ref, reactive } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
+import { RouterLink } from 'vue-router';
+
 
 const toast = useToast();
 

@@ -1,8 +1,6 @@
 <script setup>
 import { Card, Button } from "primevue";
-
 import Chat from '../components/Chat.vue'; 
-
 </script>
 
 <template>
@@ -11,24 +9,26 @@ import Chat from '../components/Chat.vue';
       <Chat />
     </div>
     <div class="main-content">
-       <div class="background-container"></div>
-   <div class="home-container">
-    <div class="main-content">
+      <div class="background-container"></div>
       <div class="cards-container">
         <Card style="overflow: hidden" class="kartya">
           <template #header>
             <img alt="Coinflip" src="/coinflip.png" />
           </template>
-          <template #title>Coinflip</template>
+
+          <template #title>
+            <div class="cimke">Coinflip</div>
+          </template>
           <template #content>
-            <p class="m-0">
-              A coinflip egy egyszerű játék, ahol egy érme feldobásával döntünk,
-              hogy fej vagy írás lesz-e. Az esélyek 50-50%-osak, és a végeredmény
-              véletlenszerű.
-            </p>
+            <div class="szoveg">
+              <p class="m-0">
+A játékos a gép ellen játszik. Véletlenszerűen dől el
+hogy a "fej" vagy "írás" oldal lesz a nyertes. A játékosnak helyesen kell tippelnie hogy nyerjen
+              </p>
+            </div>
           </template>
           <template #footer>
-            <div class="flex gap-4 mt-1">
+            <div class="flex gap-4 mt-1 footer-buttons">
               <Button
                 label="Játék!"
                 severity="danger"
@@ -44,15 +44,20 @@ import Chat from '../components/Chat.vue';
           <template #header>
             <img alt="Roulette" src="/roulette.png" />
           </template>
-          <template #title>Roulette</template>
+          <template #title>
+            <div class="cimke">Roulette</div>
+          </template>
           <template #content>
-            <p class="m-0">
-              A roulette egy klasszikus kaszinó játék, ahol a szerencsén múlik,
-              hogy a golyó melyik számra esik.
-            </p>
+            <div class="szoveg">
+              <p class="m-0">
+A játék egy forgó kerekére épül, ahol a játékosok színekre fogadnak. 
+A pörgetés végén egy nyilazott jelző mutatja meg, melyik szín lett a nyertes. 
+
+              </p>
+            </div>
           </template>
           <template #footer>
-            <div class="flex gap-4 mt-1">
+            <div class="flex gap-4 mt-1 footer-buttons">
               <Button
                 label="Játék!"
                 severity="danger"
@@ -64,19 +69,24 @@ import Chat from '../components/Chat.vue';
           </template>
         </Card>
 
-        <Card style="overflow: hidden" class="kartya">
+       <Card style="overflow: hidden" class="kartya">
           <template #header>
-            <img alt="Crash" src="/crash.png" />
+            <img alt="Coinflip" src="/crash.png" />
           </template>
-          <template #title>Crash</template>
+
+          <template #title>
+            <div class="cimke">Crash</div>
+          </template>
           <template #content>
-            <p class="m-0">
-              A Crash egy olyan szerencsejáték, ahol a cél minél magasabb szorzónál kiszállni,
-              mielőtt a szorzó összeomlik.
-            </p>
+            <div class="szoveg">
+              <p class="m-0">
+          A játékosok egy folyamatosan gyorsuló grafikonon próbálnak időben kiszállni, mielőtt az összeomlik.
+           Minél magasabbra emelkedik a grafikon, annál nagyobb a potenciális nyeremény, de a kockázat is nő.
+              </p>
+            </div>
           </template>
           <template #footer>
-            <div class="flex gap-4 mt-1">
+            <div class="flex gap-4 mt-1 footer-buttons">
               <Button
                 label="Játék!"
                 severity="danger"
@@ -90,29 +100,18 @@ import Chat from '../components/Chat.vue';
       </div>
     </div>
   </div>
-    </div>
-  </div>
-
-
-
- 
 </template>
 
 <style scoped>
-
-
-
-.main-content {
-  flex-grow: 1;
+.szoveg {
+  margin-top: 15px;
+  flex-grow: 1; 
 }
 
-.username {
-  font-weight: 900;
-  margin-right: 8px;
-}
-
-.message-text {
-  font-weight: 100;
+.cimke {
+  text-align: center; 
+  font-size: 1.5rem; 
+  margin-bottom: 10px;
 }
 
 .home-container {
@@ -121,8 +120,6 @@ import Chat from '../components/Chat.vue';
   position: relative;
   z-index: 1;
 }
-
-
 
 .main-content {
   flex-grow: 1;
@@ -134,12 +131,11 @@ import Chat from '../components/Chat.vue';
 
 .cards-container {
   margin-top: 100px;
-  margin-left: 50px;
   display: flex;
   justify-content: center;
   gap: 20px;
-  flex-wrap: wrap;
   width: 100%;
+  overflow-x: auto; /* Ha a képernyő túl kicsi, legyen görgethető */
 }
 
 .kartya {
@@ -147,12 +143,17 @@ import Chat from '../components/Chat.vue';
   color: white;
   width: 25rem;
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px; /* Állítsd be a kártya minimális magasságát */
+  flex-shrink: 0; /* Ne zsugorodjon össze a kártya */
 }
 
 .gomb {
   background-color: rgb(253, 32, 93);
   width: 100%;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 
@@ -195,5 +196,11 @@ import Chat from '../components/Chat.vue';
   color: red;
   font-weight: bold;
   margin-top: 10px;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 </style>

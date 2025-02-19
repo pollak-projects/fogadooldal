@@ -160,20 +160,24 @@ export default {
 }
 
 .container {
-  padding-top: 60px; /* A navbar magasságával megegyező padding */
+  padding-top: 80px; 
   max-width: 600px;
-  margin: 0 auto; /* Középre igazítás */
+  width: 100%;   
+  margin: 0 auto;   
   text-align: center;
   background: #1a1d23;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 100vh; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
 }
-
 .coin-container {
   perspective: 1000px;
   margin: 2rem auto;
-  padding-top: 80px; /* Növelt padding a navbar miatt */
+  padding-top: 0; 
 }
 
 .coin {
@@ -183,7 +187,7 @@ export default {
   position: relative;
   transform-style: preserve-3d;
   transition: transform 1s;
-  z-index: 10; /* Biztosítja, hogy a coin a navbar felett legyen */
+  z-index: 10; 
 }
 
 .coin.flipping.heads {
@@ -309,7 +313,7 @@ export default {
   }
 
   .coin-container {
-    padding-top: 100px; /* Nagyobb padding mobilon */
+    padding-top: 0; /* Nagyobb padding mobilon */
   }
 }
 

@@ -14,6 +14,11 @@ const router = createRouter({
       component: import("../components/Home.vue"),
     },
 
+    {
+      path: "/rolunk",
+      name: "Rolunk",
+      component: import("../components/Rolunk.vue"),
+    },
 
 
     {
@@ -61,6 +66,16 @@ const router = createRouter({
       path: "/logout",
       name: "Logout",
       component: import("../components/Login.vue"),
+    },
+    {
+      path: "/jelszovisszaallitas",
+      name: "Jelszovisszaallitas",
+      component: import("../components/ResetPass.vue"),
+    },
+    {
+      path: "/jelszoHandle",
+      name: "jelszoHandle",
+      component: import("../components/PassHandle.vue"),
     },
   ],
 });
