@@ -47,12 +47,19 @@
     </div>
 
     <div class="balance">
-      <p>Egyenleg: {{ balance }} Ft</p>
+      <p>
+        Egyenleg:
+        <span class="balance-container">
+          <span class="balance-amount">{{ balance }}</span>
+          <img src="/coin.svg" alt="coin" class="coinkep" />
+        </span>
+      </p>
     </div>
   </div>
 </template>
 
 <script>
+import { store } from "../config/store.js";
 export default {
   data() {
     return {
@@ -62,17 +69,18 @@ export default {
       isFlipping: false,
       showResult: false,
       betAmount: 0,
-      balance: 1000, // Kezdeti egyenleg
       winAmount: 0,
     };
   },
 
   computed: {
+    balance() {
+      return store.coins;
+    },
     hasWon() {
       return this.userChoice === this.result;
     },
   },
-
   methods: {
     chooseHeads() {
       this.startFlip("heads");
@@ -81,11 +89,10 @@ export default {
       this.startFlip("tails");
     },
     startFlip(choice) {
-      if (this.betAmount > this.balance) {
+      if (this.betAmount > store.coins) {
         alert("Nincs elég pénzed!");
         return;
       }
-
       // Reset coin rotation to initial state
       const coin = this.$refs.coin;
       coin.style.transform = "rotateY(0deg)";
@@ -102,21 +109,17 @@ export default {
       this.isFlipping = false;
       this.showResult = true;
 
-      // Calculate win/loss after animation
       if (this.hasWon) {
-        this.winAmount = this.betAmount * .9;
-        this.balance += this.winAmount;
+        this.winAmount = this.betAmount * 1.5;
+        store.coins += this.winAmount;
       } else {
-        this.balance -= this.betAmount;
+        store.coins -= this.betAmount;
       }
 
       // Set the final rotation of the coin based on the result
       const coin = this.$refs.coin;
-      if (this.result === "heads") {
-        coin.style.transform = "rotateY(1980deg)"; // 1800 + 180 = 1980 (180deg)
-      } else {
-        coin.style.transform = "rotateY(1800deg)"; // 0deg
-      }
+      coin.style.transform =
+        this.result === "heads" ? "rotateY(1980deg)" : "rotateY(1800deg)";
     },
     resetGame() {
       this.userChoice = null;
@@ -134,6 +137,16 @@ export default {
 </script>
 
 <style>
+.balance-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; /* Térköz az ikon és a szöveg között */
+}
+.coinkep {
+  width: 20px;
+  height: 20px;
+}
+
 .navbar {
   position: fixed;
   top: 0;
