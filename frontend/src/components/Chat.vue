@@ -1,12 +1,13 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUpdated } from "vue";
 
 const messages = ref([]);
 const newMessage = ref("");
 const errorMessage = ref("");
+const chatMessagesRef = ref(null); // ref a chat uzenetek tarolojara
 
 const forbiddenWords = [
-  "fasz", "mocskos", "kutya", "kuvasz", "budos dog", "patkany", "patkány", "puna", "sunci", "n1gger", "nigg3r", "n1ga", "n1g4", "nig4", "megfoglak baszni", "büdös dög", "szétbaszom a fejed", "baszni", "geci", "nigger", "niga", "cigány", "cigánynigger", "cigány nigger", "nigabiga", "cigany", "kurva", "gecis kurva", "cigány kurva", 
+  "fasz", "mocskos", "kutya", "cici", "hitlet", "csöcs", "csocs", "kuvasz", "budos dog", "patkany", "patkány", "puna", "sunci", "n1gger", "nigg3r", "n1ga", "n1g4", "nig4", "megfoglak baszni", "büdös dög", "szétbaszom a fejed", "baszni", "geci", "nigger", "niga", "cigány", "cigánynigger", "cigány nigger", "nigabiga", "cigany", "kurva", "gecis kurva", "cigány kurva", 
   "aberált", "aberrált", "abortuszmaradék", "abszolút hülye", "agyalágyult", "agyatlan", "agybatetovált", "ágybavizelős", "agyfasz", "agyhalott", "agyonkúrt", "agyonvert", "agyrákos", "aids-es", "alapvetően fasz", "animalsex-mániás", "antibarom", "aprófaszú", "arcbarakott", "aszaltfaszú", "aszott", "átbaszott", "azt a kurva de fasz", 
   "balfasz", "balfészek", "baromfifasz", "basz-o-matic", "baszhatatlan", "basznivaló", "bazmeg", "bazdmeg", "bazd meg", "bazzeg", "bebaszott", "befosi", "békapicsa", "bélböfi", "beleiből kiforgatott", "bélszél", "brunya", "büdösszájú", "búvalbaszott", "buzeráns", "buzernyák", "buzi", "buzikurva", 
   "cafat", "cafka", "céda", "cérnafaszú", "cigány", "cottonfej", "cseszett", "csibefasz", "csipszar", "csirkefaszú", "csitri", "csöcs", "csöcsfej", "csöppszar", "csupaszfarkú", "cuncipunci", 
@@ -39,43 +40,44 @@ const sendMessage = () => {
     );
 
     if (containsForbiddenWord) {
-      errorMessage.value = "Ne írj be csúnya szót!";
+      errorMessage.value = "Ne irj be csunya szot!";
     } else {
-      messages.value.push({ text: newMessage.value, user: "Felhasználó" });
+      messages.value.push({ text: newMessage.value, user: "Felhasznalo" });
       newMessage.value = "";
       errorMessage.value = "";
     }
   }
 };
+
+// automatikus gorgetes az uj uzenetekhez
+onUpdated(() => {
+  if (chatMessagesRef.value) {
+    chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight;
+  }
+});
 </script>
-
-
-
 <template>
-
-    <div class="chat-container">
-      <div class="chat-header">Chat</div>
-      <div class="chat-messages">
-          <div v-for="(message, index) in messages" :key="index" class="message">
-            <strong class="username">{{ message.user }}: </strong> 
-            <span class="message-text">{{ message.text }}</span>
-          </div>
+  <div class="chat-container">
+    <div class="chat-header">Chat</div>
+    <div class="chat-messages" ref="chatMessagesRef">
+      <div v-for="(message, index) in messages" :key="index" class="message">
+        <strong class="username">{{ message.user }}: </strong>
+        <span class="message-text">{{ message.text }}</span>
       </div>
-<div class="chat-input">
-  <input
-    v-model="newMessage"
-    @keyup.enter="sendMessage"
-    placeholder="Írj üzenetet..."
-  />
-  <button type="button" @click="sendMessage" class="send-button">Küldés</button>
+    </div>
+    <div class="chat-input">
+      <input
+        v-model="newMessage"
+        @keyup.enter="sendMessage"
+        placeholder="Írj üzenetet..."
+      />
+      <button type="button" @click="sendMessage" class="send-button">Küldés</button>
     </div>
     <div v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </div>
   </div>
-
 </template>
-
 
 <style scoped>
 .send-button {
@@ -95,16 +97,21 @@ const sendMessage = () => {
   color: rgb(248, 31, 31);
   font-weight: bold;
   margin-top: 10px;
-  position: fixed;
-  bottom: 80px; /* Az input mező felett jelenjen meg */
-  width: 330px; /* A chat-container szélességéhez igazítva */
+  text-align: center;
+}
+
+
+
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+  padding-bottom: 5px; 
 }
 
 .chat-container {
-  width: 350px; /* szélesség */
-  height: 90vh; /* magasság */
-  top: 100px;
-  bottom: 20px;
+  width: 350px;
+  height: 90vh;
   background-color: rgba(41, 32, 45, 0.9);
   border-radius: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -114,21 +121,18 @@ const sendMessage = () => {
   padding: 10px;
   position: fixed;
   z-index: 1001;
+  margin-top: 30px;
 }
 
 .chat-header {
+  margin-top: 70px;
   font-size: 1.2rem;
   font-weight: bold;
   padding: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.chat-messages {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 10px;
-  max-height: calc(90vh - 150px); 
-}
+
 
 .message {
   margin-bottom: 10px;
@@ -138,10 +142,10 @@ const sendMessage = () => {
   display: flex;
   gap: 10px;
   padding: 10px;
-  position: fixed;
-  bottom: 100px;
-  width: 330px; /* A chat-container szélességéhez igazítva */
-  background-color: rgba(41, 32, 45, 0.9); /* Háttérszín, hogy ne látszódjon át */
+  background-color: rgba(41, 32, 45, 0.9);
+  position: sticky;
+  bottom: 0;
+  z-index: 1002; /* Biztosítja, hogy az input mindig látható legyen */
 }
 
 .chat-input input {

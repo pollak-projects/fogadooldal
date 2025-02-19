@@ -322,8 +322,9 @@
       body: JSON.stringify({
         name: torlendocsopi,
       }),
+    }).then(() => {
+      window.location.reload();
     });
-    window.location.reload();
   }
 
   function modositas() {
