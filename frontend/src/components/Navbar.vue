@@ -118,6 +118,16 @@ const menuItems = ref([
       router.push("/settings");
     },
   },
+    {
+    label: "Rólunk",
+    icon: "pi pi-rolunk",
+    label: "Rólunk",
+    icon: "pi pi-rolunk",
+    command: () => {
+      router.push("/rolunk");
+      router.push("/rolunk");
+    },
+  },
   {
     label: "Kijelentkezés",
     icon: "pi pi-sign-out",

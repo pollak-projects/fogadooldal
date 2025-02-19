@@ -40,7 +40,7 @@ const sendMessage = () => {
     );
 
     if (containsForbiddenWord) {
-      errorMessage.value = "Ne irj be csunya szot!";
+      errorMessage.value = "Ne írj be csúnya szót!";
     } else {
       messages.value.push({ text: newMessage.value, user: "Felhasznalo" });
       newMessage.value = "";

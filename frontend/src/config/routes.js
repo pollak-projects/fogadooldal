@@ -14,6 +14,11 @@ const router = createRouter({
       component: import("../components/Home.vue"),
     },
 
+    {
+      path: "/rolunk",
+      name: "Rolunk",
+      component: import("../components/Rolunk.vue"),
+    },
 
 
     {
