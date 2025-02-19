@@ -110,7 +110,7 @@ export default {
       this.showResult = true;
 
       if (this.hasWon) {
-        this.winAmount = this.betAmount * 1.5;
+        this.winAmount = this.betAmount * .9;
         store.coins += this.winAmount;
       } else {
         store.coins -= this.betAmount;
