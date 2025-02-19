@@ -67,6 +67,16 @@ const router = createRouter({
       name: "Logout",
       component: import("../components/Login.vue"),
     },
+    {
+      path: "/jelszovisszaallitas",
+      name: "Jelszovisszaallitas",
+      component: import("../components/ResetPass.vue"),
+    },
+    {
+      path: "/jelszoHandle",
+      name: "jelszoHandle",
+      component: import("../components/PassHandle.vue"),
+    },
   ],
 });
 
