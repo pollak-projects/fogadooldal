@@ -1,377 +1,271 @@
 <template>
-  <div>
-    <!-- Navbar -->
-    <div class="navbar">
-      <!-- Navbar tartalom -->
-    </div>
-
-    <!-- Roulette tartalom -->
-    <div class="roulette-container">
-      <div class="casino-ui">
-        <!-- Betting Interface -->
-        <div class="betting-section">
-          <div class="balance-box">
-            <span class="balance-container">
-              Egyenleg: <span class="balance-amount">{{ balance }}</span>
-              <img src="/coin.svg" alt="coin" class="coinkep" />
-            </span>
-          </div>
-          <div class="bets-container">
-            <div
-              v-for="(multiplier, color) in multipliers"
-              :key="color"
-              class="bet-card"
-              :class="color"
-              @click="placeBet(color)"
-            >
-              <div class="bet-header">{{ color.toUpperCase() }}</div>
-              <div class="bet-multiplier">{{ multiplier }}x</div>
-              <input
-                type="number"
-                v-model.number="bets[color]"
-                min="0"
-                :disabled="!isBettingTime"
-              />
-              <div class="bet-controls">
-                <button @click.stop="adjustBet(color, 5)">+5</button>
-                <button @click.stop="adjustBet(color, -5)">-5</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Roulette Wheel -->
-        <div class="wheel-container">
-          <div class="wheel-mask">
-            <div class="wheel" :style="{ transform: `rotate(${rotation}deg)` }">
-              <div
-                v-for="(segment, index) in segments"
-                :key="index"
-                class="segment"
-                :class="segment.color"
-              ></div>
-            </div>
-          </div>
-          <div class="pointer"></div>
-        </div>
-
-        <!-- Game Controls -->
-        <div class="game-controls">
-          <div class="timer">Hátralévő idő: {{ timer }}mp</div>
-          <div class="history">
-            <div
-              v-for="(result, index) in resultHistory"
-              :key="index"
-              class="history-item"
-              :class="result.color"
-            >
-              {{ result.color.charAt(0).toUpperCase() }}
-            </div>
+  <div class="roulette-container bg-gray-900 text-white min-h-screen flex flex-col items-center p-6 pt-24">
+    <h1 class="text-4xl font-bold mb-6 animate-pulse">Vue Roulette</h1>
+    
+    <!-- Roulette Wheel -->
+    <div class="relative mb-8">
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <div class="w-0 h-0 border-l-12 border-r-12 border-b-24 border-transparent border-b-yellow-400"></div>
+      </div>
+      <div class="roulette-wheel flex overflow-hidden border-4 border-yellow-500 rounded-lg w-[800px] h-32 relative bg-gray-800">
+        <div class="flex" :style="wheelStyle">
+          <div v-for="(item, index) in wheel" :key="index" 
+               class="p-6 text-3xl w-40 text-center font-bold flex items-center justify-center"
+               :class="getColorClass(item)">
+            {{ item }}
           </div>
         </div>
       </div>
     </div>
+    
+    <!-- Info Section -->
+    <div class="info-container flex gap-8 mb-8">
+      <div class="p-4 bg-gray-800 rounded-lg">
+        <p class="text-xl">Time Left: <span class="font-mono">{{ timer }}</span></p>
+      </div>
+      <div class="p-4 bg-gray-800 rounded-lg">
+        <p class="text-xl">Balance: <span class="font-mono text-green-400">${{ balance }}</span></p>
+      </div>
+    </div>
+
+    <!-- Chip Selector -->
+    <div class="chip-selector flex gap-4 mb-6">
+      <button v-for="chip in chips" :key="chip" @click="selectChip(chip)"
+              class="w-12 h-12 rounded-full flex items-center justify-center font-bold border-2 border-yellow-500"
+              :class="selectedChip === chip ? 'bg-yellow-500 text-black' : 'bg-gray-800 text-yellow-500'">
+        {{ chip }}
+      </button>
+    </div>
+
+    <!-- Betting Section -->
+    <div class="betting-section grid grid-cols-3 gap-4 mb-8 w-[800px]">
+      <div v-for="bet in betOptions" :key="bet.multiplier" 
+           class="bet-card p-4 rounded-lg text-center cursor-pointer transform transition hover:scale-105"
+           :class="[bet.color, { 'ring-4 ring-yellow-500': activeBets[bet.label] }, bet.hoverColor]"
+           @click="placeBet(bet)">
+        <p class="text-2xl font-bold mb-2">{{ bet.label }}</p>
+        <p class="text-sm opacity-80">Pays {{ bet.multiplier }}x</p>
+        <p class="mt-2 text-yellow-400">${{ activeBets[bet.label] || 0 }}</p>
+      </div>
+    </div>
+
+    <!-- Current Bets -->
+    <div class="current-bets bg-gray-800 p-4 rounded-lg mb-6 w-96" v-if="Object.values(activeBets).some(b => b > 0)">
+      <h2 class="text-xl font-bold mb-2">Current Bets</h2>
+      <div class="flex flex-wrap gap-2">
+        <div v-for="(amount, type) in activeBets" :key="type" v-if="amount > 0"
+             class="px-3 py-1 rounded-full text-sm" :class="getBetClass(type)">
+          {{ type }}: ${{ amount }}
+        </div>
+      </div>
+    </div>
+
+    <!-- History Section -->
+    <div class="history-section bg-gray-800 p-4 rounded-lg w-96 max-h-32 overflow-y-auto">
+      <h2 class="text-xl font-bold mb-2">Previous Rolls</h2>
+      <div class="flex flex-wrap gap-2">
+        <span v-for="(item, index) in limitedHistory" :key="index" 
+              class="px-3 py-1 rounded-full text-sm" :class="getColorClass(item)">
+          {{ getSymbolLabel(item) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio ref="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wheel-spin-1027.mp3"></audio>
+    <audio ref="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
   </div>
 </template>
 
-<script>
-import { store } from "../config/store.js";
-export default {
-  data() {
-    return {
-      timer: 15,
-      isBettingTime: true,
-      rotation: 0, // This will control the rotation of the wheel
-      resultHistory: [],
-      bets: { red: 0, green: 0, black: 0 },
-      multipliers: { red: 2, black: 2, green: 14 },
-      segments: this.generateSegments(),
-    };
-  },
-  mounted() {
-    this.startTimer();
-  },
-  methods: {
-    balance() {
-      return store.coins;
-    },
-    generateSegments() {
-      const segments = [];
-      // Add green segment (1 green)
-      segments.push({ color: "green" });
-      // Add 24 black and 24 red segments
-      for (let i = 0; i < 24; i++) segments.push({ color: "red" });
-      for (let i = 0; i < 24; i++) segments.push({ color: "black" });
-      return segments;
-    },
+<script setup>
+import { ref, computed, onMounted } from 'vue';
 
-    startTimer() {
-      const timerInterval = setInterval(() => {
-        if (this.timer > 0) this.timer--;
-        else {
-          this.timer = 15; // Reset timer after countdown
-          this.isBettingTime = !this.isBettingTime;
-          if (!this.isBettingTime) {
-            this.spinWheel();
-          } else {
-            this.resetRound();
-          }
-        }
-      }, 1000);
-    },
-
-    adjustBet(color, amount) {
-      if (!this.isBettingTime) return;
-      const newBet = Math.max(0, this.bets[color] + amount);
-      const totalBets =
-        Object.values(this.bets).reduce((a, b) => a + b) -
-        this.bets[color] +
-        newBet;
-
-      if (totalBets <= this.balance) {
-        this.bets[color] = newBet;
-        this.balance -= amount;
-      }
-    },
-
-    placeBet(color) {
-      if (this.isBettingTime && this.balance >= this.bets[color] + 5) {
-        this.bets[color] += 5;
-        this.balance -= 5;
-      }
-    },
-
-    spinWheel() {
-      const result = this.calculateResult();
-      const totalRotation = 360 * 5 + Math.random() * 360; // 5 full rotations plus a random angle
-      this.rotation = totalRotation;
-
-      setTimeout(() => {
-        this.processResult(result.color);
-        this.resetRound();
-      }, 5000);
-    },
-
-    calculateResult() {
-      const random = Math.random();
-      let color;
-
-      if (random < 0.02)
-        color = "green"; // Green segment is 2% of total segments
-      else if (random < 0.51) color = "red"; // Red segment covers ~49%
-      else color = "black"; // Black segment covers ~49%
-
-      return { color };
-    },
-
-    processResult(resultColor) {
-      const winnings = this.bets[resultColor] * this.multipliers[resultColor];
-      this.balance += winnings;
-      this.resultHistory.unshift({ color: resultColor });
-      if (this.resultHistory.length > 8) this.resultHistory.pop();
-    },
-
-    resetRound() {
-      this.bets = { red: 0, green: 0, black: 0 };
-      this.timer = 15;
-      this.isBettingTime = true;
-      this.rotation = 0;
-    },
-  },
+// Roulette wheel setup
+const createWheel = () => {
+  const baseWheel = ["🟢", ...Array(24).fill().flatMap(() => ["🔴", "⚫"])];
+  return [...baseWheel, ...baseWheel, ...baseWheel, ...baseWheel]; // 4x duplikálva
 };
+
+const wheel = ref(createWheel());
+const currentPosition = ref(0); // Kezdő pozíció
+const bettingOpen = ref(true);
+const timer = ref(15);
+const history = ref([]);
+const balance = ref(5000);
+const activeBets = ref({ Red: 0, Green: 0, Black: 0 });
+const selectedChip = ref(100);
+const chips = [10, 50, 100, 500];
+const spinSound = ref(null);
+const winSound = ref(null);
+
+const betOptions = ref([
+  { 
+    label: "Red", 
+    multiplier: 2, 
+    color: "bg-red-600", 
+    hoverColor: "hover:bg-red-700" 
+  },
+  { 
+    label: "Green", 
+    multiplier: 14, 
+    color: "bg-green-600", 
+    hoverColor: "hover:bg-green-700" 
+  },
+  { 
+    label: "Black", 
+    multiplier: 2, 
+    color: "bg-gray-900", 
+    hoverColor: "hover:bg-gray-800" 
+  }
+]);
+
+const wheelStyle = computed(() => ({
+  transform: `translateX(-${currentPosition.value * 160}px)`,
+  transition: bettingOpen.value ? 'none' : 'transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)',
+  willChange: 'transform'
+}));
+
+const limitedHistory = computed(() => history.value.slice(0, 10));
+
+const startTimer = () => {
+  const countdown = setInterval(() => {
+    timer.value--;
+    if (timer.value === 0) {
+      clearInterval(countdown);
+      bettingOpen.value = false;
+      spinWheel();
+    }
+  }, 1000);
+};
+
+const spinWheel = () => {
+  spinSound.value.play();
+  const targetIndex = Math.floor(Math.random() * 49); // Véletlenszerű célpozíció
+  const fullSpins = 4; // Teljes körök száma
+  const totalSteps = (fullSpins * wheel.value.length) + targetIndex;
+  
+  currentPosition.value = totalSteps;
+  
+  setTimeout(() => {
+    const finalPosition = totalSteps % wheel.value.length;
+    const winningColor = wheel.value[finalPosition % 49]; // Nyerőszín kiválasztása
+    
+    history.value.unshift(winningColor);
+    if (history.value.length > 50) history.value.pop();
+    
+    resolveBets(winningColor);
+    bettingOpen.value = true;
+    timer.value = 15;
+    resetBets();
+    
+    currentPosition.value = finalPosition + (4 * 49); // Pozíció visszaállítása
+  }, 5000);
+};
+
+const selectChip = (chip) => {
+  selectedChip.value = chip;
+};
+
+const placeBet = (bet) => {
+  if (!bettingOpen.value || balance.value < selectedChip.value) return;
+  
+  balance.value -= selectedChip.value;
+  activeBets.value[bet.label] += selectedChip.value;
+};
+
+const resolveBets = (winningColor) => {
+  const winType = winningColor === "🔴" ? "Red" : 
+                 winningColor === "⚫" ? "Black" : "Green";
+  const multiplier = betOptions.value.find(b => b.label === winType).multiplier;
+  const winAmount = activeBets.value[winType] * multiplier;
+  
+  if (winAmount > 0) {
+    balance.value += winAmount;
+    winSound.value.play();
+  }
+};
+
+const resetBets = () => {
+  activeBets.value = { Red: 0, Green: 0, Black: 0 };
+};
+
+const getColorClass = (symbol) => {
+  return {
+    'bg-red-600': symbol === "🔴",
+    'bg-gray-900': symbol === "⚫",
+    'bg-green-600': symbol === "🟢"
+  };
+};
+
+const getBetClass = (type) => {
+  return {
+    'bg-red-600/30 text-red-400': type === 'Red',
+    'bg-green-600/30 text-green-400': type === 'Green',
+    'bg-gray-900/30 text-gray-400': type === 'Black'
+  };
+};
+
+const getSymbolLabel = (symbol) => {
+  return { "🔴": "Red", "⚫": "Black", "🟢": "Green" }[symbol];
+};
+
+onMounted(() => {
+  startTimer();
+});
 </script>
 
-<style scoped>
-.balance-container {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px; /* Kis térköz az ikon és az egyenleg között */
-}
-
-.coinkep {
-  width: 20px;
-  height: 20px;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background-color: #333;
-  color: white;
-  padding: 10px 20px;
-}
-
-.roulette-container {
-  background: rgb(46, 40, 54);
-  min-height: 100vh;
-  padding: 20px;
-  padding-top: 100px; /* Navbar magassága + egy kis tér */
-  margin-top: 0;
-}
-
-.casino-ui {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.betting-section {
-  margin-top: 50px;
-  background: rgb(46, 40, 54);
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 25px;
-}
-
-.balance-box {
-  background: rgb(76, 67, 88);
-  color: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.bets-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-}
-
-.bet-card {
-  padding: 15px;
-  border-radius: 8px;
-  color: white;
-  text-align: center;
-  transition: transform 0.2s;
-}
-
-.bet-card:hover {
-  transform: scale(1.03);
-}
-
-.bet-card input {
-  width: 100%;
-  padding: 8px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.9);
-  text-align: center;
-  font-weight: bold;
-  color: black;
-}
-
-.bet-controls button {
-  background: #34495e;
-  border: none;
-  color: white;
-  padding: 5px 10px;
-  margin: 0 2px;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.bet-controls button:hover {
-  background: #3b5166;
-}
-
-.red {
-  background: #e74c3c;
-}
-.green {
-  background: #2ecc71;
-}
-.black {
-  background: #2c3e50;
-}
-
-.wheel-container {
-  position: relative;
-  height: 200px;
-  margin: 30px 0;
+<style>
+.roulette-wheel {
+  will-change: transform;
   overflow: hidden;
 }
 
-.wheel-mask {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.wheel {
+.roulette-wheel > div {
   display: flex;
-  transition: transform 5s ease-in-out; /* Smooth transition for rotation */
+  min-width: max-content;
 }
 
-.segment {
-  width: 100px;
-  height: 100%;
-  border-radius: 50%;
-  margin: 0 5px;
+.roulette-wheel div div {
+  min-width: 160px;
+  height: 128px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  flex-shrink: 0;
 }
 
-.segment.red {
-  background: #e74c3c;
-}
-.segment.green {
-  background: #2ecc71;
-}
-.segment.black {
-  background: #2c3e50;
+/* Black hover fix */
+.bg-gray-900:hover {
+  background-color: #1a1a1a !important;
 }
 
-.pointer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 3px;
-  height: 100%;
-  background: gold;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+.history-section {
+  scrollbar-width: thin;
+  scrollbar-color: #6B7280 #374151;
 }
 
-.game-controls {
-  background: rgb(76, 67, 88);
-  padding: 15px;
-  border-radius: 10px;
+.history-section::-webkit-scrollbar {
+  width: 8px;
 }
 
-.timer {
-  color: #fff;
-  font-size: 1.2em;
-  margin-bottom: 15px;
-  text-align: center;
+.history-section::-webkit-scrollbar-track {
+  background: #374151;
 }
 
-.history {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
+.history-section::-webkit-scrollbar-thumb {
+  background: #6B7280;
+  border-radius: 4px;
 }
 
-.history-item {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: white;
+.bet-card {
+  transition: all 0.2s ease;
 }
 
-.history-item.red {
-  background: #e74c3c;
+.current-bets div {
+  transition: all 0.2s ease;
 }
-.history-item.green {
-  background: #2ecc71;
-}
-.history-item.black {
-  background: #2c3e50;
+
+.history-section span {
+  transition: all 0.2s ease;
 }
 </style>

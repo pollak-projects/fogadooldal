@@ -1,6 +1,12 @@
 <script setup>
 import { ref, onMounted, onUpdated } from "vue";
 
+const emit = defineEmits(['close-chat']);
+
+const closeChat = () => {
+  emit('close-chat');
+};
+
 const messages = ref([]);
 const newMessage = ref("");
 const errorMessage = ref("");
@@ -55,10 +61,16 @@ onUpdated(() => {
     chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight;
   }
 });
+
+
 </script>
+
 <template>
   <div class="chat-container">
-    <div class="chat-header">Chat</div>
+    <div class="chat-header">
+      Chat
+      <button @click="closeChat" class="close-chat-button" title="Chat bezárása">◄</button>
+    </div>
     <div class="chat-messages" ref="chatMessagesRef">
       <div v-for="(message, index) in messages" :key="index" class="message">
         <strong class="username">{{ message.user }}: </strong>
@@ -80,6 +92,22 @@ onUpdated(() => {
 </template>
 
 <style scoped>
+
+.close-chat-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  float: right;
+}
+
+.close-chat-button:hover {
+  color: rgb(187, 185, 185);
+}
+
+
+
 .send-button {
   padding: 8px 16px;
   background-color: rgb(253, 32, 93);

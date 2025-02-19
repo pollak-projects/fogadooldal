@@ -1,12 +1,27 @@
 <script setup>
 import { Card, Button } from "primevue";
-import Chat from '../components/Chat.vue'; 
+import Chat from '../components/Chat.vue';
+import { ref } from "vue";
+
+const isChatOpen = ref(true);
+
+const toggleChat = () => {
+  isChatOpen.value = !isChatOpen.value;
+};
 </script>
 
 <template>
   <div class="home-container">
     <div class="sidebar">
-      <Chat />
+      <Button
+        v-if="!isChatOpen"
+        @click="toggleChat"
+        :label="isChatOpen ? '◄' : '►'"
+        class="chat-toggle-button"
+      />
+      <transition name="slide-fade">
+        <Chat v-if="isChatOpen" @close-chat="toggleChat" />
+      </transition>
     </div>
     <div class="main-content">
       <div class="background-container"></div>
@@ -22,8 +37,8 @@ import Chat from '../components/Chat.vue';
           <template #content>
             <div class="szoveg">
               <p class="m-0">
-A játékos a gép ellen játszik. Véletlenszerűen dől el
-hogy a "fej" vagy "írás" oldal lesz a nyertes. A játékosnak helyesen kell tippelnie hogy nyerjen
+                A játékos a gép ellen játszik. Véletlenszerűen dől el
+                hogy a "fej" vagy "írás" oldal lesz a nyertes. A játékosnak helyesen kell tippelnie hogy nyerjen
               </p>
             </div>
           </template>
@@ -50,9 +65,8 @@ hogy a "fej" vagy "írás" oldal lesz a nyertes. A játékosnak helyesen kell ti
           <template #content>
             <div class="szoveg">
               <p class="m-0">
-A játék egy forgó kerekére épül, ahol a játékosok színekre fogadnak. 
-A pörgetés végén egy nyilazott jelző mutatja meg, melyik szín lett a nyertes. 
-
+                A játék egy forgó kerekére épül, ahol a játékosok színekre fogadnak. 
+                A pörgetés végén egy nyilazott jelző mutatja meg, melyik szín lett a nyertes. 
               </p>
             </div>
           </template>
@@ -69,7 +83,7 @@ A pörgetés végén egy nyilazott jelző mutatja meg, melyik szín lett a nyert
           </template>
         </Card>
 
-       <Card style="overflow: hidden" class="kartya">
+        <Card style="overflow: hidden" class="kartya">
           <template #header>
             <img alt="Coinflip" src="/crash.png" />
           </template>
@@ -80,8 +94,8 @@ A pörgetés végén egy nyilazott jelző mutatja meg, melyik szín lett a nyert
           <template #content>
             <div class="szoveg">
               <p class="m-0">
-          A játékosok egy folyamatosan gyorsuló grafikonon próbálnak időben kiszállni, mielőtt az összeomlik.
-           Minél magasabbra emelkedik a grafikon, annál nagyobb a potenciális nyeremény, de a kockázat is nő.
+                A játékosok egy folyamatosan gyorsuló grafikonon próbálnak időben kiszállni, mielőtt az összeomlik.
+                Minél magasabbra emelkedik a grafikon, annál nagyobb a potenciális nyeremény, de a kockázat is nő.
               </p>
             </div>
           </template>
@@ -103,6 +117,42 @@ A pörgetés végén egy nyilazott jelző mutatja meg, melyik szín lett a nyert
 </template>
 
 <style scoped>
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.chat-toggle-button {
+  margin-top: 110px;
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.chat-toggle-button:hover {
+  background-color: rgb(184, 184, 184) !important;
+  color: black !important; 
+  transform: scale(1.1);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  border-color: black !important;
+}
+
 .szoveg {
   margin-top: 15px;
   flex-grow: 1; 
