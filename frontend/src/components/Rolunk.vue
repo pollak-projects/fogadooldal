@@ -52,16 +52,21 @@ export default {
 </script>
 
 <style scoped>
+
 .about-page {
   padding: 4rem 0;
   background-color: rgb(46, 40, 54);
-  min-height: 100vh;
+  height: 100vh; 
+  overflow: hidden; 
 }
 
 .container {
   max-width: 1200px;
+  background-color: rgb(46, 40, 54);
   margin: 0 auto;
   padding: 0 20px;
+  margin-top: -100px;
+  overflow: hidden; /* Letiltja a görgetést a konténeren belül */
 }
 
 .page-title {
@@ -83,6 +88,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   padding: 20px;
+  overflow: hidden; /* Letiltja a görgetést a team-grid-en belül */
 }
 
 .team-member {

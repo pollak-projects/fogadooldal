@@ -152,10 +152,9 @@ export default {
   width: 100%;   
   margin: 0 auto;   
   text-align: center;
-  background: #1a1d23;
+  background-color: rgb(46, 40, 54);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   min-height: 100vh; 
   display: flex;
   flex-direction: column;
