@@ -104,7 +104,7 @@ export default {
 
       // Calculate win/loss after animation
       if (this.hasWon) {
-        this.winAmount = this.betAmount * 1.5;
+        this.winAmount = this.betAmount * .5;
         this.balance += this.winAmount;
       } else {
         this.balance -= this.betAmount;
