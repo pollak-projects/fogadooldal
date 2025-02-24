@@ -30,7 +30,6 @@ const toggleChat = () => {
           <template #header>
             <img alt="Coinflip" src="/coinflip.png" />
           </template>
-
           <template #title>
             <div class="cimke">Coinflip</div>
           </template>
@@ -87,7 +86,6 @@ const toggleChat = () => {
           <template #header>
             <img alt="Coinflip" src="/crash.png" />
           </template>
-
           <template #title>
             <div class="cimke">Crash</div>
           </template>
@@ -112,6 +110,12 @@ const toggleChat = () => {
           </template>
         </Card>
       </div>
+      <!-- Mozgó szöveg sáv -->
+      <div class="marquee-container">
+        <div class="marquee-text">
+          Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀💰
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -133,6 +137,7 @@ const toggleChat = () => {
   top: 10px;
   z-index: 1000;
   background-color: rgba(255, 255, 255, 0.9);
+  color: black;
   border: none;
   border-radius: 50%;
   width: 50px;
@@ -185,19 +190,41 @@ const toggleChat = () => {
   justify-content: center;
   gap: 20px;
   width: 100%;
-  overflow-x: auto; /* Ha a képernyő túl kicsi, legyen görgethető */
+  padding: 20px 0;
+  flex-wrap: wrap;
 }
 
 .kartya {
+  width: 90%;
+  max-width: 22rem;
+  margin: 10px;
   background-color: rgb(41, 32, 45);
   color: white;
-  width: 25rem;
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 400px; /* Állítsd be a kártya minimális magasságát */
-  flex-shrink: 0; /* Ne zsugorodjon össze a kártya */
+  min-height: 350px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform; 
+}
+
+.kartya:hover {
+  transform: scale(1.03); 
+  box-shadow: 0 10px 20px rgba(253, 32, 93, 0.3);
+  z-index: 10; 
+}
+
+@media (max-width: 768px) {
+  .cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .kartya {
+    width: 100%;
+    max-width: none;
+    margin: 10px 0;
+  }
 }
 
 .gomb {
@@ -252,5 +279,41 @@ const toggleChat = () => {
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+
+.marquee-container {
+  width: 100%;
+  max-width: calc(22rem * 3 + 30px); 
+  margin: 20px auto;
+  overflow: hidden;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.marquee-text {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .marquee-container {
+    max-width: 100%; /* Teljes szélességű a mobilnézetben */
+  }
 }
 </style>
