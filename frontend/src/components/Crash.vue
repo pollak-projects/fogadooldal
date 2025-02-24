@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
+import { store } from "../config/store";
 
 const toast = useToast();
 
@@ -28,6 +29,7 @@ const startGame = () => {
       currentMultiplier.value += 0.01;
       if (Math.random() < 0.02) {
         crashGame();
+        lost();
         clearInterval(interval);
       }
     }
@@ -44,9 +46,25 @@ const crashGame = () => {
 const cashOut = () => {
   if (!crashed.value) {
     const winnings = betAmount.value * currentMultiplier.value;
-    toast.success(`Sikeresen kivetted: ${winnings.toFixed(2)}`);
+    store.coins += winnings; // Hozzáadjuk a nyereményt a balance-hoz
+    toast.success(
+      `Sikeresen kivetted: ${winnings.toFixed(
+        2
+      )}, Aktuális egyenleg: ${store.coins.toFixed(2)}`
+    );
     crashGame();
   }
+};
+
+const lost = () => {
+  const loss = betAmount.value;
+  store.coins -= loss; // Levonjuk a tétet, ha veszteség van
+  toast.error(
+    `Veszítettél: ${loss.toFixed(2)}, Aktuális egyenleg: ${store.coins.toFixed(
+      2
+    )}`
+  );
+  crashGame();
 };
 </script>
 
@@ -74,7 +92,11 @@ const cashOut = () => {
         Cash Out
       </button>
     </div>
-
+    <h1>Egyenleg:</h1>
+    <span class="balance-container">
+      <span class="balance-amount">{{ store.coins }}</span>
+      <img src="/coin.svg" alt="coin" class="coinkep" />
+    </span>
     <div class="multiplier-display">
       <div
         class="multiplier-bar"
@@ -99,7 +121,6 @@ const cashOut = () => {
 </template>
 
 <style scoped>
-
 .cim {
   text-align: center;
   font-size: 80px;
