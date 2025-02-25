@@ -8,6 +8,12 @@ const router = createRouter({
       name: "Coinflip",
       component: import("../components/Coinflip.vue"),
     },
+
+    {
+      path: "/slot",
+      name: "Slot",
+      component: import("../components/Slot.vue"),
+    },
     {
       path: "/home",
       name: "Home",

@@ -65,6 +65,23 @@
           <img src="/cr4sh.png" class="crash-icon" alt="Crash Icon" />
           <span class="crash-text">Crash</span>
         </Button>
+
+        <!-- Új Slot gomb -->
+        <Button
+          class="mr-2 slot-button"
+          :class="{
+            'active-button': isActive('/slot'),
+            'current-page': isActive('/slot'),
+            fixszin: !isActive('/slot'),
+          }"
+          severity="secondary"
+          as="RouterLink"
+          to="/slot"
+          text
+        >
+          <img src="/slot.png" class="slot-icon" alt="Slot Icon" />
+          <span class="slot-text">Slot</span>
+        </Button>
       </template>
 
       <template #end>
@@ -97,16 +114,11 @@ const menuItems = ref([
   {
     label: "Segítség",
     icon: "pi pi-question-circle",
-    label: "Segítség",
-    icon: "pi pi-question-circle",
     command: () => {
-      router.push("/help");
       router.push("/help");
     },
   },
   {
-    label: "Fiók adatok",
-    icon: "pi pi-user",
     label: "Fiók adatok",
     icon: "pi pi-user",
     command: () => {
@@ -116,30 +128,21 @@ const menuItems = ref([
   {
     label: "Beállítások",
     icon: "pi pi-cog",
-    label: "Beállítások",
-    icon: "pi pi-cog",
     command: () => {
-      router.push("/settings");
       router.push("/settings");
     },
   },
-    {
-    label: "Rólunk",
-    icon: "pi pi-rolunk",
+  {
     label: "Rólunk",
     icon: "pi pi-rolunk",
     command: () => {
-      router.push("/rolunk");
       router.push("/rolunk");
     },
   },
   {
     label: "Kijelentkezés",
     icon: "pi pi-sign-out",
-    label: "Kijelentkezés",
-    icon: "pi pi-sign-out",
     command: () => {
-      router.push("/logout");
       router.push("/logout");
     },
   },
@@ -176,7 +179,9 @@ const isActive = (path) => {
 .profile-border {
   border: 2px solid rgb(255, 121, 159);
 }
-.crash-button {
+
+.crash-button,
+.slot-button {
   font-size: 1.25rem;
   display: flex;
   align-items: center;
@@ -184,17 +189,20 @@ const isActive = (path) => {
   color: rgb(247, 233, 233);
 }
 
-.crash-text {
+.crash-text,
+.slot-text {
   font-size: 1rem;
 }
 
-.crash-icon {
+.crash-icon,
+.slot-icon {
   width: 35px;
   height: 35px;
   transition: transform 0.3s ease;
 }
 
-.crash-button:hover .crash-icon {
+.crash-button:hover .crash-icon,
+.slot-button:hover .slot-icon {
   transform: scale(1.1);
 }
 
@@ -215,7 +223,6 @@ const isActive = (path) => {
 
 .active-button {
   color: rgb(253, 32, 93) !important;
-  color: rgb(253, 32, 93) !important;
   transition: color 0.3s ease;
 }
 
@@ -225,19 +232,21 @@ const isActive = (path) => {
 
 .home-button,
 .coinflip-button,
-.roulette-button {
+.roulette-button,
+.crash-button,
+.slot-button {
   font-size: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgb(247, 233, 233);
   color: rgb(247, 233, 233);
 }
 
 .home-button:hover .home-text,
 .coinflip-button:hover .coinflip-text,
 .roulette-button:hover .roulette-text,
-.crash-button:hover .crash-text {
+.crash-button:hover .crash-text,
+.slot-button:hover .slot-text {
   color: rgb(253, 32, 93) !important;
   transform: scale(1.1);
   transition: transform 0.3s ease;
@@ -250,7 +259,8 @@ const isActive = (path) => {
 
 .coinflip-text,
 .roulette-text,
-.crash-text {
+.crash-text,
+.slot-text {
   font-size: 18px;
   transition: transform 0.3s ease;
 }
@@ -283,8 +293,7 @@ const isActive = (path) => {
 }
 
 .p-button:hover {
-  color: white !important; /* Itt állítjuk be a fehér színt */
-  color: white !important; /* Itt állítjuk be a fehér színt */
+  color: white !important;
   transition: color 0.3s ease;
 }
 
@@ -308,14 +317,16 @@ const isActive = (path) => {
 
 .home-button:hover .logo,
 .coinflip-button:hover .coinflip-icon,
-.roulette-button:hover .roulette-icon {
+.roulette-button:hover .roulette-icon,
+.slot-button:hover .slot-icon {
   transform: scale(1.1);
 }
 
 .home-button:hover,
 .coinflip-button:hover,
 .roulette-button:hover,
-.crash-button:hover {
+.crash-button:hover,
+.slot-button:hover {
   color: rgb(253, 32, 93);
 }
 </style>
