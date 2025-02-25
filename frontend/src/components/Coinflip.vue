@@ -23,6 +23,7 @@
         v-model="betAmount"
         placeholder="Tét összege"
         :disabled="isDisabled"
+        class="bevittCoin"
       />
       <button
         class="bet-button heads"
@@ -138,6 +139,12 @@ export default {
 </script>
 
 <style>
+.bevittCoin{
+  background-color: rgb(41, 32, 45);
+  border-radius: 5px;
+  border: solid rgb(57, 46, 61) 2px;
+}
+
 .cim {
   text-align: center;
   font-size: 80px;

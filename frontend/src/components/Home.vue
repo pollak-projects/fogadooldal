@@ -1,6 +1,6 @@
 <script setup>
 import { Card, Button } from "primevue";
-import Chat from '../components/Chat.vue';
+import Chat from "../components/Chat.vue";
 import { ref } from "vue";
 
 const isChatOpen = ref(true);
@@ -36,8 +36,9 @@ const toggleChat = () => {
           <template #content>
             <div class="szoveg">
               <p class="m-0">
-                A játékos a gép ellen játszik. Véletlenszerűen dől el
-                hogy a "fej" vagy "írás" oldal lesz a nyertes. A játékosnak helyesen kell tippelnie hogy nyerjen
+                A játékos a gép ellen játszik. Véletlenszerűen dől el hogy a
+                "fej" vagy "írás" oldal lesz a nyertes. A játékosnak helyesen
+                kell tippelnie hogy nyerjen
               </p>
             </div>
           </template>
@@ -64,8 +65,9 @@ const toggleChat = () => {
           <template #content>
             <div class="szoveg">
               <p class="m-0">
-                A játék egy forgó kerekére épül, ahol a játékosok színekre fogadnak. 
-                A pörgetés végén egy nyilazott jelző mutatja meg, melyik szín lett a nyertes. 
+                A játék egy forgó kerekére épül, ahol a játékosok színekre
+                fogadnak. A pörgetés végén egy nyilazott jelző mutatja meg,
+                melyik szín lett a nyertes.
               </p>
             </div>
           </template>
@@ -92,8 +94,8 @@ const toggleChat = () => {
           <template #content>
             <div class="szoveg">
               <p class="m-0">
-                A játékosok egy folyamatosan gyorsuló grafikonon próbálnak időben kiszállni, mielőtt az összeomlik.
-                Minél magasabbra emelkedik a grafikon, annál nagyobb a potenciális nyeremény, de a kockázat is nő.
+                A Crash egy kaszinó játék, ahol a szorzó folyamatosan nő. A cél,
+                hogy időben kivegyük a tétet, mielőtt a szorzó lezuhan. Ha lezuhan, vesztettél!
               </p>
             </div>
           </template>
@@ -113,7 +115,8 @@ const toggleChat = () => {
       <!-- Mozgó szöveg sáv -->
       <div class="marquee-container">
         <div class="marquee-text">
-          Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀💰
+          Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash
+          és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀💰
         </div>
       </div>
     </div>
@@ -121,11 +124,13 @@ const toggleChat = () => {
 </template>
 
 <style scoped>
-.slide-fade-enter-active, .slide-fade-leave-active {
+.slide-fade-enter-active,
+.slide-fade-leave-active {
   transition: all 0.3s ease;
 }
 
-.slide-fade-enter-from, .slide-fade-leave-to {
+.slide-fade-enter-from,
+.slide-fade-leave-to {
   transform: translateX(-100%);
   opacity: 0;
 }
@@ -152,7 +157,7 @@ const toggleChat = () => {
 
 .chat-toggle-button:hover {
   background-color: rgb(184, 184, 184) !important;
-  color: black !important; 
+  color: black !important;
   transform: scale(1.1);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
   border-color: black !important;
@@ -160,13 +165,14 @@ const toggleChat = () => {
 
 .szoveg {
   margin-top: 15px;
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 
 .cimke {
-  text-align: center; 
-  font-size: 1.5rem; 
+  font-size: 1.5rem;
   margin-bottom: 10px;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .home-container {
@@ -205,13 +211,33 @@ const toggleChat = () => {
   justify-content: space-between;
   min-height: 350px;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform; 
+  will-change: transform;
 }
 
 .kartya:hover {
-  transform: scale(1.03); 
+  transform: scale(1.03);
   box-shadow: 0 10px 20px rgba(253, 32, 93, 0.3);
-  z-index: 10; 
+  z-index: 10;
+}
+
+.kartya img {
+  width: 365px;
+  height: 200px;
+  margin-right: 10px;
+}
+
+.kartya .flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.kartya .header-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Igazítás balra, de lehet középre is */
+  gap: 10px; /* Kép és címke közötti távolság */
 }
 
 @media (max-width: 768px) {
@@ -219,7 +245,7 @@ const toggleChat = () => {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .kartya {
     width: 100%;
     max-width: none;
@@ -235,7 +261,7 @@ const toggleChat = () => {
 }
 
 .gomb:hover {
-  background-color: rgb(206, 30, 80);
+  background-color: rgb(206, 30, 80) !important;
   border: 1px solid rgb(255, 121, 159);
 }
 
@@ -281,10 +307,9 @@ const toggleChat = () => {
   width: 100%;
 }
 
-
 .marquee-container {
   width: 100%;
-  max-width: calc(22rem * 3 + 30px); 
+  max-width: calc(22rem * 3 + 30px);
   margin: 20px auto;
   overflow: hidden;
   white-space: nowrap;
