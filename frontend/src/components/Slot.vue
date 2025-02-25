@@ -10,10 +10,10 @@ const sevens = ['7️⃣']; // 1 hetes
 
 // Szimbólumok súlyozva
 const symbols = [
-  ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, // 25 gyümölcs (legtöbb esély)
-  ...bells, ...bells, ...bells, // 3 csengő (közepes esély)
-  ...goldBars, ...goldBars, // 2 aranyrúd (ritkább)
-  ...sevens // 1 hetes (legritkább)
+  ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits,// 25 gyümölcs (legtöbb esély)
+  ...bells, ...bells, ...bells, ...bells, ...bells, ...bells, ...bells, ...bells,// 3 csengő (közepes esély)
+  ...goldBars, ...goldBars, ...goldBars, ...goldBars, ...goldBars, // 2 aranyrúd (ritkább)
+  ...sevens,   ...sevens,  ...sevens, // 1 hetes (legritkább)
 ];
 
 const slots = ref([null, null, null]);
