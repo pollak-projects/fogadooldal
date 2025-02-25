@@ -95,7 +95,8 @@ const toggleChat = () => {
             <div class="szoveg">
               <p class="m-0">
                 A Crash egy kaszinó játék, ahol a szorzó folyamatosan nő. A cél,
-                hogy időben kivegyük a tétet, mielőtt a szorzó lezuhan. Ha lezuhan, vesztettél!
+                hogy időben kivegyük a tétet, mielőtt a szorzó lezuhan. Ha
+                lezuhan, vesztettél!
               </p>
             </div>
           </template>
@@ -107,6 +108,34 @@ const toggleChat = () => {
                 class="gomb"
                 as="RouterLink"
                 to="/crash"
+              />
+            </div>
+          </template>
+        </Card>
+        <Card style="overflow: hidden" class="kartya">
+          <template #header>
+            <img alt="Coinflip" src="/slotkep.png" />
+          </template>
+          <template #title>
+            <div class="cimke">Slot</div>
+          </template>
+          <template #content>
+            <div class="szoveg">
+              <p class="m-0">
+                A slot játék során a játékos pénzt tesz fel, majd pörgetést
+                indít. A gép véletlenszerű szimbólumokat mutat, és ha
+                azok nyerőt adnak, kifizetést biztosítanak.
+              </p>
+            </div>
+          </template>
+          <template #footer>
+            <div class="flex gap-4 mt-1 footer-buttons">
+              <Button
+                label="Játék!"
+                severity="danger"
+                class="gomb"
+                as="RouterLink"
+                to="/slot"
               />
             </div>
           </template>
@@ -124,6 +153,16 @@ const toggleChat = () => {
 </template>
 
 <style scoped>
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px; /* Csökkentett szélesség */
+  height: 100%;
+  background-color: rgb(46, 40, 54);
+  z-index: 1000;
+}
+
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.3s ease;
@@ -180,6 +219,7 @@ const toggleChat = () => {
   height: 100vh;
   position: relative;
   z-index: 1;
+  padding-left: 60px;
 }
 
 .main-content {
@@ -188,21 +228,22 @@ const toggleChat = () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  margin-left: 60px;
 }
 
 .cards-container {
   margin-top: 100px;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
   padding: 20px 0;
   flex-wrap: wrap;
+  max-width: calc(100% - 60px);
 }
 
 .kartya {
-  width: 90%;
-  max-width: 22rem;
+  width: 18rem;
   margin: 10px;
   background-color: rgb(41, 32, 45);
   color: white;
@@ -221,9 +262,9 @@ const toggleChat = () => {
 }
 
 .kartya img {
-  width: 365px;
-  height: 200px;
-  margin-right: 10px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .kartya .flex-header {
@@ -308,7 +349,7 @@ const toggleChat = () => {
 }
 
 .marquee-container {
-  width: 100%;
+  width: 1100px;
   max-width: calc(22rem * 3 + 30px);
   margin: 20px auto;
   overflow: hidden;
