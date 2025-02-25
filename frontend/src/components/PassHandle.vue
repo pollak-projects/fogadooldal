@@ -75,7 +75,7 @@
         "Authorization": `Bearer ${localStorage.getItem("access_token")}`
       },
       body: JSON.stringify({
-        newPassword: newPassword.value,
+        password: newPassword.value,
         
       }),
     })
