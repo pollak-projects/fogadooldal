@@ -1,5 +1,6 @@
 <template>
   <div id="app" class="container">
+    <h1 class="cim">Coinflip</h1>
     <div class="coin-container">
       <div
         class="coin"
@@ -110,7 +111,7 @@ export default {
       this.showResult = true;
 
       if (this.hasWon) {
-        this.winAmount = this.betAmount * .9;
+        this.winAmount = this.betAmount * 0.9;
         store.coins += this.winAmount;
       } else {
         store.coins -= this.betAmount;
@@ -137,6 +138,17 @@ export default {
 </script>
 
 <style>
+.cim {
+  text-align: center;
+  font-size: 80px;
+  font-weight: bold;
+  color: #f39c12;
+  text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.6);
+  letter-spacing: 3px;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
 .balance-container {
   display: inline-flex;
   align-items: center;
@@ -160,23 +172,23 @@ export default {
 }
 
 .container {
-  padding-top: 80px; 
+  padding-top: 80px;
   max-width: 600px;
-  width: 100%;   
-  margin: 0 auto;   
+  width: 100%;
+  margin: 0 auto;
   text-align: center;
   background-color: rgb(46, 40, 54);
   padding: 2rem;
   border-radius: 12px;
-  min-height: 100vh; 
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
+  justify-content: center;
 }
 .coin-container {
   perspective: 1000px;
   margin: 2rem auto;
-  padding-top: 0; 
+  padding-top: 0;
 }
 
 .coin {
@@ -186,7 +198,7 @@ export default {
   position: relative;
   transform-style: preserve-3d;
   transition: transform 1s;
-  z-index: 10; 
+  z-index: 10;
 }
 
 .coin.flipping.heads {

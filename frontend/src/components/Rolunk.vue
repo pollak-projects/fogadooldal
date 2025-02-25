@@ -20,7 +20,7 @@
       </div>
     </div>
   </div>
-</template>
+</template> 
 
 <script>
 export default {
@@ -66,7 +66,7 @@ export default {
   margin: 0 auto;
   padding: 0 20px;
   margin-top: -100px;
-  overflow: hidden; /* Letiltja a görgetést a konténeren belül */
+  overflow: hidden; 
 }
 
 .page-title {

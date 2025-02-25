@@ -21,6 +21,7 @@ import { groupController } from "./controller/group.controller.js";
 import { listAllTokens } from "./services/auth.service.js";
 import { listAllGroup } from "./services/group.service.js";
 import { authController } from "./controller/auth.controller.js";
+import { coinController } from "./controller/coins.controller.js";
 
 const app = express();
 const port = 3300;
@@ -38,6 +39,7 @@ app.set("view engine", "ejs");
 app.use("/user", userRouter);
 app.use("/auth", authController);
 app.use("/group", groupController);
+app.use("/coins", coinController);
 
 app.get("/", async (req, res) => {
   const userData = await listAllUsers();
