@@ -33,11 +33,6 @@ const startGame = () => {
   // Azonnal levonjuk a tétet a store.coins-ból
   store.coins -= Math.round(betAmount.value);
 
-  // Kiíratjuk az új egyenleget
-  toast.success(`Tét levonva! Aktuális egyenleg: ${Math.round(store.coins)}`, {
-    position: "top-right",
-  });
-
   // Indítjuk a játékot
   isRunning.value = true;
   crashed.value = false;
