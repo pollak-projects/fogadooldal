@@ -48,7 +48,7 @@ const bet = ref(1);
 const spin = () => {
   if (spinning.value) return;
   if (bet.value < 1 || !Number.isInteger(bet.value)) {
-    toast.error("Érvénytelen tét! Adj meg egy pozitív egész számot.");
+    toast.error("Nincs elég pénzed.");
     return;
   }
   if (store.coins < bet.value) {
