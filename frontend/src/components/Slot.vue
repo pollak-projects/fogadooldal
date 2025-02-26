@@ -1,19 +1,44 @@
 <script setup>
-import { ref } from 'vue';
-import { useToast } from 'vue-toastification';
+import { ref } from "vue";
+import { useToast } from "vue-toastification";
+import { store } from "../config/store";
 
 const toast = useToast();
-const fruits = ['🍒', '🍋', '🍊', '🍇', '🍉']; // 5 gyümölcs
-const bells = ['🔔']; // 1 csengő
-const goldBars = ['🧈']; // 1 aranyrúd
-const sevens = ['7️⃣']; // 1 hetes
+const fruits = ["🍒", "🍋", "🍊", "🍇", "🍉"]; // 5 gyümölcs
+const bells = ["🔔"]; // 1 csengő
+const goldBars = ["🧈"]; // 1 aranyrúd
+const sevens = ["7️⃣"]; // 1 hetes
 
 // Szimbólumok súlyozva
 const symbols = [
-  ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits, ...fruits,// 25 gyümölcs (legtöbb esély)
-  ...bells, ...bells, ...bells, ...bells, ...bells, ...bells, ...bells, ...bells,// 3 csengő (közepes esély)
-  ...goldBars, ...goldBars, ...goldBars, ...goldBars, ...goldBars, // 2 aranyrúd (ritkább)
-  ...sevens,   ...sevens,  ...sevens, // 1 hetes (legritkább)
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits,
+  ...fruits, // 25 gyümölcs (legtöbb esély)
+  ...bells,
+  ...bells,
+  ...bells,
+  ...bells,
+  ...bells,
+  ...bells,
+  ...bells,
+  ...bells, // 3 csengő (közepes esély)
+  ...goldBars,
+  ...goldBars,
+  ...goldBars,
+  ...goldBars,
+  ...goldBars, // 2 aranyrúd (ritkább)
+  ...sevens,
+  ...sevens,
+  ...sevens, // 1 hetes (legritkább)
 ];
 
 const slots = ref([null, null, null]);
@@ -26,14 +51,21 @@ const spin = () => {
     toast.error("Érvénytelen tét! Adj meg egy pozitív egész számot.");
     return;
   }
+  if (store.coins < bet.value) {
+    toast.error("Nincs elég egyenleged a pörgetéshez!");
+    return;
+  }
 
+  store.coins -= bet.value; // Levonja a tétet
   spinning.value = true;
   let spinCount = 0;
-  
+
   const spinInterval = setInterval(() => {
-    slots.value = slots.value.map(() => symbols[Math.floor(Math.random() * symbols.length)]);
+    slots.value = slots.value.map(
+      () => symbols[Math.floor(Math.random() * symbols.length)]
+    );
     spinCount++;
-    
+
     if (spinCount > 10) {
       clearInterval(spinInterval);
       spinning.value = false;
@@ -43,10 +75,10 @@ const spin = () => {
 };
 
 const checkWin = () => {
-  if (slots.value.every(slot => slot === slots.value[0])) {
+  if (slots.value.every((slot) => slot === slots.value[0])) {
     const symbol = slots.value[0];
     let multiplier = 0;
-    let message = '';
+    let message = "";
 
     if (fruits.includes(symbol)) {
       multiplier = 2;
@@ -63,48 +95,82 @@ const checkWin = () => {
     }
 
     const winAmount = bet.value * multiplier;
+    store.coins += winAmount; // Hozzáadja a nyereményt az egyenleghez
+
     toast.success(`${message} Nyertél ${winAmount} pontot!`, {
       timeout: 5000,
       hideProgressBar: true,
-      icon: false
+      icon: false,
     });
   } else {
-    toast.error(`Sajnos most nem nyertél. Próbáld újra! Vesztettél ${bet.value} pontot.`, {
-      timeout: 3000,
-      hideProgressBar: true,
-      icon: false
-    });
+    toast.error(
+      `Sajnos most nem nyertél. Próbáld újra! Vesztettél ${bet.value} pontot.`,
+      {
+        timeout: 3000,
+        hideProgressBar: true,
+        icon: false,
+      }
+    );
   }
 };
 </script>
 
 <template>
   <div class="slot-machine">
+    <h1 class="cim">Slots</h1>
     <div class="slots">
       <div v-for="(slot, index) in slots" :key="index" class="slot">
         {{ slot }}
       </div>
     </div>
-    
+
     <div class="controls">
       <div class="bet-input">
         <label>Tét:</label>
-        <input 
-          type="number" 
-          v-model.number="bet" 
-          min="1" 
-          step="1" 
+        <input
+          type="number"
+          v-model.number="bet"
+          min="1"
+          step="1"
           :disabled="spinning"
-        >
+        />
+      </div>
+      <h1 class="egyenlegSzoveg">Egyenleg:</h1>
+      <div class="egyenleg">
+        <h1>{{ store.coins }}</h1>
+        <img src="/coin.svg" alt="coin" class="coinkep" />
       </div>
       <button @click="spin" :disabled="spinning">
-        {{ spinning ? 'Pörgetés...' : 'Pörgetés' }}
+        {{ spinning ? "Pörgetés..." : "Pörgetés" }}
       </button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.egyenlegSzoveg {
+  color: white;
+  margin-bottom: -15px;
+}
+.egyenleg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+.cim {
+  text-align: center;
+  font-size: 80px;
+  font-weight: bold;
+  color: #f39c12;
+  text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.6);
+  letter-spacing: 3px;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  margin-top: -170px;
+}
+
 .slot-machine {
   max-width: 600px;
   width: 100%;
@@ -157,9 +223,10 @@ const checkWin = () => {
 .bet-input input {
   padding: 8px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 2px solid rgb(253, 32, 93);
   width: 80px;
   text-align: center;
+  width: 100%;
 }
 
 button {

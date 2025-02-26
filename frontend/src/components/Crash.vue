@@ -159,7 +159,7 @@ const lost = () => {
 .bet-input input {
   padding: 10px;
   font-size: 1em;
-  border: 2px solid #4caf50;
+  border: 2px solid rgb(253, 32, 93);
   border-radius: 5px;
   width: 100%;
   max-width: 200px;
@@ -183,8 +183,12 @@ button {
 }
 
 .start-button {
-  background-color: #4caf50;
+  background-color: rgb(253, 32, 93);
   color: white;
+}
+
+.start-button:hover{
+  background-color: rgb(206, 30, 80);
 }
 
 .start-button:disabled {
@@ -214,7 +218,7 @@ button {
 
 .multiplier-bar {
   height: 100%;
-  background-color: #4caf50;
+  background-color: rgb(253, 32, 93);
   transition: width 0.1s;
 }
 
