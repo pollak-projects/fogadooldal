@@ -90,7 +90,7 @@
           {{ store.coins }}
         </div>
         <img
-          src="/pfp.png"
+          :src="userStore.profileImage"
           class="w-15 rounded-full cursor-pointer profile-border"
           @click="toggleMenu"
         />
@@ -105,7 +105,9 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Button, Toolbar, Menu } from "primevue";
 import { store } from "../config/store.js";
+import { useUserStore } from "../config/store.js";
 
+const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
 const menu = ref(null);
