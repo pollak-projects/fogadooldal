@@ -13,8 +13,9 @@ const crashPoint = ref(0);
 const history = ref([]);
 
 const startGame = () => {
-  if (betAmount.value <= 0) {
-    toast.error("Kérlek adj meg egy érvényes tétet!", {
+  // Ellenőrizzük, hogy a tét ne haladja meg a rendelkezésre álló érméket
+  if (betAmount.value <= 0 || betAmount.value > store.coins) {
+    toast.error("Nincs elég pénzed!", {
       position: "top-right",
     });
     return;
@@ -46,11 +47,11 @@ const crashGame = () => {
 const cashOut = () => {
   if (!crashed.value) {
     const winnings = betAmount.value * currentMultiplier.value;
-    store.coins += winnings; // Hozzáadjuk a nyereményt a balance-hoz
+    store.coins += Math.round(winnings); // Kerekítjük az nyereményt egész számra
     toast.success(
-      `Sikeresen kivetted: ${winnings.toFixed(
-        2
-      )}, Aktuális egyenleg: ${store.coins.toFixed(2)}`
+      `Sikeresen kivetted: ${Math.round(
+        winnings
+      )}, Aktuális egyenleg: ${Math.round(store.coins)}`
     );
     crashGame();
   }
@@ -58,10 +59,10 @@ const cashOut = () => {
 
 const lost = () => {
   const loss = betAmount.value;
-  store.coins -= loss; // Levonjuk a tétet, ha veszteség van
+  store.coins -= Math.round(loss); // Kerekítjük a veszteséget
   toast.error(
-    `Veszítettél: ${loss.toFixed(2)}, Aktuális egyenleg: ${store.coins.toFixed(
-      2
+    `Veszítettél: ${Math.round(loss)}, Aktuális egyenleg: ${Math.round(
+      store.coins
     )}`
   );
   crashGame();
@@ -187,7 +188,7 @@ button {
   color: white;
 }
 
-.start-button:hover{
+.start-button:hover {
   background-color: rgb(206, 30, 80);
 }
 
