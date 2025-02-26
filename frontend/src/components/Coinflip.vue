@@ -43,7 +43,11 @@
 
     <div v-if="showResult" class="result">
       <p :class="['result-text', hasWon ? 'win' : 'lose']">
-        {{ hasWon ? `NYERTÉL! ${winAmount} Ft` : `VESZTETTÉL ${betAmount} Ft` }}
+        {{
+          hasWon
+            ? `NYERTÉL ${winAmount} COINT!`
+            : `VESZTETTÉL ${betAmount} COINT! `
+        }}
       </p>
       <button class="play-again" @click="resetGame">ÚJ JÁTÉK</button>
     </div>
@@ -122,10 +126,10 @@ export default {
       if (this.hasWon) {
         this.winAmount = this.betAmount * 0.9;
         store.coins += this.winAmount;
-        toast.success(`NYERTÉL! ${this.winAmount} Ft`);
+        toast.success(`NYERTÉL ${this.winAmount} COINT!`);
       } else {
         store.coins -= this.betAmount;
-        toast.error(`VESZTETTÉL ${this.betAmount} Ft`);
+        toast.error(`VESZTETTÉL ${this.betAmount} COINT!`);
       }
 
       // Set the final rotation of the coin based on the result
