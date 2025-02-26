@@ -62,6 +62,8 @@
 
 <script>
 import { store } from "../config/store.js";
+import { useToast } from "vue-toastification";
+
 export default {
   data() {
     return {
@@ -83,6 +85,7 @@ export default {
       return this.userChoice === this.result;
     },
   },
+
   methods: {
     chooseHeads() {
       this.startFlip("heads");
@@ -91,10 +94,13 @@ export default {
       this.startFlip("tails");
     },
     startFlip(choice) {
+      const toast = useToast();
+
       if (this.betAmount > store.coins) {
-        alert("Nincs elég pénzed!");
+        toast.error("Nincs elég pénzed!");
         return;
       }
+
       // Reset coin rotation to initial state
       const coin = this.$refs.coin;
       coin.style.transform = "rotateY(0deg)";
@@ -108,14 +114,18 @@ export default {
       this.showResult = false;
     },
     onAnimationEnd() {
+      const toast = useToast();
+
       this.isFlipping = false;
       this.showResult = true;
 
       if (this.hasWon) {
         this.winAmount = this.betAmount * 0.9;
         store.coins += this.winAmount;
+        toast.success(`NYERTÉL! ${this.winAmount} Ft`);
       } else {
         store.coins -= this.betAmount;
+        toast.error(`VESZTETTÉL ${this.betAmount} Ft`);
       }
 
       // Set the final rotation of the coin based on the result
@@ -139,7 +149,7 @@ export default {
 </script>
 
 <style>
-.bevittCoin{
+.bevittCoin {
   background-color: rgb(41, 32, 45);
   border-radius: 5px;
   border: solid rgb(57, 46, 61) 2px;

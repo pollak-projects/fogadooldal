@@ -25,6 +25,16 @@ const toggleChat = () => {
     </div>
     <div class="main-content">
       <div class="background-container"></div>
+      
+      <!-- Mozgó szöveg sáv -->
+      <div class="marquee-container">
+        <div class="marquee-text">
+          Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash
+          és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀🎡🍀
+        </div>
+      </div>
+
+      <!-- Kártyák -->
       <div class="cards-container">
         <Card style="overflow: hidden" class="kartya">
           <template #header>
@@ -112,6 +122,7 @@ const toggleChat = () => {
             </div>
           </template>
         </Card>
+
         <Card style="overflow: hidden" class="kartya">
           <template #header>
             <img alt="Coinflip" src="/slotkep.png" />
@@ -141,13 +152,6 @@ const toggleChat = () => {
           </template>
         </Card>
       </div>
-      <!-- Mozgó szöveg sáv -->
-      <div class="marquee-container">
-        <div class="marquee-text">
-          Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash
-          és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀💰
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -157,7 +161,7 @@ const toggleChat = () => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 60px; /* Csökkentett szélesség */
+  width: 60px;
   height: 100%;
   background-color: rgb(46, 40, 54);
   z-index: 1000;
@@ -232,7 +236,7 @@ const toggleChat = () => {
 }
 
 .cards-container {
-  margin-top: 100px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -265,33 +269,6 @@ const toggleChat = () => {
   width: 100%;
   height: auto;
   object-fit: cover;
-}
-
-.kartya .flex-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.kartya .header-content {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Igazítás balra, de lehet középre is */
-  gap: 10px; /* Kép és címke közötti távolság */
-}
-
-@media (max-width: 768px) {
-  .cards-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .kartya {
-    width: 100%;
-    max-width: none;
-    margin: 10px 0;
-  }
 }
 
 .gomb {
@@ -336,12 +313,6 @@ const toggleChat = () => {
   }
 }
 
-.error-message {
-  color: red;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
 .footer-buttons {
   display: flex;
   justify-content: center;
@@ -349,9 +320,12 @@ const toggleChat = () => {
 }
 
 .marquee-container {
+  margin-top: 120px !important; 
+  margin-bottom: 10px !important;
   width: 1100px;
   max-width: calc(22rem * 3 + 30px);
   margin: 20px auto;
+  margin-top: 80px;
   overflow: hidden;
   white-space: nowrap;
   background-color: rgba(0, 0, 0, 0.2);
@@ -378,8 +352,21 @@ const toggleChat = () => {
 }
 
 @media (max-width: 768px) {
-  .marquee-container {
-    max-width: 100%; /* Teljes szélességű a mobilnézetben */
+  .cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .kartya {
+    width: 100%;
+    max-width: none;
+    margin: 10px 0;
+  }
+
+
+  
+  .cards-container {
+    margin-top: 10px;
   }
 }
 </style>
