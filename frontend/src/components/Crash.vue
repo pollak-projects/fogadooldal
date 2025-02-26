@@ -12,6 +12,15 @@ const crashed = ref(false);
 const crashPoint = ref(0);
 const history = ref([]);
 
+const crashGame = () => {
+  if (!crashed.value) {
+    isRunning.value = false;
+    crashed.value = true;
+    crashPoint.value = currentMultiplier.value;
+    history.value.unshift(crashPoint.value.toFixed(2));
+  }
+};
+
 const startGame = () => {
   // Ellenőrizzük, hogy a tét ne haladja meg a rendelkezésre álló érméket
   if (betAmount.value <= 0 || betAmount.value > store.coins) {
@@ -21,6 +30,15 @@ const startGame = () => {
     return;
   }
 
+  // Azonnal levonjuk a tétet a store.coins-ból
+  store.coins -= Math.round(betAmount.value);
+
+  // Kiíratjuk az új egyenleget
+  toast.success(`Tét levonva! Aktuális egyenleg: ${Math.round(store.coins)}`, {
+    position: "top-right",
+  });
+
+  // Indítjuk a játékot
   isRunning.value = true;
   crashed.value = false;
   currentMultiplier.value = 1.0;
@@ -29,19 +47,12 @@ const startGame = () => {
     if (isRunning.value) {
       currentMultiplier.value += 0.01;
       if (Math.random() < 0.02) {
-        crashGame();
-        lost();
+        crashGame(); // Itt már egyszer hívjuk meg
+        lost(); // Ha a játék véget ér, akkor a veszteséget is rögzítjük
         clearInterval(interval);
       }
     }
   }, 40);
-};
-
-const crashGame = () => {
-  isRunning.value = false;
-  crashed.value = true;
-  crashPoint.value = currentMultiplier.value;
-  history.value.unshift(crashPoint.value.toFixed(2));
 };
 
 const cashOut = () => {
@@ -53,19 +64,18 @@ const cashOut = () => {
         winnings
       )}, Aktuális egyenleg: ${Math.round(store.coins)}`
     );
-    crashGame();
+    crashGame(); // Itt csak egyszer hívjuk meg a crashGame-t
   }
 };
 
 const lost = () => {
   const loss = betAmount.value;
-  store.coins -= Math.round(loss); // Kerekítjük a veszteséget
   toast.error(
     `Veszítettél: ${Math.round(loss)}, Aktuális egyenleg: ${Math.round(
       store.coins
     )}`
   );
-  crashGame();
+  crashGame(); // Itt is csak egyszer hívjuk meg a crashGame-t
 };
 </script>
 
@@ -101,7 +111,7 @@ const lost = () => {
     <div class="multiplier-display">
       <div
         class="multiplier-bar"
-        :style="{ width: `${currentMultiplier * 10}%` }"
+        :style="{ width: `${currentMultiplier * 1}%` }"
       ></div>
       <div class="multiplier-text">
         Szorzó: {{ currentMultiplier.toFixed(2) }}x
