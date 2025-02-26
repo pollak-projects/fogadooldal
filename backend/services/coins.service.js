@@ -21,16 +21,19 @@ export async function addCoin(mennyiseg, userid) {
     });
 }
 
-export async function removeCoin(mennyiseg, userid) {
+export async function updateCoin(id, mennyiseg, userid) {
   await prisma.coin
     .update({
+      where: {
+        id: id,
+      },
       data: {
         mennyiseg: mennyiseg,
         userid: userid,
       },
     })
     .catch((err) => {
-      console.error(err);
-      throw new Error();
+      console.error(err.message);
+      throw new Error(err.message);
     });
 }
