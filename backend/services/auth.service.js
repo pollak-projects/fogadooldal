@@ -4,6 +4,7 @@ import { encrypt } from "../lib/hash.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { emailMegerosites } from "./emailsender.js";
+import { addCoin } from "./coins.service.js";
 
 const prisma = new PrismaClient();
 
@@ -98,12 +99,12 @@ async function createNewToken(id, nev, email, groupsNeve) {
   );
 }
 
-export async function register(username, password, email, full_name ) {
+export async function register(username, password, email, full_name) {
   const pwdEncrypted = await encrypt(password);
 
   let uuid = crypto.randomUUID();
 
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: {
       username: username,
       password: pwdEncrypted,
@@ -112,8 +113,11 @@ export async function register(username, password, email, full_name ) {
       email_verification_token: uuid,
     },
   });
-
-  await  emailMegerosites(email, uuid)
+  await addCoin(1000, user.id).catch((err) => {
+    console.error(err);
+    throw new Error();
+  });
+  await emailMegerosites(email, uuid);
 }
 export async function login(username, password) {
   const user = await prisma.user
@@ -141,10 +145,10 @@ export async function login(username, password) {
       email: user.email,
       userGroup: user.groupsNeve,
     },
-    secret, 
+    secret,
     {
       expiresIn: 20 * 60 * 1000,
-      algorithm: "HS512"
+      algorithm: "HS512",
     }
   );
 
@@ -155,7 +159,7 @@ export async function login(username, password) {
     secret,
     {
       expiresIn: 20 * 60 * 1000,
-      algorithm: "HS512"
+      algorithm: "HS512",
     }
   );
 
@@ -165,8 +169,6 @@ export async function login(username, password) {
     user_id: user.id,
   };
 }
-
-
 
 export async function listAllTokens() {
   const data = await prisma.maindata.findUnique({

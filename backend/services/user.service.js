@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { addCoin } from "./coins.service.js";
 
 const prisma = new PrismaClient();
 
@@ -31,7 +32,7 @@ export async function login(username, password) {
 
 export async function addUser(username, password, email, admin, full_name) {
   const hashedPwd = await encrypt(password);
-  await prisma.user
+  const user = await prisma.user
     .create({
       data: {
         username: username,

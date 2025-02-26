@@ -1,7 +1,7 @@
 import express from "express";
 import {
   addCoin,
-  removeCoin,
+  updateCoin,
   listAllCoins,
 } from "../services/coins.service.js";
 const router = express.Router();
@@ -28,10 +28,10 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.put("/remove", async (req, res) => {
-  const { mennyiseg, userid } = req.body;
+router.put("/update", async (req, res) => {
+  const { id, mennyiseg, userid } = req.body;
 
-  await removeCoin(mennyiseg, userid);
+  await updateCoin(id, mennyiseg, userid);
 
   res.status(200).json({
     message: "Data successfully updated",
