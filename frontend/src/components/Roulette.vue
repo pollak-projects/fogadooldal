@@ -34,10 +34,12 @@
           Hátralévő idő: <span>{{ timer }}mp</span>
         </p>
       </div>
-      <div class="p-4 bg-gray-800 rounded-lg">
-        <p class="text-xl">
+
+      <div class="p-4 bg-gray-800 rounded-lg balance flex items-center">
+        <p class="text-xl mr-2">
           Egyenleg: <span>{{ store.coins }}</span>
         </p>
+        <img src="/coin.svg" alt="Coin" class="coinkep" />
       </div>
     </div>
 
@@ -188,8 +190,8 @@ const startTimer = () => {
     timer.value--;
     if (timer.value === 0) {
       clearInterval(countdown);
-      bettingOpen.value = false;
-      spinWheel();
+      bettingOpen.value = false; // Bezárjuk a fogadást
+      spinWheel(); // Elindítjuk a kört
     }
   }, 1000);
 };
@@ -209,11 +211,16 @@ const spinWheel = () => {
     if (history.value.length > 50) history.value.pop();
 
     resolveBets(winningColor);
+
+    // A kör befejezését követően újra engedélyezzük a fogadást
     bettingOpen.value = true;
-    timer.value = 15;
+    timer.value = 15; // Új időzítő indítása
     resetBets();
 
     currentPosition.value = finalPosition + 4 * wheel.value.length; // Visszaállítás a helyes pozícióra
+
+    // Új kör indítása
+    startTimer();
   }, 5000);
 };
 
@@ -243,7 +250,7 @@ const resolveBets = (winningColor) => {
 };
 
 const resetBets = () => {
-  activeBets.value = { Red: 0, Green: 0, Black: 0 };
+  activeBets.value = { Red: 0, Green: 0, Black: 0 }; // Minden fogadást törlünk
 };
 
 const getColorClass = (symbol) => {
@@ -262,6 +269,17 @@ onMounted(() => {
 </script>
 
 <style>
+.balance {
+  display: flex;
+  align-items: center;
+}
+
+.coinkep {
+  width: 20px; /* Adjust the size of the coin image */
+  height: 20px;
+  margin-left: 5px; /* Space between the amount and the coin image */
+}
+
 .cim {
   margin-top: 50px;
 }

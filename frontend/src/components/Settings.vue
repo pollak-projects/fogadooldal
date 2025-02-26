@@ -2,44 +2,44 @@
   <div class="settings-page">
     <div class="settings-container">
       <h1 class="h1">Profil Beállítások</h1>
-      <br>
+      <br />
       <Toast />
       <div class="profile-picture-section">
-  <div class="avatar-wrapper">
-    <img 
-      :src="profileImage" 
-      alt=""
-      class="profile-avatar"
-    >
-  </div>
-  <label for="avatar-upload" class="upload-button">
-    <input
-      type="file"
-      ref="imgRef"
-      id="avatar-upload"
-      accept="image/*"
-      @change="handleImageUpload"
-      hidden
-    >
-    <span class="upload-content">
-      <img src="/kepfeltolto.png" alt="Kép feltöltése" class="upload-icon">
-      <span class="upload-text">Kép módosítása</span>
-    </span>
-  </label>
-</div>
+        <div class="avatar-wrapper">
+          <img :src="profileImage" alt="" class="profile-avatar" />
+        </div>
+        <label for="avatar-upload" class="upload-button">
+          <input
+            type="file"
+            ref="imgRef"
+            id="avatar-upload"
+            accept="image/*"
+            @change="handleImageUpload"
+            hidden
+          />
+          <span class="upload-content">
+            <img
+              src="/kepfeltolto.png"
+              alt="Kép feltöltése"
+              class="upload-icon"
+            />
+            <span class="upload-text">Kép módosítása</span>
+          </span>
+        </label>
+      </div>
 
       <form @submit.prevent="saveSettings" class="settings-form">
         <div class="form-section">
           <h1 class="h1">Személyes adatok</h1>
-          <br>
+          <br />
           <div class="form-group">
             <label>Teljes név:</label>
-            <input type="text" v-model="userData.name" required>
+            <input type="text" v-model="userData.name" required />
           </div>
 
           <div class="form-group">
             <label>Email cím:</label>
-            <input type="email" v-model="userData.email" required>
+            <input type="email" v-model="userData.email" required />
           </div>
 
           <div class="form-group">
@@ -49,26 +49,33 @@
         </div>
 
         <div class="form-section">
-  <h1 class="h1">Jelszó módosítás</h1>
-  <br>
-  <div class="form-group">
-    <label>Új jelszó:</label>
-    <input :type="showPassword ? 'text' : 'password'" v-model="userData.newPassword">
-    <div class="show-password float-right">
-      <img
-        :src="showPassword ? '/eye2.png' : '/hidden2.png'"
-        alt="Toggle Password Visibility"
-        @click="showPassword = !showPassword"
-        class="password-toggle-icon"
-      />
-    </div>
-  </div>
-  <!-- Jelszó visszaállítás gomb -->
-  <div class="form-group">
-    <!--<RouterLink  /RouterLink>-->
-    <RouterLink type="button" @click="jelszoVisszaallitas" to="/jelszovisszaallitas"  class="reset-password-button">Jelszó visszaállítása</RouterLink> 
-  </div>
-</div>
+          <h1 class="h1">Jelszó módosítás</h1>
+          <br />
+          <div class="form-group">
+            <label>Új jelszó:</label>
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              v-model="userData.newPassword"
+            />
+            <div class="show-password float-right">
+              <img
+                :src="showPassword ? '/eye2.png' : '/hidden2.png'"
+                alt="Toggle Password Visibility"
+                @click="showPassword = !showPassword"
+                class="password-toggle-icon"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <RouterLink
+              type="button"
+              @click="jelszoVisszaallitas"
+              to="/jelszovisszaallitas"
+              class="reset-password-button"
+              >Jelszó visszaállítása</RouterLink
+            >
+          </div>
+        </div>
 
         <div class="Mentesgomb">
           <button type="submit" class="save-button">Beállítások mentése</button>
@@ -79,68 +86,59 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
-import { useToast } from 'primevue/usetoast';
-import Toast from 'primevue/toast';
-import { RouterLink } from 'vue-router';
+import { ref, reactive } from "vue";
+import { useToast } from "primevue/usetoast";
+import Toast from "primevue/toast";
+import { RouterLink } from "vue-router";
+import { useUserStore } from "../config/store"; // Importáld a store-t
 
-
+const userStore = useUserStore();
 const toast = useToast();
 
 // Reactive state
-const rawImg = ref(null);
-const imgs = ref(null);
-const reader = ref(new FileReader());
-const profileImage = ref(null);
 const showPassword = ref(false);
 const userData = reactive({
-  name: '',
-  email: '',
-  bio: '',
-  newPassword: '',
+  name: "",
+  email: "",
+  bio: "",
+  newPassword: "",
   notifications: {
     email: true,
-    sms: false
-  }
+    sms: false,
+  },
 });
 
 // Template refs
 const imgRef = ref(null);
 
-// Methods
-const save = () => {
-  reader.value.onload = () => {
-    rawImg.value = reader.value.result;
-    console.log(rawImg.value);
-  };
-  
-  const fileInput = imgRef.value;
-  if(fileInput?.files?.length) {
-    reader.value.readAsDataURL(fileInput.files[0]);
-  }
-};
+// Profilkép elérési útja a store-ból
+const profileImage = ref(userStore.profileImage);
 
+// Handle image upload
 const handleImageUpload = (e) => {
   const file = e.target.files[0];
-  if(file) {
+  if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      profileImage.value = e.target.result;
+      // Frissítjük a store-ban tárolt profilképet
+      userStore.setProfileImage(e.target.result);
+      profileImage.value = e.target.result; // Frissítjük a profilképet a komponensben
     };
     reader.readAsDataURL(file);
   }
 };
 
+// Form mentése
 const saveSettings = () => {
-  console.log('Saved data:', {
+  console.log("Saved data:", {
     ...userData,
-    profileImage: profileImage.value
+    profileImage: profileImage.value,
   });
-  
+
   toast.add({
-    severity: 'success',
-    summary: 'Sikeres mentés',
-    life: 3000
+    severity: "success",
+    summary: "Sikeres mentés",
+    life: 3000,
   });
 };
 </script>
@@ -214,7 +212,7 @@ const saveSettings = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3rem; 
+  gap: 3rem;
   margin-bottom: 2rem;
   text-align: center;
 }
