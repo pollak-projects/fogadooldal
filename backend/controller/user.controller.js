@@ -16,11 +16,11 @@ router.get("/getAll", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { username, password, email, full_name } = req.body;
-
   await addUser(username, password, email, full_name)
-    .then(() => {
+    .then((response) => {
       res.status(201).json({
         message: "Data successfully inserted",
+        response: response.id,
       });
     })
     .catch(() => {

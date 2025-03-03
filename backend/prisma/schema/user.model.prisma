@@ -10,7 +10,6 @@ model User {
     created_at     DateTime? @default(now()) 
     updated_at     DateTime? @default(now()) @updatedAt
     full_name      String   @unique
-    admin          Int? @default(0)
 
     coin Coin[]
 

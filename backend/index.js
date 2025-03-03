@@ -85,6 +85,8 @@ app.get("/groups", async (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`App started at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`App started at http://localhost:${port}`);
+// });
+
+export default app;

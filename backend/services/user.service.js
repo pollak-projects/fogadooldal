@@ -30,17 +30,15 @@ export async function login(username, password) {
   }
 }
 
-export async function addUser(username, password, email, admin, full_name) {
+export async function addUser(username, password, email, full_name) {
   const hashedPwd = await encrypt(password);
   const user = await prisma.user
     .create({
       data: {
         username: username,
         password: hashedPwd,
-        admin: admin,
         full_name: full_name,
         email: email,
-        admin: admin,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -49,6 +47,7 @@ export async function addUser(username, password, email, admin, full_name) {
       console.error(err);
       throw new Error();
     });
+  return user;
 }
 
 export async function updateUser(id, username, password, email, groupsNeve) {
