@@ -11,6 +11,7 @@ const toggleChat = () => {
 </script>
 
 <template>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <div class="home-container">
     <div class="sidebar">
       <Button
@@ -25,7 +26,7 @@ const toggleChat = () => {
     </div>
     <div class="main-content">
       <div class="background-container"></div>
-      
+
       <!-- Mozgó szöveg sáv -->
       <div class="marquee-container">
         <div class="marquee-text">
@@ -134,8 +135,8 @@ const toggleChat = () => {
             <div class="szoveg">
               <p class="m-0">
                 A slot játék során a játékos pénzt tesz fel, majd pörgetést
-                indít. A gép véletlenszerű szimbólumokat mutat, és ha
-                azok nyerőt adnak, kifizetést biztosítanak.
+                indít. A gép véletlenszerű szimbólumokat mutat, és ha azok
+                nyerőt adnak, kifizetést biztosítanak.
               </p>
             </div>
           </template>
@@ -179,10 +180,10 @@ const toggleChat = () => {
 }
 
 .chat-toggle-button {
-  margin-top: 110px;
-  position: fixed;
-  left: 10px;
-  top: 10px;
+  position: absolute;
+  left: 100%; /* A sidebar jobb szélére kerül */
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 1000;
   background-color: rgba(255, 255, 255, 0.9);
   color: black;
@@ -197,7 +198,6 @@ const toggleChat = () => {
   transition: all 0.3s ease;
   cursor: pointer;
 }
-
 .chat-toggle-button:hover {
   background-color: rgb(184, 184, 184) !important;
   color: black !important;
@@ -223,7 +223,7 @@ const toggleChat = () => {
   height: 100vh;
   position: relative;
   z-index: 1;
-  padding-left: 60px;
+  padding-left: 60px; /* A sidebar miatt van itt bal oldali padding */
 }
 
 .main-content {
@@ -232,7 +232,7 @@ const toggleChat = () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  margin-left: 60px;
+  margin-left: 60px; /* Hely, hogy a sidebar ne takarja a tartalmat */
 }
 
 .cards-container {
@@ -243,7 +243,7 @@ const toggleChat = () => {
   width: 100%;
   padding: 20px 0;
   flex-wrap: wrap;
-  max-width: calc(100% - 60px);
+  max-width: calc(100% - 60px); /* A sidebar miatt */
 }
 
 .kartya {
@@ -256,7 +256,6 @@ const toggleChat = () => {
   justify-content: space-between;
   min-height: 350px;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
 }
 
 .kartya:hover {
@@ -275,12 +274,10 @@ const toggleChat = () => {
   background-color: rgb(253, 32, 93);
   width: 100%;
   margin-top: 20px;
-  margin-bottom: 10px;
 }
 
 .gomb:hover {
   background-color: rgb(206, 30, 80) !important;
-  border: 1px solid rgb(255, 121, 159);
 }
 
 .background-container {
@@ -320,12 +317,11 @@ const toggleChat = () => {
 }
 
 .marquee-container {
-  margin-top: 120px !important; 
+  margin-top: 120px !important;
   margin-bottom: 10px !important;
   width: 1100px;
   max-width: calc(22rem * 3 + 30px);
   margin: 20px auto;
-  margin-top: 80px;
   overflow: hidden;
   white-space: nowrap;
   background-color: rgba(0, 0, 0, 0.2);
@@ -352,21 +348,82 @@ const toggleChat = () => {
 }
 
 @media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  /* A chat gomb középre kerüljön mobilon */
+  .chat-toggle-button {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10px;
+  }
+
+  .main-content {
+    padding: 10px;
+    margin-left: 0;
+  }
+
+  /* A kártyák szélessége mobilon legyen 100% */
   .cards-container {
     flex-direction: column;
     align-items: center;
+    gap: 20px;
   }
 
   .kartya {
     width: 100%;
-    max-width: none;
+    max-width: 100%;
     margin: 10px 0;
+    transition: none;
   }
 
+  .marquee-container {
+    width: 100%;
+    max-width: none;
+    margin: 20px 0;
+    padding: 5px;
+  }
 
-  
-  .cards-container {
+  .marquee-text {
+    font-size: 1rem;
+  }
+
+  .footer-buttons {
+    flex-direction: column;
+  }
+
+  .gomb {
+    width: 100%;
     margin-top: 10px;
+  }
+
+  .cimke {
+    font-size: 1.2rem;
+  }
+
+  .szoveg p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .sidebar {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 60px;
+  }
+
+  .cards-container {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .kartya {
+    width: 18rem;
+    margin: 10px;
   }
 }
 </style>

@@ -81,13 +81,9 @@ const handleLogin = () => {
     .then(async (res) => {
       const data = await res.json();
 
-      
-      localStorage.setItem("access_token", data.access_token)
-      localStorage.setItem("refresh_token", data.refresh_token)
-      localStorage.setItem("user_id", data.user_id)
-
-
-      
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      localStorage.setItem("user_id", data.user_id);
 
       if (res.ok) {
         router.push("/home");
@@ -291,5 +287,60 @@ input#password {
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .app-name {
+    font-size: 48px;
+  }
+
+  .logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .login-container {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .input-group input {
+    padding: 12px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-name {
+    font-size: 36px;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .login-container {
+    max-width: 95%;
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .input-group input {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .login-button {
+    font-size: 14px;
+    padding: 12px;
+  }
 }
 </style>
