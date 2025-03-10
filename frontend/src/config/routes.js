@@ -74,6 +74,11 @@ const router = createRouter({
       name: "Logout",
       component: import("../components/Login.vue"),
     },
+  {
+    path: "/login",
+      name: "Login",
+      component: import("../components/Login.vue"),
+    },
     {
       path: "/jelszovisszaallitas",
       name: "Jelszovisszaallitas",
