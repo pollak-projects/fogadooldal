@@ -65,6 +65,11 @@ export async function updateUser(id, username, password, email, groupsNeve) {
 }
 
 export async function deleteUser(id) {
+  await prisma.coin.delete({
+    where: {
+      userid: id,
+    },
+  });
   await prisma.user.delete({
     where: {
       id: id,

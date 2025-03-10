@@ -3,14 +3,15 @@ import app from "../../index.js";
 import { json } from "express";
 
 test("POST /user/delete should pass", async () => {
-  await request(app).post("/user/add").send({
-    username: "test1",
+  const response = await request(app).post("/user/add").send({
+    username: "test142",
     password: "test",
-    email: "test@test.com",
-    full_name: "test",
+    email: "test4131@test.com",
+    full_name: "test31",
   });
-  const response = await request(app)
+  const deleteResponse = await request(app)
+    .delete(`/coin/delete?id=${JSON.parse(response.text).id}`)
     .delete(`/user/delete?id=${JSON.parse(response.text).id}`)
     .send();
-  expect(response.status).toBe(204);
+  expect(deleteResponse.status).toBe(204);
 });

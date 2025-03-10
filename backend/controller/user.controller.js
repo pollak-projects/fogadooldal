@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import {
   listAllUsers,
   addUser,
@@ -20,7 +20,7 @@ router.post("/add", async (req, res) => {
     .then((response) => {
       res.status(201).json({
         message: "Data successfully inserted",
-        response: response.id,
+        id: response.id,
       });
     })
     .catch(() => {
@@ -37,6 +37,7 @@ router.delete("/delete", async (req, res) => {
 
   res.status(204).json({
     message: "Data successfully deleted",
+    id: response.id,
   });
 });
 

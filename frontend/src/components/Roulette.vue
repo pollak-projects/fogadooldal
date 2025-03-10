@@ -1,6 +1,6 @@
 <template>
   <div
-    class="roulette-container text-white min-h-screen flex flex-col items-center p-6 pt-24"
+    class="roulette-container text-white min-h-screen flex flex-col items-center p-6 pt-24 overflow-y-auto"
   >
     <h1 class="text-4xl font-bold mb-6 cim">Roulette</h1>
 
@@ -269,6 +269,22 @@ onMounted(() => {
 </script>
 
 <style>
+.roulette-container {
+  max-height: 100vh !important;
+  overflow-y: auto !important;
+}
+#app {
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+html,
+body {
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+}
 .balance {
   display: flex;
   align-items: center;
