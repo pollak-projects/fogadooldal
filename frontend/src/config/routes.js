@@ -68,6 +68,7 @@ const router = createRouter({
       name: "Crash",
       component: import("../components/Crash.vue"),
     },
+    
     {
       path: "/logout",
       name: "Logout",

@@ -83,7 +83,7 @@
         <button type="submit" class="register-button bold">Regisztrálás</button>
       </form>
 
-            <RouterLink to="/login" class="text-center float-right login-link">
+            <RouterLink to="/" class="text-center float-right login-link">
         Van már fiókod? Jelentkezz be!
       </RouterLink>
 
