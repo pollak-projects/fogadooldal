@@ -181,7 +181,7 @@ const toggleChat = () => {
 
 .chat-toggle-button {
   position: absolute;
-  left: 100%; /* A sidebar jobb szélére kerül */
+  left: 80%; /* A sidebar jobb szélére kerül */
   top: 50%;
   transform: translateY(-50%);
   z-index: 1000;
@@ -198,10 +198,10 @@ const toggleChat = () => {
   transition: all 0.3s ease;
   cursor: pointer;
 }
+
 .chat-toggle-button:hover {
   background-color: rgb(184, 184, 184) !important;
   color: black !important;
-  transform: scale(1.1);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
   border-color: black !important;
 }
@@ -414,11 +414,6 @@ const toggleChat = () => {
 
   .main-content {
     margin-left: 60px;
-  }
-
-  .cards-container {
-    flex-wrap: wrap;
-    justify-content: flex-start;
   }
 
   .kartya {
