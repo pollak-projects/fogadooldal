@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../index.js";
+import app from "../../index.js";
 
 test("POST /auth/login should pass", async () => {
   const response = await request(app).post("/auth/login").send({

@@ -2,20 +2,22 @@ import request from "supertest";
 import app from "../../index.js";
 
 test("POST /user/update should pass", async () => {
-  await request(app).post("/group/add").send({
-    username: "test",
+  const response = await request(app).post("/user/add").send({
+    username: "test3645",
     password: "test",
-    email: "test@test.com",
-    full_name: "test",
+    email: "test634643@test.com",
+    full_name: "test53456",
   });
-  const response = await request(app).put("/user/update").send({
-    username: "test543",
-    password: "test",
-    email: "test@test.com",
-    groupsNeve: "admin",
-  });
+  const updateResponse = await request(app)
+    .put(`/user/update?id=${JSON.parse(response.text).id}`)
+    .send({
+      username: "test543",
+      password: "test",
+      email: "test7658@test.com",
+      groupsNeve: "admin",
+    });
   await request(app)
     .delete(`/user/delete?id=${JSON.parse(response.text).id}`)
     .send();
-  expect(response.status).toBe(200);
+  expect(updateResponse.status).toBe(200);
 });
