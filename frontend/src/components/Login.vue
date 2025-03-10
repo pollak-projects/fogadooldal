@@ -60,7 +60,9 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const router = useRouter();
 const username = ref("");
 const password = ref("");
@@ -81,19 +83,22 @@ const handleLogin = () => {
     .then(async (res) => {
       const data = await res.json();
 
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("refresh_token", data.refresh_token);
-      localStorage.setItem("user_id", data.user_id);
-
       if (res.ok) {
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
+        localStorage.setItem("user_id", data.user_id);
         router.push("/home");
       } else {
-        errorMessage.value =
-          data.message || "Hiba történt a bejelentkezés során";
+        // Hibakezelés
+        if (data.message === "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.") {
+          toast.error("Kérlek erősítsd meg az email címedet a bejelentkezés előtt.");
+        } else {
+          toast.error(data.message || "Hiba történt a bejelentkezés során");
+        }
       }
     })
     .catch((err) => {
-      errorMessage.value = "Hiba történt a bejelentkezés során";
+      toast.error("Hiba történt a bejelentkezés során");
       console.error(err);
     });
 };
