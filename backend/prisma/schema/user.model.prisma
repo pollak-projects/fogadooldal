@@ -17,5 +17,5 @@ model User {
 
     Groups  Groups? @relation(fields: [groupsNeve], references: [name])
     groupsNeve String? @default("user")
-
 }
+

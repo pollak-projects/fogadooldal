@@ -10,6 +10,9 @@ import {
 import { emailMegerosites } from "../services/emailsender.js";
 import { jelszoVisszaallitas } from "../services/emailsender.js";
 
+import { isAdmin } from "../utils/auth.js"; 
+
+// A kódod további része
 const router = express.Router();
 
 router.get("/verify", (req, res) => {
@@ -216,6 +219,10 @@ router.get("/verify-email", async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+
+
+
 
 
 export { router as authController };

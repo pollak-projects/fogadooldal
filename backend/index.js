@@ -10,6 +10,7 @@ import { listAllTokens } from "./services/auth.service.js";
 import { listAllGroup } from "./services/group.service.js";
 import { authController } from "./controller/auth.controller.js";
 import { coinController } from "./controller/coins.controller.js";
+import { isAdmin } from "../backend/utils/auth.js";
 
 const app = express();
 const port = 3300;
@@ -117,6 +118,51 @@ app.get("/groups", async (req, res) => {
 // Szerver indítása
 server.listen(port, () => {
   console.log(`App started at http://localhost:${port}`);
+});
+
+
+
+io.on("connection", (socket) => {
+  console.log("Egy felhasználó csatlakozott:", socket.id);
+
+  socket.on("chat message", async (msg) => {
+    const user = await getUserById(socket.userId); // Példa függvény
+    io.emit("chat message", {
+      text: msg,
+      user: user.username,
+      userId: user._id,
+      isAdmin: isAdmin(user), // 👈 Admin státusz hozzáadása
+      messageId: generateUniqueId(), // Egyedi ID generálása
+    });
+  });
+
+  socket.on("delete message", async (messageId) => {
+    const user = await getUserById(socket.userId);
+    if (isAdmin(user)) {
+      await deleteMessage(messageId); // Példa függvény
+      io.emit("message deleted", messageId); // Valós idejű frissítés
+    }
+  });
+
+  socket.on("ban user", async (userId) => {
+    const user = await getUserById(socket.userId);
+    if (isAdmin(user)) {
+      await banUser(userId); // Példa függvény
+      io.emit("user banned", userId); // Valós idejű frissítés
+    }
+  });
+
+  socket.on("timeout user", async (userId, minutes) => {
+    const user = await getUserById(socket.userId);
+    if (isAdmin(user)) {
+      await timeoutUser(userId, minutes); // Példa függvény
+      io.emit("user timeout", { userId, minutes }); // Valós idejű frissítés
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Egy felhasználó kilépett:", socket.id);
+  });
 });
 
 export default app;
