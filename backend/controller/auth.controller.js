@@ -69,7 +69,7 @@ router.post("/login", async (req, res) => {
     const user = await login(username, password);
 
     if (!user.access_token || !user.refresh_token) {
-      res.status(401).json({ message: "Hibás felhasználó név vagy jelszó!" });
+      res.status(401).json(user);
       return;
     }
     res.cookie("access_token", user.access_token, {
@@ -138,7 +138,7 @@ router.get("/genToken", async (req, res) => {
 
 router.get("/validate", async (req, res) => {
   try {
-    const token = req.headers["authorization"];
+
     const token = req.headers["authorization"];
     if (!token) {
       return res.status(400).send("Token is required");
@@ -217,5 +217,5 @@ router.get("/verify-email", async (req, res) => {
   }
 });
 
-export { router as authController };
+
 export { router as authController };
