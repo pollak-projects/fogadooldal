@@ -181,6 +181,15 @@ const isActive = (path) => {
 
 .profile-border {
   border: 2px solid rgb(255, 121, 159);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-border:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }
 
 .crash-button,
