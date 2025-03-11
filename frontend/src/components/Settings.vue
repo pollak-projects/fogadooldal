@@ -91,10 +91,10 @@ import { useToast } from "primevue/usetoast";
 import Toast from "primevue/toast";
 import { RouterLink } from "vue-router";
 import { useUserStore } from "../config/store"; // Importáld a store-t
+import { parseJwt } from "../lib/jwtparser.js";
 
 const userStore = useUserStore();
 const toast = useToast();
-
 // Reactive state
 const showPassword = ref(false);
 const userData = reactive({
