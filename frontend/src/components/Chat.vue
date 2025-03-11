@@ -18,6 +18,9 @@ const userName = ref(parseJwt(localStorage.getItem("access_token")).username);
 
 
 const forbiddenWords = [
+  "h1tl3r",
+  "h1tler",
+  "hitl3r",
   "fasz",
   "mocskos",
   "kutya",
