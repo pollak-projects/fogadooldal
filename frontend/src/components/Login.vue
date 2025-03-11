@@ -90,8 +90,12 @@ const handleLogin = () => {
         router.push("/home");
       } else {
         // Hibakezelés
+
         if (data.message === "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.") {
-          toast.error("Kérlek erősítsd meg az email címedet a bejelentkezés előtt.");
+          toast.warning("Bejelentkezéshez meg kell erősítened az emailed!", {
+            timeout: 5000,
+            icon: "⚠️"
+          });
         } else {
           toast.error(data.message || "Hiba történt a bejelentkezés során");
         }
@@ -347,5 +351,18 @@ input#password {
     font-size: 14px;
     padding: 12px;
   }
+}
+
+.Vue-Toastification__toast--warning {
+  background-color: #ffc107 !important;
+  color: #333 !important;
+}
+
+.Vue-Toastification__toast--error {
+  background-color: #dc3545 !important;
+}
+
+.Vue-Toastification__toast--success {
+  background-color: #28a745 !important;
 }
 </style>

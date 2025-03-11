@@ -123,27 +123,7 @@ export async function verifyEmail(token) {
   console.log("Email verified for user:", user.id); // Hibakereséshez
   return "Sikeres megerősítés! Most már bejelentkezhetsz.";
 }
-export async function verifyEmail(token) {
-  const user = await prisma.user.findFirst({
-    where: {
-      email_verification_token: token,
-    },
-  });
 
-  if (!user) {
-    throw new Error("Érvénytelen token.");
-  }
-
-  await prisma.user.update({
-    where: { id: user.id },
-    data: {
-      email_verified: true, // Beállítjuk, hogy a felhasználó megerősítette az email címét
-      email_verification_token: null, // Töröljük a tokent, mert már nem lesz rá szükség
-    },
-  });
-
-  return "Sikeres megerősítés! Most már bejelentkezhetsz.";
-}
 export async function register(username, password, email, full_name) {
   const pwdEncrypted = await encrypt(password);
 
@@ -170,18 +150,13 @@ export async function login(username, password) {
       username: username,
     },
   });
-  const user = await prisma.user.findUnique({
-    where: {
-      username: username,
-    },
-  });
 
   if (!user) {
-    return { message: "Hibás felhasználónév vagy jelszó" };
+    return { message: "Hibás felhasználónév" };
   }
 
   if (!(await bcrypt.compare(password, user.password))) {
-    return { message: "Hibás felhasználónév vagy jelszó" };
+    return { message: "Hibás jelszó" };
   }
 
   // Ellenőrizzük, hogy a felhasználó megerősítette-e az email címét
