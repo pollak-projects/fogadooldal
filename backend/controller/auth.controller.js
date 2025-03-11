@@ -139,7 +139,6 @@ router.get("/genToken", async (req, res) => {
 router.get("/validate", async (req, res) => {
   try {
     const token = req.headers["authorization"];
-    const token = req.headers["authorization"];
     if (!token) {
       return res.status(400).send("Token is required");
     }
@@ -217,5 +216,4 @@ router.get("/verify-email", async (req, res) => {
   }
 });
 
-export { router as authController };
 export { router as authController };

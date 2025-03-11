@@ -161,19 +161,23 @@ export async function login(username, password) {
 
   // Ellenőrizzük, hogy a felhasználó megerősítette-e az email címét
   if (!user.email_verified) {
-    return { message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt." };
+    return {
+      message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.",
+    };
   }
-
 
   // Ellenőrizzük, hogy a felhasználó megerősítette-e az email címét
   if (!user.email_verified) {
-    return { message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt." };
+    return {
+      message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.",
+    };
   }
 
   const secret = process.env.JWT_SECRET;
   const token = jwt.sign(
     {
       sub: user.id,
+      username: user.username,
       name: user.nev,
       email: user.email,
       userGroup: user.groupsNeve,
