@@ -5,6 +5,7 @@ import {
   pwdChange,
   login,
   register,
+  verifyEmail,
 } from "../services/auth.service.js";
 import { emailMegerosites } from "../services/emailsender.js";
 import { jelszoVisszaallitas } from "../services/emailsender.js";
@@ -62,6 +63,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
+  console.log(username, password);
   console.log(username, password);
   try {
     const user = await login(username, password);
@@ -137,6 +139,7 @@ router.get("/genToken", async (req, res) => {
 router.get("/validate", async (req, res) => {
   try {
     const token = req.headers["authorization"];
+    const token = req.headers["authorization"];
     if (!token) {
       return res.status(400).send("Token is required");
     }
@@ -198,4 +201,21 @@ router.post("/logout", (req, res) => {
   }
 });
 
+router.get("/verify-email", async (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).json({ message: "Hiányzó token." });
+  }
+
+  try {
+    const result = await verifyEmail(token);
+    res.status(200).json({ message: result });
+  } catch (error) {
+    console.error("Error during email verification:", error);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+export { router as authController };
 export { router as authController };

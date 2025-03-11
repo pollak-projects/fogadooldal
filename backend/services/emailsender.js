@@ -26,7 +26,7 @@ export async function emailMegerosites(useremail, uuid) {
     "<h2 style='color: #2c3e50;'>E-mail cím megerősítése</h2>" + 
     "<p style='font-size: 16px;'>Üdvözlünk a BetWise-nál! Kérlek erősítsd meg az e-mail címed a fiók aktiválásához.</p>" + 
     "<br>"+
-    "<p style='text-align: center;'><a href='http://localhost:5173/megerosites?token="+ uuid  +"' style='background-color: rgb(253, 32, 93); display: inline-block; padding: 18px 40px; background-color: rgb(253, 32, 93); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;'>E-mail cím megerősítése</a></p>" +
+    "<p style='text-align: center;'><a href='http://localhost:5173/verify-email?token="+ uuid  +"' style='background-color: rgb(253, 32, 93); display: inline-block; padding: 18px 40px; background-color: rgb(253, 32, 93); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;'>E-mail cím megerősítése</a></p>" +
      "<br>"+
     "<p style='font-size: 16px;'>Ha nem te regisztráltál, kérlek hagyd figyelmen kívül ezt az üzenetet.</p>" + 
     "</div>" + 

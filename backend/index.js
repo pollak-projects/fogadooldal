@@ -49,6 +49,18 @@ app.get("/", async (req, res) => {
   });
 });
 
+
+
+app.get('/verify-email', async (req, res) => {
+  const { token } = req.query;
+  try {
+    const result = await verifyEmail(token);
+    res.send(result);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 app.get("/login", async (req, res) => {
   res.render("login");
 });
