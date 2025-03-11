@@ -11,6 +11,7 @@ import { listAllGroup } from "./services/group.service.js";
 import { authController } from "./controller/auth.controller.js";
 import { coinController } from "./controller/coins.controller.js";
 import { isAdmin } from "../backend/utils/auth.js";
+import { listAllDataById } from "./services/user.service.js"
 
 const app = express();
 const port = 3300;
@@ -126,13 +127,13 @@ io.on("connection", (socket) => {
   console.log("Egy felhasználó csatlakozott:", socket.id);
 
   socket.on("chat message", async (msg) => {
-    const user = await getUserById(socket.userId); // Példa függvény
+    const user = await listAllDataById(socket.userId); 
     io.emit("chat message", {
       text: msg,
       user: user.username,
       userId: user._id,
-      isAdmin: isAdmin(user), // 👈 Admin státusz hozzáadása
-      messageId: generateUniqueId(), // Egyedi ID generálása
+      isAdmin: isAdmin(user), 
+      messageId: generateUniqueId(),
     });
   });
 
