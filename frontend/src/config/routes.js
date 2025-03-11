@@ -89,6 +89,12 @@ const router = createRouter({
       name: "jelszoHandle",
       component: import("../components/PassHandle.vue"),
     },
+
+        {
+      path: "/megerosites",
+      name: "Megerősítés",
+      component: import("../components/Megerosites.vue"),
+    },
   ],
 });
 

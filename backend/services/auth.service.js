@@ -99,6 +99,27 @@ async function createNewToken(id, nev, email, groupsNeve) {
   );
 }
 
+export async function verifyEmail(token) {
+  const user = await prisma.user.findFirst({
+    where: {
+      email_verification_token: token,
+    },
+  });
+
+  if (!user) {
+    throw new Error("Érvénytelen token.");
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      email_verified: true, // Beállítjuk, hogy a felhasználó megerősítette az email címét
+      email_verification_token: null, // Töröljük a tokent, mert már nem lesz rá szükség
+    },
+  });
+
+  return "Sikeres megerősítés! Most már bejelentkezhetsz.";
+}
 export async function register(username, password, email, full_name) {
   const pwdEncrypted = await encrypt(password);
 
@@ -120,15 +141,11 @@ export async function register(username, password, email, full_name) {
   await emailMegerosites(email, uuid);
 }
 export async function login(username, password) {
-  const user = await prisma.user
-    .findUnique({
-      where: {
-        username: username,
-      },
-    })
-    .catch((error) => {
-      return error.message;
-    });
+  const user = await prisma.user.findUnique({
+    where: {
+      username: username,
+    },
+  });
 
   if (!user) {
     return { message: "Hibás felhasználónév vagy jelszó" };
@@ -137,6 +154,12 @@ export async function login(username, password) {
   if (!(await bcrypt.compare(password, user.password))) {
     return { message: "Hibás felhasználónév vagy jelszó" };
   }
+
+  // Ellenőrizzük, hogy a felhasználó megerősítette-e az email címét
+  if (!user.email_verified) {
+    return { message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt." };
+  }
+
   const secret = process.env.JWT_SECRET;
   const token = jwt.sign(
     {

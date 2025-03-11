@@ -142,6 +142,8 @@ const handleRegister = () => {
         const data = await res.json();
         if (data.message.includes("User_username_key")) {
           toast.error("A felhasználónév már foglalt!");
+        } else if (data.message.includes("User_email_key")) {
+          toast.error("Ez az e-mail cím már használatban van!");
         } else {
           toast.error(data.message || "Hiba történt a regisztráció során");
         }
