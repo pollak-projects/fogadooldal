@@ -158,6 +158,7 @@ const toggleChat = () => {
 </template>
 
 <style scoped>
+/* A stílusok maradnak változatlanok */
 .sidebar {
   position: fixed;
   top: 0;
@@ -181,7 +182,7 @@ const toggleChat = () => {
 
 .chat-toggle-button {
   position: absolute;
-  left: 80%; /* A sidebar jobb szélére kerül */
+  left: 80%;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1000;
@@ -223,7 +224,7 @@ const toggleChat = () => {
   height: 100vh;
   position: relative;
   z-index: 1;
-  padding-left: 60px; /* A sidebar miatt van itt bal oldali padding */
+  padding-left: 60px;
 }
 
 .main-content {
@@ -232,7 +233,7 @@ const toggleChat = () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  margin-left: 60px; /* Hely, hogy a sidebar ne takarja a tartalmat */
+  margin-left: 60px;
 }
 
 .cards-container {
@@ -243,7 +244,7 @@ const toggleChat = () => {
   width: 100%;
   padding: 20px 0;
   flex-wrap: wrap;
-  max-width: calc(100% - 60px); /* A sidebar miatt */
+  max-width: calc(100% - 60px);
 }
 
 .kartya {
@@ -352,7 +353,6 @@ const toggleChat = () => {
     display: none;
   }
 
-  /* A chat gomb középre kerüljön mobilon */
   .chat-toggle-button {
     left: 50%;
     transform: translateX(-50%);
@@ -364,7 +364,6 @@ const toggleChat = () => {
     margin-left: 0;
   }
 
-  /* A kártyák szélessége mobilon legyen 100% */
   .cards-container {
     flex-direction: column;
     align-items: center;

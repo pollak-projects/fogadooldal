@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUpdated } from "vue";
 import { parseJwt } from "../lib/jwtparser.js";
+import socket from "../utils/socket/socket.js"; // Importáld a Socket.IO klienst
 
 const emit = defineEmits(["close-chat"]);
 
@@ -11,10 +12,10 @@ const closeChat = () => {
 const messages = ref([]);
 const newMessage = ref("");
 const errorMessage = ref("");
-const chatMessagesRef = ref(null); // ref a chat uzenetek tarolojara
+const chatMessagesRef = ref(null);
 
-// A bejelentkezett felhasználó neve (például egy változóban tároljuk)
 const userName = ref(parseJwt(localStorage.getItem("access_token")).username);
+
 
 const forbiddenWords = [
   "fasz",
@@ -407,6 +408,7 @@ const forbiddenWords = [
   "zsugorított faszú",
 ];
 
+// Üzenet küldése
 const sendMessage = () => {
   if (newMessage.value.trim() !== "") {
     const containsForbiddenWord = forbiddenWords.some((word) =>
@@ -416,15 +418,25 @@ const sendMessage = () => {
     if (containsForbiddenWord) {
       errorMessage.value = "Ne írj be csúnya szót!";
     } else {
-      // A bejelentkezett felhasználó nevét használjuk a 'user' helyett
-      messages.value.push({ text: newMessage.value, user: userName.value });
+      // Küldjük az üzenetet a szervernek
+      socket.emit("chat message", {
+        text: newMessage.value,
+        user: userName.value,
+      });
       newMessage.value = "";
       errorMessage.value = "";
     }
   }
 };
 
-// automatikus gorgetes az uj uzenetekhez
+// Üzenet fogadása a szervertől
+onMounted(() => {
+  socket.on("chat message", (msg) => {
+    messages.value.push(msg);
+  });
+});
+
+// Automatikus görgetés az új üzenetekhez
 onUpdated(() => {
   if (chatMessagesRef.value) {
     chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight;
@@ -467,6 +479,7 @@ onUpdated(() => {
 </template>
 
 <style scoped>
+/* A stílusok maradnak változatlanok */
 .close-chat-button {
   background: none;
   border: none;
@@ -535,12 +548,12 @@ onUpdated(() => {
 }
 
 .username {
-  color: rgb(253, 32, 93); /* A felhasználó neve rózsaszínű */
+  color: rgb(253, 32, 93);
 }
 
 .message-text {
-  color: white; /* Az üzenet szövege fehér */
-  font-weight: normal; /* Az üzenet szövege nem vastag */
+  color: white;
+  font-weight: normal;
 }
 
 .chat-input {
@@ -550,17 +563,7 @@ onUpdated(() => {
   background-color: rgba(41, 32, 45, 0.9);
   position: sticky;
   bottom: 0;
-  z-index: 1002; /* Biztosítja, hogy az input mindig látható legyen */
-}
-
-.chat-input {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  background-color: rgba(41, 32, 45, 0.9);
-  position: sticky;
-  bottom: 0;
-  z-index: 1002; /* Biztosítja, hogy az input mindig látható legyen */
+  z-index: 1002;
 }
 
 .chat-input input {
