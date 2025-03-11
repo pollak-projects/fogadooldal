@@ -5,9 +5,16 @@ import {
   deleteUser,
   updateUser,
   login,
+  listAllDataById,
 } from "../services/user.service.js";
 
 const router = express.Router();
+
+router.get("/getAllById/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = await listAllDataById(id);
+  res.status(200).json(data);
+});
 
 router.get("/getAll", async (req, res) => {
   const data = await listAllUsers();

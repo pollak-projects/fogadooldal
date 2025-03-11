@@ -26,7 +26,6 @@ const router = createRouter({
       component: import("../components/Rolunk.vue"),
     },
 
-
     {
       path: "/roulette",
       name: "Roulette",
@@ -43,7 +42,6 @@ const router = createRouter({
       name: "Openpage",
       component: import("../components/Login.vue"),
     },
-
 
     {
       path: "/help",
@@ -68,14 +66,14 @@ const router = createRouter({
       name: "Crash",
       component: import("../components/Crash.vue"),
     },
-    
+
     {
       path: "/logout",
       name: "Logout",
       component: import("../components/Login.vue"),
     },
-  {
-    path: "/login",
+    {
+      path: "/login",
       name: "Login",
       component: import("../components/Login.vue"),
     },
@@ -90,7 +88,7 @@ const router = createRouter({
       component: import("../components/PassHandle.vue"),
     },
 
-        {
+    {
       path: "/verify-email",
       name: "Megerősítés",
       component: import("../components/Megerosites.vue"),
