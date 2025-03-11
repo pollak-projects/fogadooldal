@@ -87,7 +87,7 @@
       <template #end>
         <img src="/coin.svg" class="coinkep" />
         <div class="coin-balance">
-          {{ store.coins }}
+          {{ user?.coin[0].mennyiseg }}
         </div>
         <img
           :src="userStore.profileImage"
@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Button, Toolbar, Menu } from "primevue";
 import { store } from "../config/store.js";
@@ -111,6 +111,23 @@ const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
 const menu = ref(null);
+const user = ref();
+
+onMounted(() => {
+  fetch(
+    `http://localhost:3300/user/getAllById/${localStorage.getItem("user_id")}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
+    const data = await res.json();
+    console.log(data);
+    user.value = data;
+  });
+});
 
 const menuItems = ref([
   {

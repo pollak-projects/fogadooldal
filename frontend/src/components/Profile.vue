@@ -1,163 +1,112 @@
+<script setup>
+import { onMounted, ref } from "vue";
+
+// Példa felhasználói adat
+const user = ref();
+
+// Dátum formázó funkció
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 1-től kezdődik, ezért +1
+  const day = date.getDate().toString().padStart(2, "0"); // Napi érték formázása
+  const hours = date.getHours().toString().padStart(2, "0"); // Órák
+  const minutes = date.getMinutes().toString().padStart(2, "0"); // Percek
+
+  return `${year}.${month}.${day} ${hours}:${minutes}`; // Formátum: YYYY.MM.DD HH:mm
+}
+
+onMounted(() => {
+  fetch(
+    `http://localhost:3300/user/getAllById/${localStorage.getItem("user_id")}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
+    const data = await res.json();
+    console.log(data);
+    user.value = data;
+  });
+});
+</script>
+
 <template>
-  <div class="profile-container">
-    <Card class="card">
-      <template #title>Fiókbeállítások</template>
-      <template #content>
-        <div class="p-fluid grid">
-          <!-- Profilkép feltöltés -->
-          <div class="col-12 md:col-4 flex flex-column align-items-center">
-            <div class="avatar-container mb-4">
-              <img 
-                :src="profileImage || '/pfp.png'" 
-                class="profile-image"
-                alt="Profilkép"
-              />
-              <FileUpload
-                mode="basic"
-                accept="image/*"
-                :maxFileSize="1000000"
-                chooseLabel="Kép módosítása"
-                @select="handleImageUpload"
-                class="mt-3"
-              />
-            </div>
-          </div>
-
-          <!-- Fiók adatok -->
-          <div class="col-12 md:col-8">
-            <div class="field">
-              <label for="name">Teljes név</label>
-              <InputText
-                id="name"
-                v-model="userData.name"
-                class="w-full"
-              />
-            </div>
-
-            <div class="field mt-4">
-              <label for="email">E-mail cím</label>
-              <InputText
-                id="email"
-                v-model="userData.email"
-                type="email"
-                class="w-full"
-              />
-            </div>
-
-            <div class="field mt-4">
-              <label for="password">Új jelszó</label>
-              <InputText
-                id="password"
-                v-model="userData.password"
-                type="password"
-                class="w-full"
-                placeholder="••••••••"
-              />
-            </div>
-
-            <div class="flex justify-content-end mt-5">
-              <Button 
-                label="Mentés" 
-                icon="pi pi-check"
-                @click="saveProfile"
-                class="save-button"
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Veszélyes beállítások -->
-        <Divider />
-        <div class="danger-zone">
-          <h3 class="text-red-400">Veszélyes zóna</h3>
-          <Button
-            label="Fiók törlése"
-            icon="pi pi-trash"
-            severity="danger"
-            class="mt-3"
-            @click="confirmDeleteAccount"
-          />
-        </div>
-      </template>
-    </Card>
+  <div class="profile-page">
+    <div class="container">
+      <div class="card">
+        <h1 class="page-title">Fiók adatai</h1>
+        <ul class="user-info-list">
+          <li><strong>Felhasználónév:</strong> {{ user?.username }}</li>
+          <li><strong>Teljes név:</strong> {{ user?.full_name }}</li>
+          <li><strong>E-mail cím:</strong> {{ user?.email }}</li>
+          <!-- A dátumok formázása a megfelelő órával és perccel -->
+          <li>
+            <strong>Létrehozás dátuma:</strong>
+            {{ formatDate(user?.created_at) }}
+          </li>
+          <li>
+            <strong>Frissítés dátuma:</strong>
+            {{ formatDate(user?.updated_at) }}
+          </li>
+          <li><strong>Jogosultság:</strong> {{ user?.groupsNeve }}</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
-  
-  <script setup>
-  </script>
-  
-  <style scoped>
-  .help-page {
-    padding: 2rem;
-    background-color: rgb(46, 40, 54);
-    min-height: 100vh;
-    color: rgb(247, 233, 233);
-  }
-  
-  .help-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    font-size: 2rem;
-    color: rgb(247, 233, 233);
-    margin-bottom: 1.5rem;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    color: rgb(247, 233, 233);
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  h3 {
-    font-size: 1.25rem;
-    color: rgb(247, 233, 233);
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  p {
-    font-size: 1rem;
-    color: rgb(247, 233, 233);
-    line-height: 1.6;
-  }
-  
-  .faq-section {
-    margin-bottom: 2rem;
-  }
-  
-  .email-support {
-    font-size: 1rem;
-    color: rgb(247, 233, 233);
-    margin-top: 1rem;
-  }
-  
-  .email-support a {
-    color: rgb(255, 152, 152);
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .email-support a:hover {
-    text-decoration: underline;
-  }
-  
-  ul {
-    list-style-type: disc;
-    margin-left: 2rem;
-    margin-top: 1rem;
-  }
-  
-  li {
-    font-size: 1rem;
-    color: rgb(247, 233, 233);
-    margin-bottom: 0.5rem;
-  }
-  </style>
+
+<style scoped>
+.profile-page {
+  padding: 4rem 0;
+  background-color: rgb(46, 40, 54);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgb(46, 40, 54);
+}
+
+/* Kártya stílusok */
+.card {
+  background-color: rgb(41, 32, 45);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: rgb(253, 32, 93);
+  margin-bottom: 1.5rem;
+}
+
+/* Felsorolás stílusok */
+.user-info-list {
+  list-style-type: none;
+  padding: 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.user-info-list li {
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+.user-info-list strong {
+  color: rgb(253, 32, 93); /* Erősebb szín a címkékhez */
+}
+
+/* Hover effekt a kártyához */
+.card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+</style>

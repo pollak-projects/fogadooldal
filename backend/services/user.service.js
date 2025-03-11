@@ -10,6 +10,19 @@ export async function listAllUsers() {
   return data;
 }
 
+export async function listAllDataById(id) {
+  const data = await prisma.user.findUnique({
+    include: {
+      coin: true,
+    },
+    where: {
+      id: Number(id),
+    },
+  });
+
+  return data;
+}
+
 export async function login(username, password) {
   const user = await prisma.user
     .findUnique({
