@@ -534,6 +534,25 @@ onUpdated(() => {
   margin-bottom: 10px;
 }
 
+.username {
+  color: rgb(253, 32, 93); /* A felhasználó neve rózsaszínű */
+}
+
+.message-text {
+  color: white; /* Az üzenet szövege fehér */
+  font-weight: normal; /* Az üzenet szövege nem vastag */
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background-color: rgba(41, 32, 45, 0.9);
+  position: sticky;
+  bottom: 0;
+  z-index: 1002; /* Biztosítja, hogy az input mindig látható legyen */
+}
+
 .chat-input {
   display: flex;
   gap: 10px;
