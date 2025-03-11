@@ -22,7 +22,7 @@ const forbiddenWords = [
   "mocskos",
   "kutya",
   "cici",
-  "hitlet",
+  "hitler",
   "csöcs",
   "csocs",
   "kuvasz",
