@@ -12,6 +12,9 @@ export async function listAllUsers() {
 
 export async function listAllDataById(id) {
   const data = await prisma.user.findUnique({
+    include: {
+      coin: true,
+    },
     where: {
       id: Number(id),
     },

@@ -2,8 +2,12 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function listAllCoins() {
-  const data = await prisma.coin.findMany();
+export async function listAllCoinsById(id) {
+  const data = await prisma.coin.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
   return data;
 }
 

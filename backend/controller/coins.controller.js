@@ -2,12 +2,13 @@ import express from "express";
 import {
   addCoin,
   updateCoin,
-  listAllCoins,
+  listAllCoinsById,
 } from "../services/coins.service.js";
 const router = express.Router();
 
-router.get("/getAll", async (req, res) => {
-  const data = await listAllCoins();
+router.get("/getAll/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = await listAllCoinsById(id);
   res.status(200).json(data);
 });
 

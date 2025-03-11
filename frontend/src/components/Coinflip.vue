@@ -84,7 +84,7 @@ export default {
   computed: {
     balance() {
       return store.coins;
-    },
+    }, 
     hasWon() {
       return this.userChoice === this.result;
     },
