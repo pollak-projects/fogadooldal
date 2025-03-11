@@ -16,19 +16,19 @@
           <div class="input-group">
             <label for="newPassword">Új jelszó</label>
             <input
-              :type="showPassword ? 'text' : 'password'"
-              id="password"
-              v-model="newPassword"
-              placeholder="Add meg az új jelszavad"
-              required
-            />
+            :type="showPassword ? 'text' : 'password'"
+            id="newPassword"
+            v-model="newPassword"
+            placeholder="Add meg az új jelszavad"
+            required
+          />
           </div>
   
           <div class="input-group">
             <label for="passwordConf">Új jelszó megerősítése</label>
-            <input
+              <input
               :type="showPassword ? 'text' : 'password'"
-              id="password"
+              id="passwordConf"
               v-model="passwordConf"
               placeholder="Új jelszó megerősítése"
               required
@@ -64,39 +64,43 @@
   const showPassword = ref(false);
   
   const passHandle = () => {
-    if (newPassword.value !== passwordConf.value) {
+  if (newPassword.value !== passwordConf.value) {
     errorMessage.value = "Az új jelszavak nem egyeznek meg!";
     return;
   }
-    fetch("http://localhost:3300/user/update", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
-      },
-      body: JSON.stringify({
-        password: newPassword.value,
-        
-      }),
-    })
-      .then(async (res) => {
-        const data = await res.json();
 
-        if (res.ok) {
-            successMessage.value = "A jelszó sikeresen megváltoztatva!";
-            setTimeout(() => {
-        router.push("/home");
-      }, 2000);
-        } else {
-          errorMessage.value =
-            data.message || "Hiba történt a jelszavak modosítása során";
-        }
-      })
-      .catch((err) => {
-        errorMessage.value = "Hiba történt a jelszavak modosítása során";
-        console.error(err);
-      });
-  };
+  fetch("http://localhost:3300/user/update", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+    },
+    body: JSON.stringify({
+      password: newPassword.value,
+    }),
+  })
+  .then(async (res) => {
+    const contentType = res.headers.get('content-type');
+    
+    if (!contentType?.includes('application/json')) {
+      const text = await res.text();
+      throw new Error(`Nem JSON válasz: ${text.substring(0, 100)}`);
+    }
+
+    const data = await res.json();
+
+    if (res.ok) {
+      successMessage.value = "A jelszó sikeresen megváltoztatva!";
+      setTimeout(() => router.push("/home"), 2000);
+    } else {
+      errorMessage.value = data.message || "Hiba történt a módosítás során";
+    }
+  })
+  .catch((err) => {
+    errorMessage.value = `Hiba: ${err.message}`;
+    console.error("Hiba részletei:", err);
+  });
+};
   </script>
   
   <style scoped>

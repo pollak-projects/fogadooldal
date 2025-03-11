@@ -85,8 +85,12 @@ app.get("/groups", async (req, res) => {
   });
 });
 
-// app.listen(port, () => {
-//   console.log(`App started at http://localhost:${port}`);
-// });
+app.use((err, req, res, next) => {
+  res.status(500).json({ message: "Szerverhiba történt" });
+});
+
+app.listen(port, () => {
+  console.log(`App started at http://localhost:${port}`);
+});
 
 export default app;
