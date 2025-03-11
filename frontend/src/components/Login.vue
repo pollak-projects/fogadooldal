@@ -90,7 +90,7 @@ const handleLogin = () => {
         router.push("/home");
       } else {
         // Hibakezelés
-
+        console.log(data)
         if (data.message === "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.") {
           toast.warning("Bejelentkezéshez meg kell erősítened az emailed!", {
             timeout: 5000,
@@ -353,16 +353,5 @@ input#password {
   }
 }
 
-.Vue-Toastification__toast--warning {
-  background-color: #ffc107 !important;
-  color: #333 !important;
-}
 
-.Vue-Toastification__toast--error {
-  background-color: #dc3545 !important;
-}
-
-.Vue-Toastification__toast--success {
-  background-color: #28a745 !important;
-}
 </style>

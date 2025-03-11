@@ -151,26 +151,17 @@ export async function login(username, password) {
     },
   });
 
+  console.log(user)
   if (!user) {
-    return { message: "Hibás felhasználónév" };
+    return { message: "Hibás felhasználónév vagy jelszó" };
   }
 
   if (!(await bcrypt.compare(password, user.password))) {
-    return { message: "Hibás jelszó" };
+    return { message: "Hibás felhasználónév vagy jelszó" };
   }
 
-  // Ellenőrizzük, hogy a felhasználó megerősítette-e az email címét
-  if (!user.email_verified) {
-    return {
-      message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.",
-    };
-  }
-
-  // Ellenőrizzük, hogy a felhasználó megerősítette-e az email címét
-  if (!user.email_verified) {
-    return {
-      message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.",
-    };
+  if (user.email_verified === false) {
+    return { message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt." };
   }
 
   const secret = process.env.JWT_SECRET;
