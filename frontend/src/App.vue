@@ -90,9 +90,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Navbar v-if="route.path != '/' && route.path != '/register' && route.path != '/logout' && route.path != '/megerosites'  && route.path !== '/jelszovisszaallitas' && route.path !== '/jelszoHandle' && route.path !== '/login' " />
+  <Navbar v-if="route.path != '/' && route.path != '/register' && route.path != '/logout' && route.path != '/verify-email'  && route.path !== '/jelszovisszaallitas' && route.path !== '/jelszoHandle' && route.path !== '/login' " />
   <RouterView />
-  <Footer v-if="route.path != '/' && route.path != '/register' && route.path != '/logout' && route.path != '/megerosites'  && route.path !== '/jelszovisszaallitas' && route.path !== '/jelszoHandle' && route.path != '/login'"  />
+  <Footer v-if="route.path != '/' && route.path != '/register' && route.path != '/logout' && route.path != '/verify-email'  && route.path !== '/jelszovisszaallitas' && route.path !== '/jelszoHandle' && route.path != '/login'"  />
 
   <div v-if="showWarning" class="warning-message">
     <p>Inaktivitás miatt {{ countdown }} másodperc múlva kijelentkeztetjük.</p>

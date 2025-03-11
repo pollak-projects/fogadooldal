@@ -13,30 +13,29 @@ export default {
   name: "Megerosites",
   data() {
     return {
-      message: "", // Sikeres üzenet
-      error: "",   // Hibaüzenet
+      message: "", 
+      error: "",   
     };
   },
-async created() {
-  const token = this.$route.query.token;
+  async created() {
+    const token = this.$route.query.token;
 
-  if (!token) {
-    this.error = "Hiányzó token. Kérlek, ellenőrizd az emailt.";
-    return;
+    if (!token) {
+      this.error = "Hiányzó token. Kérlek, ellenőrizd az emailt.";
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:3300/auth/verify-email?token=${token}`);
+      this.message = response.data.message; 
+      setTimeout(() => {
+        this.$router.push({ name: "Login" });
+      }, 3000);
+    } catch (err) {
+      console.error("Error during email verification:", err); 
+      this.error = err.response?.data?.message || "Hiba történt a megerősítés során.";
+    }
   }
-
-  try {
-    const response = await axios.get(`http://localhost:3000/verify-email?token=${token}`);
-    this.message = response.data;
-
-    // 3 másodperc várakozás után átirányítás a bejelentkezési oldalra
-    setTimeout(() => {
-      this.$router.push({ name: "Login" }); // A "Login" útvonal neve
-    }, 3000);
-  } catch (err) {
-    this.error = err.response?.data || "Hiba történt a megerősítés során.";
-  }
-}
 };
 </script>
 

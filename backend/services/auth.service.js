@@ -100,6 +100,7 @@ async function createNewToken(id, nev, email, groupsNeve) {
 }
 
 export async function verifyEmail(token) {
+  console.log("Token received:", token); // Hibakereséshez
   const user = await prisma.user.findFirst({
     where: {
       email_verification_token: token,
@@ -107,17 +108,19 @@ export async function verifyEmail(token) {
   });
 
   if (!user) {
+    console.log("User not found with token:", token); // Hibakereséshez
     throw new Error("Érvénytelen token.");
   }
 
   await prisma.user.update({
     where: { id: user.id },
     data: {
-      email_verified: true, // Beállítjuk, hogy a felhasználó megerősítette az email címét
-      email_verification_token: null, // Töröljük a tokent, mert már nem lesz rá szükség
+      email_verified: true,
+      email_verification_token: null,
     },
   });
 
+  console.log("Email verified for user:", user.id); // Hibakereséshez
   return "Sikeres megerősítés! Most már bejelentkezhetsz.";
 }
 export async function register(username, password, email, full_name) {
