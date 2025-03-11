@@ -145,6 +145,7 @@ const menuItems = ref([
     label: "Kijelentkezés",
     icon: "pi pi-sign-out",
     command: () => {
+      localStorage.clear();
       router.push("/logout");
     },
   },
