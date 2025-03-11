@@ -1,7 +1,6 @@
 import express from "express";
 import {
   verifyJwt,
-
   listAllTokens,
   pwdChange,
   login,
@@ -9,7 +8,6 @@ import {
 } from "../services/auth.service.js";
 import { emailMegerosites } from "../services/emailsender.js";
 import { jelszoVisszaallitas } from "../services/emailsender.js";
-
 
 const router = express.Router();
 
@@ -64,8 +62,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-
-  console.log(username, password)
+  console.log(username, password);
   try {
     const user = await login(username, password);
 
@@ -87,8 +84,6 @@ router.post("/login", async (req, res) => {
       secure: true,
       path: "/",
     });
-
-
 
     res.status(200).json(user);
   } catch (error) {
@@ -141,7 +136,7 @@ router.get("/genToken", async (req, res) => {
 
 router.get("/validate", async (req, res) => {
   try {
-    const token = req.headers['authorization'];
+    const token = req.headers["authorization"];
     if (!token) {
       return res.status(400).send("Token is required");
     }
@@ -152,13 +147,11 @@ router.get("/validate", async (req, res) => {
     } else {
       res.status(401).send("Invalid token");
     }
-
   } catch (err) {
     console.error("Error validating token: ", err);
     res.status(500).send("Error validating token");
   }
 });
-
 
 router.put("/pwdChange", async (req, res) => {
   try {
@@ -205,4 +198,4 @@ router.post("/logout", (req, res) => {
   }
 });
 
-export { router as authController};
+export { router as authController };

@@ -33,7 +33,7 @@ const resetInactivityTimer = () => {
 };
 
 const showWarningMessage = () => {
-  showWarning.value = true;
+  showWarning.value = true; 
   startCountdown();
 };
 
