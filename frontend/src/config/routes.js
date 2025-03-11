@@ -91,7 +91,7 @@ const router = createRouter({
     },
 
         {
-      path: "/megerosites",
+      path: "/verify-email",
       name: "Megerősítés",
       component: import("../components/Megerosites.vue"),
     },

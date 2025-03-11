@@ -49,6 +49,18 @@ app.get("/", async (req, res) => {
   });
 });
 
+
+
+app.get('/verify-email', async (req, res) => {
+  const { token } = req.query;
+  try {
+    const result = await verifyEmail(token);
+    res.send(result);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 app.get("/login", async (req, res) => {
   res.render("login");
 });
@@ -83,10 +95,6 @@ app.get("/groups", async (req, res) => {
   res.render("groups", {
     groups: groups,
   });
-});
-
-app.use((err, req, res, next) => {
-  res.status(500).json({ message: "Szerverhiba történt" });
 });
 
 app.listen(port, () => {
