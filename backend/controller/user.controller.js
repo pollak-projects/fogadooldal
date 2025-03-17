@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import {
   listAllUsers,
   addUser,
@@ -10,53 +10,84 @@ import {
 
 const router = express.Router();
 
+// ID alapján lekérdezés
 router.get("/getAllById/:id", async (req, res) => {
-  const id = req.params.id;
-  const data = await listAllDataById(id);
-  res.status(200).json(data);
+  try {
+    const id = Number(req.params.id); // Konvertálás számra
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Érvénytelen ID formátum." });
+    }
+
+    const data = await listAllDataById(id); // Adatok lekérése
+    if (!data) {
+      return res.status(404).json({ message: "Felhasználó nem található." });
+    }
+
+    res.status(200).json(data); // Sikeres válasz
+  } catch (error) {
+    console.error("Hiba a felhasználó lekérésekor:", error);
+    res.status(500).json({ message: "Szerverhiba." });
+  }
 });
 
+// Összes felhasználó lekérése
 router.get("/getAll", async (req, res) => {
-  const data = await listAllUsers();
-  res.status(200).json(data);
+  try {
+    const data = await listAllUsers(); // Összes felhasználó lekérése
+    res.status(200).json(data); // Sikeres válasz
+  } catch (error) {
+    console.error("Hiba a felhasználók lekérésekor:", error);
+    res.status(500).json({ message: "Szerverhiba." });
+  }
 });
 
+// Új felhasználó hozzáadása
 router.post("/add", async (req, res) => {
   const { username, password, email, full_name } = req.body;
-  await addUser(username, password, email, full_name)
-    .then((response) => {
-      res.status(201).json({
-        message: "Data successfully inserted",
-        id: response.id,
-      });
-    })
-    .catch(() => {
-      res.status(409).json({
-        message: "Duplicated data",
-      });
+
+  try {
+    const response = await addUser(username, password, email, full_name);
+    res.status(201).json({
+      message: "Sikeresen hozzáadva.",
+      id: response.id,
     });
+  } catch (error) {
+    console.error("Hiba a felhasználó hozzáadásakor:", error);
+    res.status(409).json({ message: "Duplikált adat." });
+  }
 });
 
+// Felhasználó törlése
 router.delete("/delete", async (req, res) => {
-  const id = Number(req.query.id);
+  try {
+    const id = Number(req.query.id); // Konvertálás számra
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Érvénytelen ID formátum." });
+    }
 
-  await deleteUser(id);
-
-  res.status(204).json({
-    message: "Data successfully deleted",
-    id: response.id,
-  });
+    await deleteUser(id); // Felhasználó törlése
+    res.status(204).json({ message: "Sikeresen törölve." });
+  } catch (error) {
+    console.error("Hiba a felhasználó törlésekor:", error);
+    res.status(500).json({ message: "Szerverhiba." });
+  }
 });
 
+// Felhasználó frissítése
 router.put("/update", async (req, res) => {
-  const id = Number(req.query.id);
-  const { username, password, email, groupsNeve } = req.body;
+  try {
+    const id = Number(req.query.id); // Konvertálás számra
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Érvénytelen ID formátum." });
+    }
 
-  await updateUser(id, username, password, email, groupsNeve);
-
-  res.status(200).json({
-    message: "Data successfully updated",
-  });
+    const { username, password, email, groupsNeve } = req.body;
+    await updateUser(id, username, password, email, groupsNeve); // Felhasználó frissítése
+    res.status(200).json({ message: "Sikeresen frissítve." });
+  } catch (error) {
+    console.error("Hiba a felhasználó frissítésekor:", error);
+    res.status(500).json({ message: "Szerverhiba." });
+  }
 });
 
 export { router };

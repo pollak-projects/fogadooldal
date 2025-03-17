@@ -10,14 +10,16 @@ export async function listAllUsers() {
   return data;
 }
 
+// user.service.js
 export async function listAllDataById(id) {
+  // Ellenőrizzük, hogy az `id` szám-e
+  if (typeof id !== "number" || isNaN(id)) {
+    throw new Error("Az ID-nak számnak kell lennie.");
+  }
+
   const data = await prisma.user.findUnique({
-    include: {
-      coin: true,
-    },
-    where: {
-      id: Number(id),
-    },
+    include: { coin: true },
+    where: { id: id }, // Már szám típusú
   });
 
   return data;
