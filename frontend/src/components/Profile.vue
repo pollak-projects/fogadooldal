@@ -38,21 +38,32 @@ onMounted(() => {
     <div class="container">
       <div class="card">
         <h1 class="page-title">Fiók adatai</h1>
-        <ul class="user-info-list">
-          <li><strong>Felhasználónév:</strong> {{ user?.username }}</li>
-          <li><strong>Teljes név:</strong> {{ user?.full_name }}</li>
-          <li><strong>E-mail cím:</strong> {{ user?.email }}</li>
-          <!-- A dátumok formázása a megfelelő órával és perccel -->
-          <li>
-            <strong>Létrehozás dátuma:</strong>
-            {{ formatDate(user?.created_at) }}
-          </li>
-          <li>
-            <strong>Frissítés dátuma:</strong>
-            {{ formatDate(user?.updated_at) }}
-          </li>
-          <li><strong>Jogosultság:</strong> {{ user?.groupsNeve }}</li>
-        </ul>
+        <div class="user-info">
+          <div class="user-info-item">
+            <span class="label">Felhasználónév:</span>
+            <span class="value">{{ user?.username }}</span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">Teljes név:</span>
+            <span class="value">{{ user?.full_name }}</span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">E-mail cím:</span>
+            <span class="value">{{ user?.email }}</span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">Létrehozás dátuma:</span>
+            <span class="value">{{ formatDate(user?.created_at) }}</span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">Frissítés dátuma:</span>
+            <span class="value">{{ formatDate(user?.updated_at) }}</span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">Jogosultság:</span>
+            <span class="value">{{ user?.groupsNeve }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -63,50 +74,65 @@ onMounted(() => {
   padding: 4rem 0;
   background-color: rgb(46, 40, 54);
   height: 100vh;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
   max-width: 800px;
-  margin: 0 auto;
+  width: 100%;
   padding: 20px;
-  background-color: rgb(46, 40, 54);
 }
 
-/* Kártya stílusok */
 .card {
   background-color: rgb(41, 32, 45);
-  padding: 2rem;
-  border-radius: 12px;
+  padding: 2.5rem;
+  border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
 .page-title {
   text-align: center;
   font-size: 2.5rem;
   color: rgb(253, 32, 93);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* Felsorolás stílusok */
-.user-info-list {
-  list-style-type: none;
-  padding: 0;
-  color: white;
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.user-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.user-info-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.label {
+  font-weight: bold;
+  color: rgb(253, 32, 93);
   font-size: 1.1rem;
 }
 
-.user-info-list li {
-  margin: 1rem 0;
-  line-height: 1.6;
-}
-
-.user-info-list strong {
-  color: rgb(253, 32, 93); /* Erősebb szín a címkékhez */
-}
-
-/* Hover effekt a kártyához */
-.card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+.value {
+  color: white;
+  font-size: 1.1rem;
 }
 </style>
