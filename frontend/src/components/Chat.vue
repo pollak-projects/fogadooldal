@@ -421,7 +421,6 @@ const sendMessage = () => {
     if (containsForbiddenWord) {
       errorMessage.value = "Ne írj be csúnya szót!";
     } else {
-      // Küldjük az üzenetet a szervernek
       socket.emit("chat message", {
         text: newMessage.value,
         user: userName.value,
@@ -438,7 +437,6 @@ onMounted(() => {
     messages.value.push(msg);
   });
 });
-
 // Automatikus görgetés az új üzenetekhez
 onUpdated(() => {
   if (chatMessagesRef.value) {
