@@ -4,7 +4,6 @@ import {
   addUser,
   deleteUser,
   updateUser,
-  login,
   listAllDataById,
 } from "../services/user.service.js";
 

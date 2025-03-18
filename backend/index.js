@@ -1,6 +1,6 @@
 import express from "express";
-import http from "http"; // Importáld a http modult
-import { Server } from "socket.io"; // Importáld a Socket.IO-t
+import http from "http";
+import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import { router as userRouter } from "./controller/user.controller.js";
 import { listAllUsers } from "./services/user.service.js";
@@ -10,79 +10,66 @@ import { listAllTokens } from "./services/auth.service.js";
 import { listAllGroup } from "./services/group.service.js";
 import { authController } from "./controller/auth.controller.js";
 import { coinController } from "./controller/coins.controller.js";
-import { isAdmin } from "../backend/utils/auth.js";
+import { isAdmin } from "./utils/auth.js";
 import { listAllDataById } from "./services/user.service.js";
 
 const app = express();
 const port = 3300;
 
-// HTTP szerver létrehozása
 const server = http.createServer(app);
-
-// Socket.IO szerver létrehozása
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // A frontend címe
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
 
-// CORS beállítások
 const corsOptions = {
   origin: ["http://localhost:5173"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
 
-// Middleware-ek
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.set("view engine", "ejs");
 
-// Router-ek
 app.use("/user", userRouter);
 app.use("/auth", authController);
 app.use("/group", groupController);
 app.use("/coins", coinController);
 
-// Socket.IO eseménykezelők
 io.on("connection", (socket) => {
-  socket.on("login", (userId) => {
-    socket.userId = Number(userId); // Konvertálás számra
-  });
+  console.log("Egy felhasználó csatlakozott:", socket.id);
 
-  socket.on("chat message", async (msg) => {
-    if (!socket.userId || typeof socket.userId !== "number") {
-      return console.error("Érvénytelen userId:", socket.userId);
-    }
+  // Bejelentkezés esemény kezelése
+socket.on("login", (userId) => {
+  socket.userId = Number(userId); // Beállítjuk a userId-t
+  console.log("Felhasználó bejelentkezett, userId:", socket.userId);
+});
 
+  // Üzenet küldése
+socket.on("chat message", async (msg) => {
+  if (!socket.userId || typeof socket.userId !== "number") {
+    return console.error("Érvénytelen userId:", socket.userId);
+  }
+
+  try {
     const user = await listAllDataById(socket.userId);
-    // Ellenőrizzük, hogy a socket.userId érvényes szám-e
-    if (!socket.userId || typeof socket.userId !== 'number') {
-      console.error("Invalid userId:", socket.userId);
-      return;
-    }
+    io.emit("chat message", {
+      text: msg,
+      user: user.username,
+      userId: user.id,
+      isAdmin: isAdmin(user),
+      messageId: Date.now(),
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+});
 
-    try {
-      // Lekérjük a felhasználó adatait
-      const user = await listAllDataById(socket.userId);
-
-      // Küldjük az üzenetet mindenkinek
-      io.emit("chat message", {
-        text: msg,
-        user: user.username,
-        userId: user.id,
-        isAdmin: isAdmin(user),
-        messageId: Date.now(), // Egyedi azonosító az üzenethez
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  });
-
-  // Üzenet törlése eseménykezelő
-  socket.on("delete message", async (messageId) => {
+   socket.on("delete message", async (messageId) => {
     if (!socket.userId || typeof socket.userId !== 'number') {
       console.error("Invalid userId:", socket.userId);
       return;
@@ -91,15 +78,15 @@ io.on("connection", (socket) => {
     try {
       const user = await listAllDataById(socket.userId);
       if (isAdmin(user)) {
-        await deleteMessage(messageId); // Példa függvény
-        io.emit("message deleted", messageId); // Valós idejű frissítés
+        await deleteMessage(messageId);
+        io.emit("message deleted", messageId);
       }
     } catch (error) {
-      console.error("Error deleting message:", error);
+      console.error("Hiba üzenet törlésekor:", error);
     }
   });
 
-  // Felhasználó kitiltása eseménykezelő
+  // Felhasználó kitiltása
   socket.on("ban user", async (userId) => {
     if (!socket.userId || typeof socket.userId !== 'number') {
       console.error("Invalid userId:", socket.userId);
@@ -109,15 +96,15 @@ io.on("connection", (socket) => {
     try {
       const user = await listAllDataById(socket.userId);
       if (isAdmin(user)) {
-        await banUser(userId); // Példa függvény
-        io.emit("user banned", userId); // Valós idejű frissítés
+        await banUser(userId);
+        io.emit("user banned", userId);
       }
     } catch (error) {
-      console.error("Error banning user:", error);
+      console.error("Hiba felhasználó kitiltásakor:", error);
     }
   });
 
-  // Felhasználó timeout eseménykezelő
+  // Felhasználó timeout
   socket.on("timeout user", async (userId, minutes) => {
     if (!socket.userId || typeof socket.userId !== 'number') {
       console.error("Invalid userId:", socket.userId);
@@ -127,21 +114,21 @@ io.on("connection", (socket) => {
     try {
       const user = await listAllDataById(socket.userId);
       if (isAdmin(user)) {
-        await timeoutUser(userId, minutes); // Példa függvény
-        io.emit("user timeout", { userId, minutes }); // Valós idejű frissítés
+        await timeoutUser(userId, minutes);
+        io.emit("user timeout", { userId, minutes });
       }
     } catch (error) {
-      console.error("Error timing out user:", error);
+      console.error("Hiba timeout alkalmazásakor:", error);
     }
   });
 
-  // Kapcsolat bontása eseménykezelő
+  // Kapcsolat bontása
   socket.on("disconnect", () => {
     console.log("Egy felhasználó kilépett:", socket.id);
   });
 });
 
-// Útvonalak
+
 app.get("/", async (req, res) => {
   const userData = await listAllUsers();
   res.render("index", {

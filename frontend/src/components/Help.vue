@@ -30,7 +30,7 @@
         </p>
         <p class="email-support">
           <strong>E-mail cím:</strong>
-          <a href="mailto:support@example.com"> support@example.com</a>
+          <a href="mailto:betwisepollak@gmail.com"> betwisepollak@gmail.com</a>
         </p>
   
         <h2>Hasznos Tippek</h2>
@@ -48,6 +48,7 @@
   
   <style scoped>
   .help-page {
+    margin-top: 100px;
     padding: 2rem;
     background-color: rgb(46, 40, 54);
     min-height: 100vh;

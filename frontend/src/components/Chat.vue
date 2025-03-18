@@ -15,7 +15,8 @@ const errorMessage = ref("");
 const chatMessagesRef = ref(null);
 
 const userName = ref(parseJwt(localStorage.getItem("access_token")).username);
-
+const userId = ref(parseJwt(localStorage.getItem("access_token")).sub);
+const isAdmin = ref(parseJwt(localStorage.getItem("access_token")).userGroup === "admin");
 
 const forbiddenWords = [
   "h1tl3r",
@@ -424,6 +425,8 @@ const sendMessage = () => {
       socket.emit("chat message", {
         text: newMessage.value,
         user: userName.value,
+        userId: userId.value,
+        isAdmin: isAdmin.value,
       });
       newMessage.value = "";
       errorMessage.value = "";
@@ -437,6 +440,7 @@ onMounted(() => {
     messages.value.push(msg);
   });
 });
+
 // Automatikus görgetés az új üzenetekhez
 onUpdated(() => {
   if (chatMessagesRef.value) {
@@ -459,7 +463,7 @@ onUpdated(() => {
     </div>
     <div class="chat-messages" ref="chatMessagesRef">
       <div v-for="(message, index) in messages" :key="index" class="message">
-        <strong class="username">{{ message.user }}: </strong>
+        <strong class="username">{{ message.user }} <span v-if="message.isAdmin" style="color: yellow;">(ADMIN)</span>: </strong>
         <span class="message-text">{{ message.text }}</span>
       </div>
     </div>
@@ -477,6 +481,17 @@ onUpdated(() => {
       {{ errorMessage }}
     </div>
   </div>
+
+  <!-- Üzeneteknél -->
+<div v-for="(message, index) in messages" :key="index" class="message">
+  <strong class="username">{{ message.user }} <span v-if="message.isAdmin" style="color: yellow;">(ADMIN)</span>: </strong>
+  <span class="message-text">{{ message.text }}</span>
+  
+  <!-- Admin gombok -->
+  <button v-if="isAdmin" @click="deleteMessage(message.id)">Törlés</button>
+  <button v-if="isAdmin" @click="banUser(message.userId)">Kitiltás</button>
+  <button v-if="isAdmin" @click="timeoutUser(message.userId, 5)">5p Timeout</button>
+</div>
 </template>
 
 <style scoped>

@@ -144,23 +144,28 @@ export async function register(username, password, email, full_name) {
   });
   await emailMegerosites(email, uuid);
 }
+
 export async function login(username, password) {
+  console.log("Bejelentkezési kérés:", username); // Hibakeresés
+
   const user = await prisma.user.findUnique({
     where: {
       username: username,
     },
   });
 
-  console.log(user)
   if (!user) {
+    console.log("Felhasználó nem található:", username); // Hibakeresés
     return { message: "Hibás felhasználónév vagy jelszó" };
   }
 
   if (!(await bcrypt.compare(password, user.password))) {
+    console.log("Hibás jelszó:", username); // Hibakeresés
     return { message: "Hibás felhasználónév vagy jelszó" };
   }
 
   if (user.email_verified === false) {
+    console.log("Email nincs megerősítve:", username); // Hibakeresés
     return { message: "Kérlek erősítsd meg az email címedet a bejelentkezés előtt." };
   }
 
@@ -191,12 +196,16 @@ export async function login(username, password) {
     }
   );
 
+  console.log("Sikeres bejelentkezés:", user.id); // Hibakeresés
   return {
     access_token: token,
     refresh_token: refreshToken,
     user_id: user.id,
   };
 }
+
+
+
 
 export async function listAllTokens() {
   const data = await prisma.maindata.findUnique({

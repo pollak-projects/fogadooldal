@@ -10,6 +10,7 @@ import {
 import { emailMegerosites } from "../services/emailsender.js";
 import { jelszoVisszaallitas } from "../services/emailsender.js";
 
+
 import { isAdmin } from "../utils/auth.js"; 
 
 // A kódod további része
@@ -64,35 +65,30 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  console.log("Beérkezett kérés:", req.body); // Hibakeresés
+
   const { username, password } = req.body;
 
-  console.log(username, password);
-  console.log(username, password);
+  if (!username || !password) {
+    return res.status(400).json({ message: "Hiányzó felhasználónév vagy jelszó" });
+  }
+
   try {
-    const user = await login(username, password);
+    const result = await login(username, password);
 
-    if (!user.access_token || !user.refresh_token) {
-      res.status(401).json(user);
-      return;
+    if (result.message) {
+      return res.status(400).json({ message: result.message });
     }
-    res.cookie("access_token", user.access_token, {
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "none",
-      secure: true,
-      httpOnly: false,
-      path: "/",
-    });
-    res.cookie("refresh_token", user.refresh_token, {
-      maxAge: 24 * 60 * 60 * 1000,
-      httpOnly: false,
-      sameSite: "none",
-      secure: true,
-      path: "/",
-    });
 
-    res.status(200).json(user);
+    // Sikeres bejelentkezés
+    res.status(200).json({
+      access_token: result.access_token,
+      refresh_token: result.refresh_token,
+      user_id: result.user_id,
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Hiba a bejelentkezés során:", error);
+    res.status(500).json({ message: "Hiba történt a bejelentkezés során" });
   }
 });
 

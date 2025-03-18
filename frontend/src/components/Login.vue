@@ -61,6 +61,9 @@
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
+import { io } from "socket.io-client";
+
+
 
 const toast = useToast();
 const router = useRouter();
@@ -68,6 +71,8 @@ const username = ref("");
 const password = ref("");
 const errorMessage = ref("");
 const showPassword = ref(false);
+
+const socket = io("http://localhost:3300"); 
 
 const handleLogin = () => {
   fetch("http://localhost:3300/auth/login", {
@@ -87,14 +92,17 @@ const handleLogin = () => {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("refresh_token", data.refresh_token);
         localStorage.setItem("user_id", data.user_id);
+
+        // Bejelentkezési esemény küldése a szervernek
+        socket.emit("login", data.user_id); // Küldjük el a userId-t
+        console.log("Login esemény elküldve, userId:", data.user_id); // Hibakeresés
+
         router.push("/home");
       } else {
-        // Hibakezelés
-        console.log(data)
         if (data.message === "Kérlek erősítsd meg az email címedet a bejelentkezés előtt.") {
           toast.warning("Bejelentkezéshez meg kell erősítened az emailed!", {
             timeout: 5000,
-            icon: "⚠️"
+            icon: "⚠️",
           });
         } else {
           toast.error(data.message || "Hiba történt a bejelentkezés során");

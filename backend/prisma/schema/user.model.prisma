@@ -1,21 +1,29 @@
 model User {
-    id             Int      @id @default(autoincrement())
-    username       String  @unique
-    password       String         
-    email          String   @unique
-    email_verified Boolean @default(false)
-    email_verification_token String? 
-    resetToken               String?  
-    resetTokenExpires        DateTime?
-    created_at     DateTime? @default(now()) 
-    updated_at     DateTime? @default(now()) @updatedAt
-    full_name      String   @unique
-    ForgotToken              String?
-    ForgotTokenExpiresAt     DateTime?
+  id             Int      @id @default(autoincrement())
+  username       String   @unique
+  password       String
+  email          String   @unique
+  email_verified Boolean  @default(false)
+  email_verification_token String?
+  resetToken               String?
+  resetTokenExpires        DateTime?
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @default(now()) @updatedAt
+  full_name      String   @unique
+  ForgotToken              String?
+  ForgotTokenExpiresAt     DateTime?
+  isBanned      Boolean   @default(false)
+  timeoutExpires DateTime?
 
-    coin Coin[]
+  coin Coin[]
 
-    Groups  Groups? @relation(fields: [groupsNeve], references: [name])
-    groupsNeve String? @default("user")
+  Groups  Groups? @relation(fields: [groupsNeve], references: [name])
+  groupsNeve String? @default("user")
 }
 
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  text      String
+  userId    Int
+  createdAt DateTime @default(now())
+}

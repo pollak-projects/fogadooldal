@@ -1,50 +1,45 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { addCoin } from "./coins.service.js";
 
 const prisma = new PrismaClient();
 
 export async function listAllUsers() {
-  const data = await prisma.user.findMany();
-
-  return data;
+  return await prisma.user.findMany();
 }
 
-// user.service.js
 export async function listAllDataById(id) {
-  // Ellenőrizzük, hogy az `id` szám-e
   if (typeof id !== "number" || isNaN(id)) {
     throw new Error("Az ID-nak számnak kell lennie.");
   }
 
-  const data = await prisma.user.findUnique({
+  return await prisma.user.findUnique({
     include: { coin: true },
-    where: { id: id }, // Már szám típusú
+    where: { id: id },
   });
-
-  return data;
 }
 
-export async function login(username, password) {
-  const user = await prisma.user
-    .findUnique({
-      where: {
-        username: username,
-      },
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-
-  if (user !== null) {
-    const isSuccess = await bcrypt.compare(password, user.password);
-
-    return isSuccess ? user.id : null;
-  } else {
-    return null;
-  }
+export async function deleteMessage(messageId) {
+  return await prisma.chatMessage.delete({
+    where: { id: messageId },
+  });
 }
 
+export async function banUser(userId) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { isBanned: true },
+  });
+}
+
+export async function timeoutUser(userId, minutes) {
+  const timeoutExpires = new Date();
+  timeoutExpires.setMinutes(timeoutExpires.getMinutes() + minutes);
+
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { timeoutExpires },
+  });
+}
 export async function addUser(username, password, email, full_name) {
   const hashedPwd = await encrypt(password);
   const user = await prisma.user
