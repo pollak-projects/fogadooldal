@@ -14,6 +14,7 @@ model User {
   ForgotTokenExpiresAt     DateTime?
   isBanned      Boolean   @default(false)
   timeoutExpires DateTime?
+  profileImage   String?
 
   coin Coin[]
 

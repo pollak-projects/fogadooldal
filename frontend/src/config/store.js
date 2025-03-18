@@ -7,7 +7,7 @@ export const store = reactive({
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    profileImage: localStorage.getItem("profileImage") || "/pfp.png",
+    profileImage: localStorage.getItem("profileImage") || "/default.jpg",
   }),
   actions: {
     setProfileImage(imageUrl) {

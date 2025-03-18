@@ -6,7 +6,11 @@ import {
   updateUser,
   listAllDataById,
 } from "../services/user.service.js";
+import { PrismaClient } from "@prisma/client";
 
+
+
+const prisma = new PrismaClient();
 const router = express.Router();
 
 // ID alapján lekérdezés
@@ -86,6 +90,27 @@ router.put("/update", async (req, res) => {
   } catch (error) {
     console.error("Hiba a felhasználó frissítésekor:", error);
     res.status(500).json({ message: "Szerverhiba." });
+  }
+});
+
+
+router.put("/update/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, email } = req.body;
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        full_name: name,
+        email: email,
+      },
+    });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Hiba a felhasználó frissítésekor:", error);
+    res.status(500).json({ message: "Hiba történt a felhasználó frissítésekor" });
   }
 });
 

@@ -42,10 +42,7 @@
             <input type="email" v-model="userData.email" required />
           </div>
 
-          <div class="form-group">
-            <label>Bio:</label>
-            <textarea v-model="userData.bio" rows="4"></textarea>
-          </div>
+
         </div>
 
         <div class="form-section">
@@ -95,12 +92,11 @@ import { parseJwt } from "../lib/jwtparser.js";
 
 const userStore = useUserStore();
 const toast = useToast();
-// Reactive state
 const showPassword = ref(false);
+
 const userData = reactive({
   name: "",
   email: "",
-  bio: "",
   newPassword: "",
   notifications: {
     email: true,
@@ -108,38 +104,86 @@ const userData = reactive({
   },
 });
 
-// Template refs
 const imgRef = ref(null);
-
-// Profilkép elérési útja a store-ból
 const profileImage = ref(userStore.profileImage);
 
-// Handle image upload
 const handleImageUpload = (e) => {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      // Frissítjük a store-ban tárolt profilképet
       userStore.setProfileImage(e.target.result);
-      profileImage.value = e.target.result; // Frissítjük a profilképet a komponensben
+      profileImage.value = e.target.result;
     };
     reader.readAsDataURL(file);
   }
 };
 
-// Form mentése
-const saveSettings = () => {
-  console.log("Saved data:", {
-    ...userData,
-    profileImage: profileImage.value,
-  });
+const saveSettings = async () => {
+  try {
+    const userId = localStorage.getItem("user_id");
 
-  toast.add({
-    severity: "success",
-    summary: "Sikeres mentés",
-    life: 3000,
-  });
+    // Profilkép feltöltése, ha van kiválasztva
+    if (imgRef.value.files[0]) {
+      const formData = new FormData();
+      formData.append("profileImage", imgRef.value.files[0]);
+
+      const uploadResponse = await fetch(`http://localhost:3300/user/upload-profile-image/${userId}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Hiba a profilkép feltöltésekor");
+      }
+
+      const uploadData = await uploadResponse.json();
+      userStore.setProfileImage(uploadData.profileImage);
+    }
+
+    // További adatok frissítése
+    const response = await fetch(`http://localhost:3300/user/update/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: userData.name,
+        email: userData.email,
+      }),
+    });
+
+    if (response.ok) {
+      toast.add({
+        severity: "success",
+        summary: "Sikeres mentés",
+        life: 3000,
+      });
+
+      // Frissítsd a felhasználó adatait a store-ban
+      userStore.setUserData({
+        ...userStore.userData,
+        full_name: userData.name,
+        email: userData.email,
+      });
+    } else {
+      const data = await response.json();
+      toast.add({
+        severity: "error",
+        summary: "Hiba",
+        detail: data.message || "Hiba történt a mentés során",
+        life: 3000,
+      });
+    }
+  } catch (error) {
+    console.error("Hiba a mentés során:", error);
+    toast.add({
+      severity: "error",
+      summary: "Hiba",
+      detail: "Hiba történt a mentés során",
+      life: 3000,
+    });
+  }
 };
 </script>
 
