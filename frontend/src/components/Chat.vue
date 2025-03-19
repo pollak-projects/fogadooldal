@@ -17,6 +17,7 @@ const chatMessagesRef = ref(null);
 const userName = ref(parseJwt(localStorage.getItem("access_token")).username);
 const userId = ref(parseJwt(localStorage.getItem("access_token")).sub);
 const isAdmin = ref(parseJwt(localStorage.getItem("access_token")).userGroup === "admin");
+console.log(isAdmin.value);
 
 const forbiddenWords = [
   "h1tl3r",
@@ -412,7 +413,7 @@ const forbiddenWords = [
   "zsugorított faszú",
 ];
 
-// Üzenet küldése
+
 const sendMessage = () => {
   if (newMessage.value.trim() !== "") {
     const containsForbiddenWord = forbiddenWords.some((word) =>
@@ -434,14 +435,15 @@ const sendMessage = () => {
   }
 };
 
-// Üzenet fogadása a szervertől
+
 onMounted(() => {
+        socket.emit("login", localStorage.getItem("user_id")); 
   socket.on("chat message", (msg) => {
     messages.value.push(msg);
   });
 });
 
-// Automatikus görgetés az új üzenetekhez
+
 onUpdated(() => {
   if (chatMessagesRef.value) {
     chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight;
@@ -464,9 +466,15 @@ onUpdated(() => {
     <div class="chat-messages" ref="chatMessagesRef">
       <div v-for="(message, index) in messages" :key="index" class="message">
         <strong class="username">{{ message.user }} <span v-if="message.isAdmin" style="color: yellow;">(ADMIN)</span>: </strong>
-        <span class="message-text">{{ message.text }}</span>
+        <span class="message-text">{{ message.text.text }}</span>
       </div>
-    </div>
+ 
+        
+          <button class="tiltogombok" v-if="isAdmin" @click="deleteMessage(message.id)">Törlés</button>
+          <button class="tiltogombok" v-if="isAdmin" @click="banUser(message.userId)">Kitiltás</button>
+          <button class="tiltogombok" v-if="isAdmin" @click="timeoutUser(message.userId, 5)">5p Timeout</button>
+      </div>
+
     <div class="chat-input">
       <input
         v-model="newMessage"
@@ -482,20 +490,15 @@ onUpdated(() => {
     </div>
   </div>
 
-  <!-- Üzeneteknél -->
-<div v-for="(message, index) in messages" :key="index" class="message">
-  <strong class="username">{{ message.user }} <span v-if="message.isAdmin" style="color: yellow;">(ADMIN)</span>: </strong>
-  <span class="message-text">{{ message.text }}</span>
-  
-  <!-- Admin gombok -->
-  <button v-if="isAdmin" @click="deleteMessage(message.id)">Törlés</button>
-  <button v-if="isAdmin" @click="banUser(message.userId)">Kitiltás</button>
-  <button v-if="isAdmin" @click="timeoutUser(message.userId, 5)">5p Timeout</button>
-</div>
+
+
+
 </template>
 
 <style scoped>
-/* A stílusok maradnak változatlanok */
+
+
+
 .close-chat-button {
   background: none;
   border: none;

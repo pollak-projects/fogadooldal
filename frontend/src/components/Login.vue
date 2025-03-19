@@ -44,6 +44,11 @@
           />
         </div>
 
+        <!-- Elfelejtette a jelszavát? -->
+        <RouterLink to="/jelszovisszaallitas" class="forgot-password-link">
+          Elfelejtette a jelszavát?
+        </RouterLink>
+
         <button type="submit" class="login-button">Bejelentkezés</button>
       </form>
 
@@ -63,8 +68,6 @@ import { RouterLink, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { io } from "socket.io-client";
 
-
-
 const toast = useToast();
 const router = useRouter();
 const username = ref("");
@@ -72,7 +75,7 @@ const password = ref("");
 const errorMessage = ref("");
 const showPassword = ref(false);
 
-const socket = io("http://localhost:3300"); 
+const socket = io("http://localhost:3300");
 
 const handleLogin = () => {
   fetch("http://localhost:3300/auth/login", {
@@ -94,7 +97,6 @@ const handleLogin = () => {
         localStorage.setItem("user_id", data.user_id);
 
         // Bejelentkezési esemény küldése a szervernek
-        socket.emit("login", data.user_id); // Küldjük el a userId-t
         console.log("Login esemény elküldve, userId:", data.user_id); // Hibakeresés
 
         router.push("/home");
@@ -180,9 +182,6 @@ const handleLogin = () => {
     transform: translateY(-100%);
   }
 }
-.bold {
-  font-weight: 700;
-}
 
 .background-container::before {
   content: "";
@@ -202,6 +201,7 @@ const handleLogin = () => {
   margin-bottom: 20px;
   z-index: 1;
 }
+
 .logo {
   width: 100px;
   height: 100px;
@@ -236,7 +236,6 @@ h2 {
 .input-group {
   margin-bottom: 15px;
   text-align: left;
-  margin-right: auto;
 }
 
 .input-group label {
@@ -252,6 +251,7 @@ h2 {
   background-color: rgb(58, 45, 64);
   border-radius: 4px;
   font-size: 16px;
+  color: rgb(255, 121, 159);
 }
 
 .input-group input:focus {
@@ -281,11 +281,6 @@ h2 {
   font-size: 14px;
 }
 
-input#username,
-input#password {
-  color: rgb(255, 121, 159);
-}
-
 .password-toggle-icon {
   width: 24px;
   height: 24px;
@@ -304,6 +299,21 @@ input#password {
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+.forgot-password-link {
+  display: block;
+  margin-top: 10px;
+  color: rgb(253, 32, 93);
+  text-decoration: none;
+  font-size: 14px;
+  text-align: right;
+  margin-right: 30px;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+  color: rgb(255, 121, 159);
 }
 
 /* Responsive Styles */
@@ -360,6 +370,4 @@ input#password {
     padding: 12px;
   }
 }
-
-
 </style>
