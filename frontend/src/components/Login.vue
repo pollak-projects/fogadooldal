@@ -26,22 +26,21 @@
 
         <div class="input-group">
           <label for="password">Jelszó</label>
-          <input
-            :type="showPassword ? 'text' : 'password'"
-            id="password"
-            v-model="password"
-            placeholder="Add meg a jelszavad"
-            required
-          />
-        </div>
-
-        <div class="show-password float-right">
-          <img
-            :src="showPassword ? '/eye.png' : '/hidden.png'"
-            alt="Toggle Password Visibility"
-            @click="showPassword = !showPassword"
-            class="password-toggle-icon"
-          />
+          <div class="password-input-container">
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              id="password"
+              v-model="password"
+              placeholder="Add meg a jelszavad"
+              required
+            />
+            <img
+              :src="showPassword ? '/eye.png' : '/hidden.png'"
+              alt="Toggle Password Visibility"
+              @click="showPassword = !showPassword"
+              class="password-toggle-icon"
+            />
+          </div>
         </div>
 
         <!-- Elfelejtette a jelszavát? -->
@@ -281,12 +280,18 @@ h2 {
   font-size: 14px;
 }
 
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .password-toggle-icon {
+  position: absolute;
+  right: 10px;
   width: 24px;
   height: 24px;
   cursor: pointer;
-  right: 10px;
-  margin-bottom: 10px;
 }
 
 .register-link {
@@ -309,6 +314,7 @@ h2 {
   font-size: 14px;
   text-align: right;
   margin-right: 30px;
+  margin-bottom: 10px;
 }
 
 .forgot-password-link:hover {
