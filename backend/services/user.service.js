@@ -62,13 +62,14 @@ export async function addUser(username, password, email, full_name) {
 }
 
 export async function updateUser(id, username, password, email, groupsNeve) {
+  const hashedPwd = await encrypt(password);
   await prisma.user.update({
     where: {
       id: id,
     },
     data: {
       username: username,
-      password: password,
+      password: hashedPwd,
       email: email,
       groupsNeve: groupsNeve,
     },

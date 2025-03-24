@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 import { store } from "../config/store";
 
@@ -9,8 +9,25 @@ const bells = ["🔔"]; // 1 csengő
 const goldBars = ["🧈"]; // 1 aranyrúd
 const sevens = ["7️⃣"]; // 1 hetes
 
-// Szimbólumok súlyozva
+onMounted(() => {
+  fetch(
+    `http://localhost:3300/user/getAllById/${localStorage.getItem("user_id")}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
+    const data = await res.json();
+    console.log(data);
+    user.value = data;
+  });
+});
+
+// Szimbólumok súlyozva, hogy nagyobb legyen a nyerési esély
 const symbols = [
+  ...fruits, // 25 gyümölcs (legtöbb esély)
   ...fruits,
   ...fruits,
   ...fruits,
@@ -22,7 +39,6 @@ const symbols = [
   ...fruits,
   ...fruits,
   ...fruits,
-  ...fruits, 
   ...fruits,
   ...fruits,
   ...fruits,
@@ -32,9 +48,7 @@ const symbols = [
   ...fruits,
   ...fruits,
   ...fruits,
-  ...fruits,
-  ...fruits,
-  ...fruits,// 25 gyümölcs (legtöbb esély)
+  ...fruits, // 25 gyümölcs
   ...bells,
   ...bells,
   ...bells,
@@ -42,36 +56,20 @@ const symbols = [
   ...bells,
   ...bells,
   ...bells,
-  ...bells,
-  ...bells,
-  ...bells,
-  ...bells,
-  ...bells,
-  ...bells,
-  ...bells,
-  ...bells,
-  ...bells, // 3 csengő (közepes esély)
+  ...bells, // 8 csengő (növeltük az arányát)
   ...goldBars,
   ...goldBars,
   ...goldBars,
-  ...goldBars,
-  ...goldBars,
-  ...goldBars,
-  ...goldBars,
-  ...goldBars,
-  ...goldBars,
-  ...goldBars, // 2 aranyrúd (ritkább)
+  ...goldBars, // 4 aranyrúd (növeltük az arányát)
+  ...sevens, // 2 hetes (még mindig ritka, de több esély)
   ...sevens,
-  ...sevens,
-  ...sevens,
-  ...sevens,
-  ...sevens,
-  ...sevens, // 1 hetes (legritkább)
 ];
 
+// Az alap slot szimbólumok
 const slots = ref([null, null, null]);
 const spinning = ref(false);
 const bet = ref(1);
+const user = ref();
 
 const spin = () => {
   if (spinning.value) return;
@@ -79,12 +77,12 @@ const spin = () => {
     toast.error("Nincs elég pénzed.");
     return;
   }
-  if (store.coins < bet.value) {
+  if (user.value.coin[0].mennyiseg < bet.value) {
     toast.error("Nincs elég egyenleged a pörgetéshez!");
     return;
   }
 
-  store.coins -= bet.value; // Levonja a tétet
+  user.value.coin[0].mennyiseg -= bet.value; // Levonja a tétet
   spinning.value = true;
   let spinCount = 0;
 
@@ -123,7 +121,7 @@ const checkWin = () => {
     }
 
     const winAmount = bet.value * multiplier;
-    store.coins += winAmount; // Hozzáadja a nyereményt az egyenleghez
+    user.value.coin[0].mennyiseg += winAmount; // Hozzáadja a nyereményt az egyenleghez
 
     toast.success(`${message} Nyertél ${winAmount} pontot!`, {
       timeout: 5000,
@@ -165,7 +163,7 @@ const checkWin = () => {
       </div>
       <h1 class="egyenlegSzoveg">Egyenleg:</h1>
       <div class="egyenleg">
-        <h1>{{ store.coins }}</h1>
+        <h1>{{ user?.coin[0].mennyiseg }}</h1>
         <img src="/coin.svg" alt="coin" class="coinkep" />
       </div>
       <button @click="spin" :disabled="spinning">

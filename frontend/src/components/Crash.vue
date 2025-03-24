@@ -4,13 +4,30 @@ import { useToast } from "vue-toastification";
 import { store } from "../config/store";
 
 const toast = useToast();
-
+const user = ref();
 const betAmount = ref(0);
 const currentMultiplier = ref(1.0);
 const isRunning = ref(false);
 const crashed = ref(false);
 const crashPoint = ref(0);
 const history = ref([]);
+const maxMultiplier = 100; // Maximális szorzó, amelynél a játék véget ér
+
+onMounted(() => {
+  fetch(
+    `http://localhost:3300/user/getAllById/${localStorage.getItem("user_id")}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
+    const data = await res.json();
+    console.log(data);
+    user.value = data;
+  });
+});
 
 const crashGame = () => {
   if (!crashed.value) {
@@ -23,7 +40,7 @@ const crashGame = () => {
 
 const startGame = () => {
   // Ellenőrizzük, hogy a tét ne haladja meg a rendelkezésre álló érméket
-  if (betAmount.value <= 0 || betAmount.value > store.coins) {
+  if (betAmount.value <= 0 || betAmount.value > user.value.coin[0].mennyiseg) {
     toast.error("Nincs elég pénzed!", {
       position: "top-right",
     });
@@ -31,7 +48,7 @@ const startGame = () => {
   }
 
   // Azonnal levonjuk a tétet a store.coins-ból
-  store.coins -= Math.round(betAmount.value);
+  user.value.coin[0].mennyiseg -= Math.round(betAmount.value);
 
   // Indítjuk a játékot
   isRunning.value = true;
@@ -40,24 +57,39 @@ const startGame = () => {
 
   const interval = setInterval(() => {
     if (isRunning.value) {
-      currentMultiplier.value += 0.01;
-      if (Math.random() < 0.02) {
+      currentMultiplier.value += 0.005; // Lassabb növekedés, hogy ne álljon meg túl hamar
+
+      // Ha a szorzó meghaladja a maximális értéket, crash-eljük a játékot
+      if (currentMultiplier.value >= maxMultiplier) {
+        toast.error(
+          `A szorzó túllépte a ${maxMultiplier}x értéket, a játék leáll!`,
+          {
+            position: "top-right",
+          }
+        );
+        crashGame();
+        clearInterval(interval);
+      }
+
+      // Véletlenszerű crash, most csökkentettük az esélyt, hogy ritkábban történjen
+      if (Math.random() < 0.005) {
+        // 0.5% esély, hogy véget ér a játék
         crashGame(); // Itt már egyszer hívjuk meg
         lost(); // Ha a játék véget ér, akkor a veszteséget is rögzítjük
         clearInterval(interval);
       }
     }
-  }, 40);
+  }, 50); // Növelhetjük az időintervallumot is, hogy lassabban növekedjen a szorzó
 };
 
 const cashOut = () => {
   if (!crashed.value) {
     const winnings = betAmount.value * currentMultiplier.value;
-    store.coins += Math.round(winnings); // Kerekítjük az nyereményt egész számra
+    user.value.coin[0].mennyiseg += Math.round(winnings); // Kerekítjük az nyereményt egész számra
     toast.success(
       `Sikeresen kivetted: ${Math.round(
         winnings
-      )}, Aktuális egyenleg: ${Math.round(store.coins)}`
+      )}, Aktuális egyenleg: ${Math.round(user.value.coin[0].mennyiseg)}`
     );
     crashGame(); // Itt csak egyszer hívjuk meg a crashGame-t
   }
@@ -67,7 +99,7 @@ const lost = () => {
   const loss = betAmount.value;
   toast.error(
     `Veszítettél: ${Math.round(loss)}, Aktuális egyenleg: ${Math.round(
-      store.coins
+      user.value.coin[0].mennyiseg
     )}`
   );
   crashGame(); // Itt is csak egyszer hívjuk meg a crashGame-t
@@ -100,7 +132,7 @@ const lost = () => {
     </div>
     <h1>Egyenleg:</h1>
     <span class="balance-container">
-      <span class="balance-amount">{{ store.coins }}</span>
+      <span class="balance-amount">{{ user?.coin[0].mennyiseg }}</span>
       <img src="/coin.svg" alt="coin" class="coinkep" />
     </span>
     <div class="multiplier-display">

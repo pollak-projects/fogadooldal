@@ -56,7 +56,7 @@
       <p>
         Egyenleg:
         <span class="balance-container">
-          <span class="balance-amount">{{ balance }}</span>
+          <span class="balance-amount">{{ user }}</span>
           <img src="/coin.svg" alt="coin" class="coinkep" />
         </span>
       </p>
@@ -67,6 +67,25 @@
 <script>
 import { store } from "../config/store.js";
 import { useToast } from "vue-toastification";
+import { ref, onMounted } from "vue";
+
+const user = ref();
+
+onMounted(() => {
+  fetch(
+    `http://localhost:3300/user/getAllById/${localStorage.getItem("user_id")}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
+    const data = await res.json();
+    console.log(data);
+    user.value = data;
+  });
+});
 
 export default {
   data() {
@@ -83,8 +102,8 @@ export default {
 
   computed: {
     balance() {
-      return store.coins;
-    }, 
+      return user?.coin[0].mennyiseg;
+    },
     hasWon() {
       return this.userChoice === this.result;
     },
