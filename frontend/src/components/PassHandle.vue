@@ -54,23 +54,26 @@
   </template>
   
   <script setup>
-  import { ref } from "vue";
-  import { useRouter } from "vue-router";
-  
-  const router = useRouter();
-  const newPassword = ref("");
-  const passwordConf = ref("");
-  const errorMessage = ref("");
-  const showPassword = ref(false);
-  
-  const passHandle = () => {
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const newPassword = ref("");
+const passwordConf = ref("");
+const errorMessage = ref("");
+const successMessage = ref("");
+const showPassword = ref(false);
+
+const passHandle = () => {
   if (newPassword.value !== passwordConf.value) {
     errorMessage.value = "Az új jelszavak nem egyeznek meg!";
     return;
   }
 
-  fetch("http://localhost:3300/user/update", {
-    method: "POST",
+  const userId = localStorage.getItem("user_id");
+
+  fetch(`http://localhost:3300/user/update/${userId}`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${localStorage.getItem("access_token")}`
@@ -79,29 +82,28 @@
       password: newPassword.value,
     }),
   })
-  .then(async (res) => {
-    const contentType = res.headers.get('content-type');
-    
-    if (!contentType?.includes('application/json')) {
-      const text = await res.text();
-      throw new Error(`Nem JSON válasz: ${text.substring(0, 100)}`);
-    }
+    .then(async (res) => {
+      const contentType = res.headers.get('content-type');
+      if (!contentType?.includes('application/json')) {
+        const text = await res.text();
+        throw new Error(`Nem JSON válasz: ${text.substring(0, 100)}`);
+      }
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      successMessage.value = "A jelszó sikeresen megváltoztatva!";
-      setTimeout(() => router.push("/home"), 2000);
-    } else {
-      errorMessage.value = data.message || "Hiba történt a módosítás során";
-    }
-  })
-  .catch((err) => {
-    errorMessage.value = `Hiba: ${err.message}`;
-    console.error("Hiba részletei:", err);
-  });
+      if (res.ok) {
+        successMessage.value = "A jelszó sikeresen megváltoztatva!";
+        // setTimeout(() => router.push("/home"), 2000);
+      } else {
+        errorMessage.value = data.message || "Hiba történt a módosítás során";
+      }
+    })
+    .catch((err) => {
+      errorMessage.value = `Hiba: ${err.message}`;
+      console.error("Hiba részletei:", err);
+    });
 };
-  </script>
+</script>
   
   <style scoped>
   .background-container {
