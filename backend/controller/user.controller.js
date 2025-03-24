@@ -7,6 +7,8 @@ import {
   listAllDataById,
 } from "../services/user.service.js";
 import { PrismaClient } from "@prisma/client";
+import { encrypt } from "../lib/hash.js";
+
 
 
 
@@ -96,14 +98,14 @@ router.put("/update", async (req, res) => {
 
 router.put("/update/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, email } = req.body;
+  const { password } = req.body;
+  const hashedPwd = await encrypt(password);
 
   try {
     const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
       data: {
-        full_name: name,
-        email: email,
+        password: hashedPwd
       },
     });
 
