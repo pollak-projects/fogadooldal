@@ -37,7 +37,7 @@
 
       <div class="p-4 bg-gray-800 rounded-lg balance flex items-center">
         <p class="text-xl mr-2">
-          Egyenleg: <span>{{ store.coins }}</span>
+          Egyenleg: <span>{{ user?.coin[0].mennyiseg }}</span>
         </p>
         <img src="/coin.svg" alt="Coin" class="coinkep" />
       </div>
@@ -152,6 +152,8 @@ const selectedChip = ref(100);
 const chips = [10, 50, 100, 500];
 const spinSound = ref(null);
 const winSound = ref(null);
+const user = ref();
+const roundCounter = ref(1); // Track which round the wheel is on
 
 const betOptions = ref([
   {
@@ -173,15 +175,21 @@ const betOptions = ref([
     hoverColor: "hover:bg-gray-800",
   },
 ]);
-const wheelStyle = computed(() => ({
-  transform: `translateX(-${
-    (currentPosition.value % wheel.value.length) * 160
-  }px)`,
-  transition: bettingOpen.value
-    ? "none"
-    : "transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)",
-  willChange: "transform",
-}));
+const wheelStyle = computed(() => {
+  const rotation = (currentPosition.value % wheel.value.length) * 160;
+  const isSpinning = !bettingOpen.value;
+
+  // Set transition speed based on round counter
+  const transitionDuration = roundCounter.value <= 1 ? "5s" : "2s"; // Faster spin for rounds 2 and 3
+
+  return {
+    transform: `translateX(-${rotation}px)`,
+    transition: isSpinning
+      ? `transform ${transitionDuration} cubic-bezier(0.25, 0.1, 0.25, 1)`
+      : "none",
+    willChange: "transform",
+  };
+});
 
 const limitedHistory = computed(() => history.value.slice(0, 10));
 
@@ -198,28 +206,28 @@ const startTimer = () => {
 
 const spinWheel = () => {
   spinSound.value.play();
-  const targetIndex = Math.floor(Math.random() * wheel.value.length); // Véletlenszerű célpont
-  const fullSpins = 4; // A teljes kört ismételjük
-  const totalSteps = fullSpins * wheel.value.length + targetIndex; // Az összes lépés, hogy elérjük a célt
+  const targetIndex = Math.floor(Math.random() * wheel.value.length);
+  const fullSpins = 4;
+  const totalSteps = fullSpins * wheel.value.length + targetIndex;
 
   currentPosition.value = totalSteps;
 
   setTimeout(() => {
     const finalPosition = totalSteps % wheel.value.length;
-    const winningColor = wheel.value[finalPosition]; // A nyerő szín
+    const winningColor = wheel.value[finalPosition];
     history.value.unshift(winningColor);
     if (history.value.length > 50) history.value.pop();
 
     resolveBets(winningColor);
 
-    // A kör befejezését követően újra engedélyezzük a fogadást
     bettingOpen.value = true;
-    timer.value = 15; // Új időzítő indítása
+    timer.value = 15;
     resetBets();
 
-    currentPosition.value = finalPosition + 4 * wheel.value.length; // Visszaállítás a helyes pozícióra
+    currentPosition.value = finalPosition + 4 * wheel.value.length;
 
-    // Új kör indítása
+    roundCounter.value++; // Increment the round count
+
     startTimer();
   }, 5000);
 };
@@ -229,9 +237,10 @@ const selectChip = (chip) => {
 };
 
 const placeBet = (bet) => {
-  if (!bettingOpen.value || store.coins < selectedChip.value) return;
+  if (!bettingOpen.value || user.value.coin[0].mennyiseg < selectedChip.value)
+    return;
 
-  store.coins -= selectedChip.value;
+  user.value.coin[0].mennyiseg -= selectedChip.value;
   activeBets.value[bet.label] += selectedChip.value;
 };
 
@@ -244,7 +253,7 @@ const resolveBets = (winningColor) => {
   const winAmount = activeBets.value[winType] * multiplier;
 
   if (winAmount > 0) {
-    store.coins += winAmount;
+    user.value.coin[0].mennyiseg += winAmount;
     winSound.value.play();
   }
 };
@@ -265,6 +274,19 @@ const getColorClass = (symbol) => {
 
 onMounted(() => {
   startTimer();
+  fetch(
+    `http://localhost:3300/user/getAllById/${localStorage.getItem("user_id")}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
+    const data = await res.json();
+    console.log(data);
+    user.value = data;
+  });
 });
 </script>
 
