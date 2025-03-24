@@ -3,7 +3,14 @@ import http from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import { router as userRouter } from "./controller/user.controller.js";
-import { listAllUsers } from "./services/user.service.js";
+// import { listAllUsers } from "./services/user.service.js";
+import { 
+  listAllUsers, 
+  deleteMessage, 
+  banUser, 
+  timeoutUser 
+} from "./services/user.service.js";
+
 import cors from "cors";
 import { groupController } from "./controller/group.controller.js";
 import { listAllTokens } from "./services/auth.service.js";
@@ -43,13 +50,13 @@ app.use("/coins", coinController);
 io.on("connection", (socket) => {
   console.log("Egy felhasználó csatlakozott:", socket.id);
 
-  // Bejelentkezés esemény kezelése
+
 socket.on("login", (userId) => {
-  socket.userId = Number(userId); // Beállítjuk a userId-t
+  socket.userId = Number(userId); 
   console.log("Felhasználó bejelentkezett, userId:", socket.userId);
 });
 
-  // Üzenet küldése
+  
 socket.on("chat message", async (msg) => {
   if (!socket.userId || typeof socket.userId !== "number") {
     return console.error("Érvénytelen userId:", socket.userId);
@@ -57,6 +64,8 @@ socket.on("chat message", async (msg) => {
 
   try {
     const user = await listAllDataById(socket.userId);
+    if (user.isBanned) return;
+    if (user.timeoutExpires >= new Date() ) return;
     io.emit("chat message", {
       text: msg,
       user: user.username,
@@ -77,8 +86,10 @@ socket.on("chat message", async (msg) => {
 
     try {
       const user = await listAllDataById(socket.userId);
+      console.log(user)
       if (isAdmin(user)) {
-        await deleteMessage(messageId);
+        console.log("admin")
+        // await deleteMessage(messageId);
         io.emit("message deleted", messageId);
       }
     } catch (error) {
@@ -86,7 +97,7 @@ socket.on("chat message", async (msg) => {
     }
   });
 
-  // Felhasználó kitiltása
+  
   socket.on("ban user", async (userId) => {
     if (!socket.userId || typeof socket.userId !== 'number') {
       console.error("Invalid userId:", socket.userId);
@@ -97,6 +108,7 @@ socket.on("chat message", async (msg) => {
       const user = await listAllDataById(socket.userId);
       if (isAdmin(user)) {
         await banUser(userId);
+        
         io.emit("user banned", userId);
       }
     } catch (error) {
@@ -104,7 +116,7 @@ socket.on("chat message", async (msg) => {
     }
   });
 
-  // Felhasználó timeout
+  
   socket.on("timeout user", async (userId, minutes) => {
     if (!socket.userId || typeof socket.userId !== 'number') {
       console.error("Invalid userId:", socket.userId);

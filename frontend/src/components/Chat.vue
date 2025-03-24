@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted, onUpdated } from "vue";
+import { ref, onMounted, onUpdated, computed, watch } from "vue";
 import { parseJwt } from "../lib/jwtparser.js";
-import socket from "../utils/socket/socket.js"; // Importáld a Socket.IO klienst
+import socket from "../utils/socket/socket.js";
 
 const emit = defineEmits(["close-chat"]);
 
@@ -17,7 +17,12 @@ const chatMessagesRef = ref(null);
 const userName = ref(parseJwt(localStorage.getItem("access_token")).username);
 const userId = ref(parseJwt(localStorage.getItem("access_token")).sub);
 const isAdmin = ref(parseJwt(localStorage.getItem("access_token")).userGroup === "admin");
-console.log(isAdmin.value);
+
+
+const isBanned = ref(false);
+const timeoutExpires = ref(null);
+const timeoutRemaining = ref(0);
+let timeoutInterval = null;
 
 const forbiddenWords = [
   "h1tl3r",
@@ -414,7 +419,46 @@ const forbiddenWords = [
 ];
 
 
+const updateTimeoutRemaining = () => {
+  if (!timeoutExpires.value) return;
+  const now = new Date();
+  const diff = timeoutExpires.value - now;
+  
+  if (diff <= 0) {
+    timeoutExpires.value = null;
+    timeoutRemaining.value = 0;
+    clearInterval(timeoutInterval);
+    return;
+  }
+
+  const minutes = Math.floor(diff / 1000 / 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+  timeoutRemaining.value = `${minutes}p ${seconds}mp`;
+};
+
+const isTimedOut = computed(() => {
+  return timeoutExpires.value && new Date() < timeoutExpires.value;
+});
+
+watch(isTimedOut, (newVal) => {
+  if (newVal) {
+    timeoutInterval = setInterval(updateTimeoutRemaining, 1000);
+  } else {
+    clearInterval(timeoutInterval);
+  }
+});
+
 const sendMessage = () => {
+  if (isBanned.value) {
+    errorMessage.value = "Ki vagy tiltva! Nem küldhetsz üzeneteket.";
+    return;
+  }
+  
+  if (isTimedOut.value) {
+    errorMessage.value = `Időkorlátos tiltás alatt vagy! Várj még ${timeoutRemaining.value}.`;
+    return;
+  }
+
   if (newMessage.value.trim() !== "") {
     const containsForbiddenWord = forbiddenWords.some((word) =>
       newMessage.value.toLowerCase().includes(word)
@@ -423,59 +467,103 @@ const sendMessage = () => {
     if (containsForbiddenWord) {
       errorMessage.value = "Ne írj be csúnya szót!";
     } else {
-      socket.emit("chat message", {
-        text: newMessage.value,
-        user: userName.value,
-        userId: userId.value,
-        isAdmin: isAdmin.value,
-      });
+      socket.emit("chat message", newMessage.value);
       newMessage.value = "";
       errorMessage.value = "";
     }
   }
 };
 
-
 onMounted(() => {
-        socket.emit("login", localStorage.getItem("user_id")); 
+  socket.emit("login", userId.value);
+  
   socket.on("chat message", (msg) => {
     messages.value.push(msg);
   });
-});
 
+  socket.on("message deleted", (messageId) => {
+    messages.value = messages.value.filter((msg) => msg.messageId !== messageId);
+  });
+
+  socket.on("user banned", (bannedUserId) => {
+    if (Number(bannedUserId) === Number(userId.value)) {
+      isBanned.value = true;
+    }
+    messages.value = messages.value.filter((msg) => msg.userId !== bannedUserId);
+  });
+
+  socket.on("user timeout", ({ userId: timedOutUserId, expires }) => {
+    if (Number(timedOutUserId) === Number(userId.value)) {
+      timeoutExpires.value = new Date(expires);
+      updateTimeoutRemaining();
+    }
+  });
+
+  socket.on("user status", (status) => {
+    isBanned.value = status.isBanned;
+    timeoutExpires.value = status.timeoutExpires ? new Date(status.timeoutExpires) : null;
+    if (timeoutExpires.value) updateTimeoutRemaining();
+  });
+
+  // Kezdeti állapot lekérdezése
+  socket.emit("get user status", userId.value);
+});
 
 onUpdated(() => {
   if (chatMessagesRef.value) {
     chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight;
   }
 });
+
+const deleteMessage = (messageId) => {
+  socket.emit("delete message", messageId);
+};
+
+const banUser = (userId) => {
+  socket.emit("ban user", userId);
+};
+
+const timeoutUser = (userId, minutes) => {
+  socket.emit("timeout user", userId, minutes);
+};
 </script>
 
 <template>
   <div class="chat-container">
     <div class="chat-header">
       Chat
-      <button
-        @click="closeChat"
-        class="close-chat-button"
-        title="Chat bezárása"
-      >
-        ◄
-      </button>
+      <button @click="closeChat" class="close-chat-button" title="Chat bezárása">◄</button>
     </div>
+    
     <div class="chat-messages" ref="chatMessagesRef">
-      <div v-for="(message, index) in messages" :key="index" class="message">
-        <strong class="username">{{ message.user }} <span v-if="message.isAdmin" style="color: yellow;">(ADMIN)</span>: </strong>
-        <span class="message-text">{{ message.text.text }}</span>
-      </div>
- 
+      <div 
+        v-for="(message, index) in messages" 
+        :key="index" 
+        class="message"
+      >
+        <strong class="username">
+          {{ message.user }} 
+          <span v-if="message.isAdmin" style="color: yellow;">(ADMIN)</span>: 
+        </strong>
+        <span class="message-text">{{ message.text }}</span>
         
-          <button class="tiltogombok" v-if="isAdmin" @click="deleteMessage(message.id)">Törlés</button>
-          <button class="tiltogombok" v-if="isAdmin" @click="banUser(message.userId)">Kitiltás</button>
-          <button class="tiltogombok" v-if="isAdmin" @click="timeoutUser(message.userId, 5)">5p Timeout</button>
+        <div class="admin-buttons" v-if="isAdmin">
+          <button class="tiltogombok" @click="deleteMessage(message.messageId)">Törlés</button>
+          <button class="tiltogombok" @click="banUser(message.userId)">Kitiltás</button>
+          <button class="tiltogombok" @click="timeoutUser(message.userId, 5)">5p Timeout</button>
+        </div>
       </div>
+    </div>
 
-    <div class="chat-input">
+    <div v-if="isBanned" class="status-message error">
+      Ön ki van tiltva! Nem küldhet üzeneteket.
+    </div>
+
+    <div v-else-if="isTimedOut" class="status-message warning">
+      Időkorlátos tiltás: {{ timeoutRemaining }} múlva chatelhet újra
+    </div>
+
+    <div v-else class="chat-input">
       <input
         v-model="newMessage"
         @keyup.enter="sendMessage"
@@ -485,20 +573,14 @@ onUpdated(() => {
         Küldés
       </button>
     </div>
+
     <div v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </div>
   </div>
-
-
-
-
 </template>
 
 <style scoped>
-
-
-
 .close-chat-button {
   background: none;
   border: none;
@@ -564,6 +646,9 @@ onUpdated(() => {
 
 .message {
   margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .username {
@@ -592,5 +677,42 @@ onUpdated(() => {
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.tiltogombok {
+  padding: 3px 8px;
+  font-size: 14px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tiltogombok:hover {
+  background-color: #cc0000;
+}
+
+.status-message {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.status-message.error {
+  background-color: #ff4444;
+  color: white;
+}
+
+.status-message.warning {
+  background-color: #ffcc00;
+  color: black;
 }
 </style>

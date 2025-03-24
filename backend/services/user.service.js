@@ -40,6 +40,7 @@ export async function timeoutUser(userId, minutes) {
     data: { timeoutExpires },
   });
 }
+
 export async function addUser(username, password, email, full_name) {
   const hashedPwd = await encrypt(password);
   const user = await prisma.user
