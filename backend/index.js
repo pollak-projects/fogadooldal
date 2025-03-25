@@ -19,6 +19,8 @@ import { authController } from "./controller/auth.controller.js";
 import { coinController } from "./controller/coins.controller.js";
 import { isAdmin } from "./utils/auth.js";
 import { listAllDataById } from "./services/user.service.js";
+import { coinflipController } from "./controller/coinflip.controller.js";
+import { rouletteController } from "./controller/roulette.controller.js";
 
 const app = express();
 const port = 3300;
@@ -46,6 +48,8 @@ app.use("/user", userRouter);
 app.use("/auth", authController);
 app.use("/group", groupController);
 app.use("/coins", coinController);
+app.use("/coinflip", coinflipController);
+app.use("/roulette", rouletteController);
 
 io.on("connection", (socket) => {
   console.log("Egy felhasználó csatlakozott:", socket.id);

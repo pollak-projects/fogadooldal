@@ -3,5 +3,5 @@ model Roulette {
     piros Boolean
     fekete Boolean
     zold Boolean
-    date DateTime
+    date DateTime? @default(now())
 }
