@@ -18,7 +18,6 @@ const userName = ref(parseJwt(localStorage.getItem("access_token")).username);
 const userId = ref(parseJwt(localStorage.getItem("access_token")).sub);
 const isAdmin = ref(parseJwt(localStorage.getItem("access_token")).userGroup === "admin");
 
-
 const isBanned = ref(false);
 const timeoutExpires = ref(null);
 const timeoutRemaining = ref(0);
@@ -418,15 +417,15 @@ const forbiddenWords = [
   "zsugorított faszú",
 ];
 
-
 const updateTimeoutRemaining = () => {
   if (!timeoutExpires.value) return;
   const now = new Date();
-  const diff = timeoutExpires.value - now;
+  const diff = new Date(timeoutExpires.value) - now;
   
   if (diff <= 0) {
     timeoutExpires.value = null;
     timeoutRemaining.value = 0;
+    localStorage.removeItem(`user_${userId.value}_timeout`);
     clearInterval(timeoutInterval);
     return;
   }
@@ -437,7 +436,7 @@ const updateTimeoutRemaining = () => {
 };
 
 const isTimedOut = computed(() => {
-  return timeoutExpires.value && new Date() < timeoutExpires.value;
+  return timeoutExpires.value && new Date() < new Date(timeoutExpires.value);
 });
 
 watch(isTimedOut, (newVal) => {
@@ -475,6 +474,19 @@ const sendMessage = () => {
 };
 
 onMounted(() => {
+  // Check localStorage for existing ban/timeout status
+  const storedBan = localStorage.getItem(`user_${userId.value}_banned`);
+  const storedTimeout = localStorage.getItem(`user_${userId.value}_timeout`);
+  
+  if (storedBan === 'true') {
+    isBanned.value = true;
+  }
+  
+  if (storedTimeout) {
+    timeoutExpires.value = storedTimeout;
+    updateTimeoutRemaining();
+  }
+
   socket.emit("login", userId.value);
   
   socket.on("chat message", (msg) => {
@@ -488,24 +500,37 @@ onMounted(() => {
   socket.on("user banned", (bannedUserId) => {
     if (Number(bannedUserId) === Number(userId.value)) {
       isBanned.value = true;
+      localStorage.setItem(`user_${userId.value}_banned`, 'true');
     }
     messages.value = messages.value.filter((msg) => msg.userId !== bannedUserId);
   });
 
   socket.on("user timeout", ({ userId: timedOutUserId, expires }) => {
     if (Number(timedOutUserId) === Number(userId.value)) {
-      timeoutExpires.value = new Date(expires);
+      timeoutExpires.value = expires;
+      localStorage.setItem(`user_${userId.value}_timeout`, expires);
       updateTimeoutRemaining();
     }
   });
 
   socket.on("user status", (status) => {
     isBanned.value = status.isBanned;
-    timeoutExpires.value = status.timeoutExpires ? new Date(status.timeoutExpires) : null;
-    if (timeoutExpires.value) updateTimeoutRemaining();
+    if (status.isBanned) {
+      localStorage.setItem(`user_${userId.value}_banned`, 'true');
+    } else {
+      localStorage.removeItem(`user_${userId.value}_banned`);
+    }
+    
+    timeoutExpires.value = status.timeoutExpires || null;
+    if (timeoutExpires.value) {
+      localStorage.setItem(`user_${userId.value}_timeout`, timeoutExpires.value);
+      updateTimeoutRemaining();
+    } else {
+      localStorage.removeItem(`user_${userId.value}_timeout`);
+    }
   });
 
-  // Kezdeti állapot lekérdezése
+  // Request initial status from server
   socket.emit("get user status", userId.value);
 });
 
