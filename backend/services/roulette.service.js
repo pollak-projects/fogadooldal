@@ -23,7 +23,7 @@ export async function addRouletteRecord(piros, fekete, zold) {
     return record;
 }
 
-export async function updateRouletteRecord(piros, fekete, zold) {
+export async function updateRouletteRecord(id, piros, fekete, zold) {
     await prisma.roulette.update({
       where: {
         id: id,

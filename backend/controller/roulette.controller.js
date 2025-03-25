@@ -21,6 +21,12 @@ router.get("/getAll", async (req, res) => {
 
 router.post("/add", async (req, res) => {
     const { piros, fekete, zold } = req.body;
+
+    const trueCount = [piros, fekete, zold].filter(value => value === true).length;
+
+    if (trueCount !== 1) {
+        return res.status(400).json({ message: "Csak egy érték lehet true (piros, fekete vagy zöld)." });
+    }
   
     try {
       const response = await addRouletteRecord(piros, fekete, zold);
@@ -36,7 +42,7 @@ router.post("/add", async (req, res) => {
 
 router.delete("/delete", async (req, res) => {
     try {
-      const id = Number(req.query.id); // Konvertálás számra
+      const id = Number(req.body.id); // Konvertálás számra
       if (isNaN(id)) {
         return res.status(400).json({ message: "Érvénytelen ID formátum." });
       }
@@ -49,19 +55,27 @@ router.delete("/delete", async (req, res) => {
     }
 });
 
-  router.put("/update", async (req, res) => {
+router.put("/update", async (req, res) => {
     try {
-      const id = Number(req.query.id); // Konvertálás számra
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Érvénytelen ID formátum." });
-      }
-  
-      const { piros, fekete, zold } = req.body;
-      await updateRouletteRecord(id, piros, fekete, zold); 
-      res.status(200).json({ message: "Sikeresen frissítve." });
+        const id = Number(req.body.id); 
+        if (isNaN(id)) {
+            return res.status(400).json({ message: "Érvénytelen ID formátum." });
+        }
+
+        const { piros, fekete, zold } = req.body;
+
+        const trueCount = [piros, fekete, zold].filter(value => value === true).length;
+
+        if (trueCount !== 1) {
+            return res.status(400).json({ message: "Csak egy érték lehet true (piros, fekete vagy zöld)." });
+        }
+
+        await updateRouletteRecord(id, piros, fekete, zold); 
+
+        res.status(200).json({ message: "Sikeresen frissítve." });
     } catch (error) {
-      console.error("Hiba a rekord frissítésekor:", error);
-      res.status(500).json({ message: "Szerverhiba." });
+        console.error("Hiba a rekord frissítésekor:", error);
+        res.status(500).json({ message: "Szerverhiba." });
     }
 });
 

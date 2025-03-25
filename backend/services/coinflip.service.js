@@ -22,7 +22,7 @@ export async function addCoinflipRecord(fej, iras) {
     return record;
 }
 
-export async function updateCoinflipRecord(fej, iras) {
+export async function updateCoinflipRecord(id, fej, iras) {
     await prisma.coinflip.update({
       where: {
         id: id,

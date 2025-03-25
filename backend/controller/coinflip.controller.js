@@ -22,6 +22,12 @@ router.get("/getAll", async (req, res) => {
 
 router.post("/add", async (req, res) => {
     const { fej, iras } = req.body;
+
+        const trueCount = [fej, iras ].filter(value => value === true).length;
+
+        if (trueCount !== 1) {
+            return res.status(400).json({ message: "Csak egy érték lehet true (fej vagy irás)." });
+        }
   
     try {
       const response = await addCoinflipRecord(fej, iras);
@@ -37,7 +43,7 @@ router.post("/add", async (req, res) => {
 
 router.delete("/delete", async (req, res) => {
     try {
-      const id = Number(req.query.id); // Konvertálás számra
+      const id = Number(req.body.id); // Konvertálás számra
       if (isNaN(id)) {
         return res.status(400).json({ message: "Érvénytelen ID formátum." });
       }
@@ -52,7 +58,7 @@ router.delete("/delete", async (req, res) => {
 
   router.put("/update", async (req, res) => {
     try {
-      const id = Number(req.query.id); // Konvertálás számra
+      const id = Number(req.body.id); // Konvertálás számra
       if (isNaN(id)) {
         return res.status(400).json({ message: "Érvénytelen ID formátum." });
       }
