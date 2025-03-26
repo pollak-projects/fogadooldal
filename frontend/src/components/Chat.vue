@@ -459,7 +459,8 @@ const sendMessage = () => {
   }
 
   if (newMessage.value.trim() !== "") {
-    const containsForbiddenWord = forbiddenWords.some((word) =>
+   
+    const containsForbiddenWord = !isAdmin.value && forbiddenWords.some((word) =>
       newMessage.value.toLowerCase().includes(word)
     );
 
@@ -474,7 +475,7 @@ const sendMessage = () => {
 };
 
 onMounted(() => {
-  // Check localStorage for existing ban/timeout status
+
   const storedBan = localStorage.getItem(`user_${userId.value}_banned`);
   const storedTimeout = localStorage.getItem(`user_${userId.value}_timeout`);
   
@@ -530,7 +531,7 @@ onMounted(() => {
     }
   });
 
-  // Request initial status from server
+ 
   socket.emit("get user status", userId.value);
 });
 
