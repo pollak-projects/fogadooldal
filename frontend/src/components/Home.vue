@@ -166,7 +166,6 @@ const toggleChat = () => {
   left: 0;
   width: 60px;
   height: 100%;
-  background-color: rgb(46, 40, 54);
   z-index: 1000;
 }
 
@@ -320,7 +319,7 @@ const toggleChat = () => {
   width: 100%;
 }
 
-/* Fixed marquee styles */
+
 .marquee-wrapper {
   width: 100%;
   overflow: hidden;
@@ -362,7 +361,6 @@ const toggleChat = () => {
   }
 }
 
-/* Responsive styles */
 @media (max-width: 1024px) {
   .cards-container {
     gap: 15px;
