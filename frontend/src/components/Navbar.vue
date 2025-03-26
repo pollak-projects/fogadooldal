@@ -87,7 +87,7 @@
       <template #end>
         <img src="/coin.svg" class="coinkep" />
         <div class="coin-balance">
-          {{ user?.coin[0].mennyiseg }}
+          {{ store.coins }}
         </div>
         <img
           :src="userStore.profileImage"
@@ -126,7 +126,16 @@ onMounted(() => {
     const data = await res.json();
     console.log(data);
     user.value = data;
+    store.coins = data.coin[0].mennyiseg;
   });
+
+  fetch("url-to-image")
+    .then(function (response) {
+      return response.blob();
+    })
+    .then(function (blob) {
+      // here the image is a blob
+    });
 });
 
 const menuItems = ref([

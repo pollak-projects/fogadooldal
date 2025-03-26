@@ -37,7 +37,7 @@
 
       <div class="p-4 bg-gray-800 rounded-lg balance flex items-center">
         <p class="text-xl mr-2">
-          Egyenleg: <span>{{ user?.coin[0].mennyiseg }}</span>
+          Egyenleg: <span>{{ store.coins }}</span>
         </p>
         <img src="/coin.svg" alt="Coin" class="coinkep" />
       </div>
@@ -237,11 +237,23 @@ const selectChip = (chip) => {
 };
 
 const placeBet = (bet) => {
-  if (!bettingOpen.value || user.value.coin[0].mennyiseg < selectedChip.value)
-    return;
+  if (!bettingOpen.value || store.coins < selectedChip.value) return;
 
-  user.value.coin[0].mennyiseg -= selectedChip.value;
+  store.coins -= selectedChip.value;
   activeBets.value[bet.label] += selectedChip.value;
+
+  fetch("http://localhost:3300/coins/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userid: user.value.id,
+      mennyiseg: store.coins,
+    }),
+  }).then(async (res) => {
+    const data = await res.json();
+  });
 };
 
 const resolveBets = (winningColor) => {
@@ -253,8 +265,21 @@ const resolveBets = (winningColor) => {
   const winAmount = activeBets.value[winType] * multiplier;
 
   if (winAmount > 0) {
-    user.value.coin[0].mennyiseg += winAmount;
+    store.coins += winAmount;
     winSound.value.play();
+
+    fetch("http://localhost:3300/coins/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userid: user.value.id,
+        mennyiseg: store.coins,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+    });
   }
 };
 

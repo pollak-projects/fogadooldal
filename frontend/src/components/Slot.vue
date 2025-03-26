@@ -77,12 +77,25 @@ const spin = () => {
     toast.error("Nincs elég pénzed.");
     return;
   }
-  if (user.value.coin[0].mennyiseg < bet.value) {
+  if (store.coins < bet.value) {
     toast.error("Nincs elég egyenleged a pörgetéshez!");
     return;
   }
 
-  user.value.coin[0].mennyiseg -= bet.value; // Levonja a tétet
+  store.coins -= bet.value; // Levonja a tétet
+  console.log(store.coins);
+  fetch("http://localhost:3300/coins/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userid: user.value.id,
+      mennyiseg: store.coins,
+    }),
+  }).then(async (res) => {
+    const data = await res.json();
+  });
   spinning.value = true;
   let spinCount = 0;
 
@@ -163,7 +176,7 @@ const checkWin = () => {
       </div>
       <h1 class="egyenlegSzoveg">Egyenleg:</h1>
       <div class="egyenleg">
-        <h1>{{ user?.coin[0].mennyiseg }}</h1>
+        <h1>{{ store.coins }}</h1>
         <img src="/coin.svg" alt="coin" class="coinkep" />
       </div>
       <button @click="spin" :disabled="spinning">

@@ -40,7 +40,7 @@ const crashGame = () => {
 
 const startGame = () => {
   // Ellenőrizzük, hogy a tét ne haladja meg a rendelkezésre álló érméket
-  if (betAmount.value <= 0 || betAmount.value > user.value.coin[0].mennyiseg) {
+  if (betAmount.value <= 0 || betAmount.value > store.coins) {
     toast.error("Nincs elég pénzed!", {
       position: "top-right",
     });
@@ -48,7 +48,20 @@ const startGame = () => {
   }
 
   // Azonnal levonjuk a tétet a store.coins-ból
-  user.value.coin[0].mennyiseg -= Math.round(betAmount.value);
+  store.coins -= Math.round(betAmount.value);
+
+  fetch("http://localhost:3300/coins/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userid: user.value.id,
+      mennyiseg: store.coins,
+    }),
+  }).then(async (res) => {
+    const data = await res.json();
+  });
 
   // Indítjuk a játékot
   isRunning.value = true;
@@ -85,11 +98,23 @@ const startGame = () => {
 const cashOut = () => {
   if (!crashed.value) {
     const winnings = betAmount.value * currentMultiplier.value;
-    user.value.coin[0].mennyiseg += Math.round(winnings); // Kerekítjük az nyereményt egész számra
+    store.coins += Math.round(winnings); // Kerekítjük az nyereményt egész számra
+    fetch("http://localhost:3300/coins/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userid: user.value.id,
+        mennyiseg: store.coins,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+    });
     toast.success(
       `Sikeresen kivetted: ${Math.round(
         winnings
-      )}, Aktuális egyenleg: ${Math.round(user.value.coin[0].mennyiseg)}`
+      )}, Aktuális egyenleg: ${Math.round(store.coins)}`
     );
     crashGame(); // Itt csak egyszer hívjuk meg a crashGame-t
   }
@@ -99,10 +124,22 @@ const lost = () => {
   const loss = betAmount.value;
   toast.error(
     `Veszítettél: ${Math.round(loss)}, Aktuális egyenleg: ${Math.round(
-      user.value.coin[0].mennyiseg
+      store.coins
     )}`
   );
   crashGame(); // Itt is csak egyszer hívjuk meg a crashGame-t
+  fetch("http://localhost:3300/coins/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userid: user.value.id,
+      mennyiseg: store.coins,
+    }),
+  }).then(async (res) => {
+    const data = await res.json();
+  });
 };
 </script>
 
@@ -132,7 +169,7 @@ const lost = () => {
     </div>
     <h1>Egyenleg:</h1>
     <span class="balance-container">
-      <span class="balance-amount">{{ user?.coin[0].mennyiseg }}</span>
+      <span class="balance-amount">{{ store.coins }}</span>
       <img src="/coin.svg" alt="coin" class="coinkep" />
     </span>
     <div class="multiplier-display">

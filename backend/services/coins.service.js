@@ -25,15 +25,14 @@ export async function addCoin(mennyiseg, userid) {
     });
 }
 
-export async function updateCoin(id, mennyiseg, userid) {
+export async function updateCoin(userid, mennyiseg) {
   await prisma.coin
     .update({
       where: {
-        id: id,
+        userid: userid,
       },
       data: {
         mennyiseg: mennyiseg,
-        userid: userid,
       },
     })
     .catch((err) => {
