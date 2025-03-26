@@ -136,6 +136,7 @@ onMounted(() => {
     .then(function (blob) {
       // here the image is a blob
     });
+    fetch("http://localhost:3300/user/")
 });
 
 const menuItems = ref([

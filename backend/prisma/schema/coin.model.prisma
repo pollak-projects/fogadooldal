@@ -1,7 +1,1 @@
-model Coin {
-    id             Int      @id @default(autoincrement())
-    mennyiseg Int
-    userid Int  @unique
 
-    user User @relation(references: [id], fields: [userid]) 
-}

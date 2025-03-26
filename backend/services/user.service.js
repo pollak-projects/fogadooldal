@@ -7,6 +7,56 @@ export async function listAllUsers() {
   return await prisma.user.findMany();
 }
 
+export async function imageGetFromDB(kapottTipus) {
+  const data = await prisma.user.findMany({
+    where: {
+      tipus: kapottTipus,
+    },
+  });
+  data.forEach((element) => {
+    //console.log(element.image);
+    let buffer = Buffer.from(element.image);
+    element.image = "data:image/png" + ";base64," + buffer.toString("base64");
+  });
+
+  return data;
+}
+
+export async function imageSaveToDB(image) {
+  const imageBlob = Buffer.from(image, "base64");
+
+  try {
+    const result = await prisma.user.update({
+      where:{
+        userId: userId
+      },
+      data: {
+        image: imageBlob,
+        text: "PLACEHOLDER",
+      },
+    });
+    return result;
+  } catch (error) {
+    console.error("Error in imageDBSave: ", error);
+  }
+}
+
+export async function imageGetFromDB(kapottTipus) {
+  const data = await prisma.feladatokPairPictures.findMany({
+    where: {
+      tipus: kapottTipus,
+    },
+  });
+  data.forEach((element) => {
+    //console.log(element.image);
+    let buffer = Buffer.from(element.image);
+    element.image = "data:image/png" + ";base64," + buffer.toString("base64");
+  });
+
+  return data;
+}
+
+
 export async function listAllDataById(id) {
   if (typeof id !== "number" || isNaN(id)) {
     throw new Error("Az ID-nak számnak kell lennie.");

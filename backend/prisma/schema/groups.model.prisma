@@ -1,10 +1,1 @@
-model Groups {
-  name String @id
-  users User[] @relation()
-  write  Boolean @default(false)
-  read   Boolean @default(false)
-  update Boolean @default(false)
-  del Boolean @default(false)
 
-
-}
