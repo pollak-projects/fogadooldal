@@ -7,20 +7,6 @@ export async function listAllUsers() {
   return await prisma.user.findMany();
 }
 
-export async function imageGetFromDB(kapottTipus) {
-  const data = await prisma.user.findMany({
-    where: {
-      tipus: kapottTipus,
-    },
-  });
-  data.forEach((element) => {
-    //console.log(element.image);
-    let buffer = Buffer.from(element.image);
-    element.image = "data:image/png" + ";base64," + buffer.toString("base64");
-  });
-
-  return data;
-}
 
 export async function imageSaveToDB(image) {
   const imageBlob = Buffer.from(image, "base64");
@@ -28,7 +14,7 @@ export async function imageSaveToDB(image) {
   try {
     const result = await prisma.user.update({
       where:{
-        userId: userId
+        id: id
       },
       data: {
         image: imageBlob,
@@ -41,10 +27,10 @@ export async function imageSaveToDB(image) {
   }
 }
 
-export async function imageGetFromDB(kapottTipus) {
-  const data = await prisma.feladatokPairPictures.findMany({
+export async function imageGetFromDB(id) {
+  const data = await prisma.user.findMany({
     where: {
-      tipus: kapottTipus,
+      id: id
     },
   });
   data.forEach((element) => {
@@ -55,6 +41,7 @@ export async function imageGetFromDB(kapottTipus) {
 
   return data;
 }
+
 
 
 export async function listAllDataById(id) {

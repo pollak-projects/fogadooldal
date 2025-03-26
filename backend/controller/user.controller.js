@@ -5,6 +5,8 @@ import {
   deleteUser,
   updateUser,
   listAllDataById,
+  imageGetFromDB,
+  imageSaveToDB
 } from "../services/user.service.js";
 import { PrismaClient } from "@prisma/client";
 import { encrypt } from "../lib/hash.js";
@@ -47,8 +49,8 @@ router.get("/getAll", async (req, res) => {
 });
 
 router.get("/getImages", async (req, res) => {
-  const { kapottTipus } = req.query;
-  const data = await imageGetFromDB(kapottTipus);
+  const { id } = req.query;
+  const data = await imageGetFromDB(id);
   res.status(200).json(data);
 });
 
