@@ -27,15 +27,17 @@ const toggleChat = () => {
     <div class="main-content">
       <div class="background-container"></div>
 
-      <!-- Mozgó szöveg sáv -->
-      <div class="marquee-container">
-        <div class="marquee-text">
-          Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash
-          és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀🎡🍀
+      <div class="marquee-wrapper">
+        <div class="marquee-container">
+          <div class="marquee-content">
+            <div class="marquee-text">
+              Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash
+              és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀🎡🍀
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Kártyák -->
       <div class="cards-container">
         <Card style="overflow: hidden" class="kartya">
           <template #header>
@@ -158,7 +160,6 @@ const toggleChat = () => {
 </template>
 
 <style scoped>
-/* A stílusok maradnak változatlanok */
 .sidebar {
   position: fixed;
   top: 0;
@@ -221,7 +222,7 @@ const toggleChat = () => {
 
 .home-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   z-index: 1;
   padding-left: 60px;
@@ -234,21 +235,22 @@ const toggleChat = () => {
   align-items: center;
   padding: 20px;
   margin-left: 60px;
+  width: calc(100% - 60px);
 }
 
 .cards-container {
   margin-top: 20px;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
   width: 100%;
   padding: 20px 0;
   flex-wrap: wrap;
-  max-width: calc(100% - 60px);
 }
 
 .kartya {
   width: 18rem;
+  min-width: 280px;
   margin: 10px;
   background-color: rgb(41, 32, 45);
   color: white;
@@ -282,10 +284,11 @@ const toggleChat = () => {
 }
 
 .background-container {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: rgb(46, 40, 54);
   background: linear-gradient(
@@ -317,23 +320,34 @@ const toggleChat = () => {
   width: 100%;
 }
 
-.marquee-container {
-  margin-top: 120px !important;
-  margin-bottom: 10px !important;
-  width: 1100px;
-  max-width: calc(22rem * 3 + 30px);
-  margin: 20px auto;
+/* Fixed marquee styles */
+.marquee-wrapper {
+  width: 100%;
   overflow: hidden;
-  white-space: nowrap;
+  margin: 120px 0 10px;
+}
+
+.marquee-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   padding: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-content {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 15s linear infinite;
 }
 
 .marquee-text {
   display: inline-block;
-  animation: marquee 20s linear infinite;
+  padding-right: 100%;
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
@@ -348,76 +362,80 @@ const toggleChat = () => {
   }
 }
 
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .cards-container {
+    gap: 15px;
+  }
+  
+  .kartya {
+    width: calc(50% - 30px);
+  }
+  
+  .marquee-text {
+    font-size: 1.1rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .home-container {
+    padding-left: 0;
+  }
+  
   .sidebar {
     display: none;
   }
-
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .kartya {
+    width: 100%;
+    max-width: 350px;
+  }
+  
+  .marquee-wrapper {
+    margin-top: 80px;
+  }
+  
+  .marquee-container {
+    padding: 8px;
+  }
+  
+  .marquee-text {
+    font-size: 1rem;
+  }
+  
   .chat-toggle-button {
     left: 50%;
     transform: translateX(-50%);
     top: 10px;
   }
-
-  .main-content {
-    padding: 10px;
-    margin-left: 0;
-  }
-
-  .cards-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .kartya {
-    width: 100%;
-    max-width: 100%;
-    margin: 10px 0;
-    transition: none;
-  }
-
-  .marquee-container {
-    width: 100%;
-    max-width: none;
-    margin: 20px 0;
-    padding: 5px;
-  }
-
-  .marquee-text {
-    font-size: 1rem;
-  }
-
-  .footer-buttons {
-    flex-direction: column;
-  }
-
-  .gomb {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .cimke {
-    font-size: 1.2rem;
-  }
-
-  .szoveg p {
-    font-size: 0.9rem;
-  }
 }
 
-@media (min-width: 769px) {
-  .sidebar {
-    display: block;
+@media (max-width: 480px) {
+  .marquee-text {
+    font-size: 0.9rem;
   }
-
-  .main-content {
-    margin-left: 60px;
-  }
-
+  
   .kartya {
-    width: 18rem;
-    margin: 10px;
+    min-height: 320px;
+  }
+  
+  .cimke {
+    font-size: 1.3rem;
+  }
+  
+  .szoveg p {
+    font-size: 0.9rem;
   }
 }
 </style>

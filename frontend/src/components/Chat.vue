@@ -474,7 +474,7 @@ const sendMessage = () => {
 };
 
 onMounted(() => {
-  // Check localStorage for existing ban/timeout status
+
   const storedBan = localStorage.getItem(`user_${userId.value}_banned`);
   const storedTimeout = localStorage.getItem(`user_${userId.value}_timeout`);
   
@@ -530,7 +530,7 @@ onMounted(() => {
     }
   });
 
-  // Request initial status from server
+ 
   socket.emit("get user status", userId.value);
 });
 
