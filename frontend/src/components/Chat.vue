@@ -459,7 +459,8 @@ const sendMessage = () => {
   }
 
   if (newMessage.value.trim() !== "") {
-    const containsForbiddenWord = forbiddenWords.some((word) =>
+   
+    const containsForbiddenWord = !isAdmin.value && forbiddenWords.some((word) =>
       newMessage.value.toLowerCase().includes(word)
     );
 
