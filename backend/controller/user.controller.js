@@ -46,6 +46,19 @@ router.get("/getAll", async (req, res) => {
   }
 });
 
+router.get("/getImages", async (req, res) => {
+  const { kapottTipus } = req.query;
+  const data = await imageGetFromDB(kapottTipus);
+  res.status(200).json(data);
+});
+
+router.post("/postImages", async (req, res) => {
+  const { file } = req.body;
+  console.log(file);
+  const data = await imageSaveToDB(file);
+  res.status(200).json(data);
+});
+
 // Új felhasználó hozzáadása
 router.post("/add", async (req, res) => {
   const { username, password, email, full_name } = req.body;

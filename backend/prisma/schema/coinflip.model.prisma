@@ -1,6 +1,1 @@
-model Coinflip {
-    id             Int      @id @default(autoincrement())
-    fej Boolean
-    iras Boolean
-    date DateTime? @default(now())
-}
+

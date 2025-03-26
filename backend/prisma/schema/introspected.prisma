@@ -1,0 +1,61 @@
+model chatmessage {
+  id        Int      @id @default(autoincrement())
+  text      String
+  userId    Int
+  createdAt DateTime @default(now())
+}
+
+model coin {
+  id        Int  @id @default(autoincrement())
+  mennyiseg Int
+  userid    Int  @unique(map: "Coin_userid_key")
+  user      user @relation(fields: [userid], references: [id], map: "Coin_userid_fkey")
+}
+
+model coinflip {
+  id   Int       @id @default(autoincrement())
+  fej  Boolean
+  iras Boolean
+  date DateTime? @default(now())
+}
+
+model groups {
+  name   String  @id
+  write  Boolean @default(false)
+  read   Boolean @default(false)
+  update Boolean @default(false)
+  del    Boolean @default(false)
+  user   user[]
+}
+
+model roulette {
+  id     Int       @id @default(autoincrement())
+  piros  Boolean
+  fekete Boolean
+  zold   Boolean
+  date   DateTime? @default(now())
+}
+
+model user {
+  id                       Int       @id @default(autoincrement())
+  username                 String    @unique(map: "User_username_key")
+  password                 String
+  email                    String    @unique(map: "User_email_key")
+  created_at               DateTime? @default(now())
+  updated_at               DateTime? @default(now())
+  full_name                String    @unique(map: "User_full_name_key")
+  groupsNeve               String?   @default("user")
+  ForgotToken              String?
+  ForgotTokenExpiresAt     DateTime?
+  email_verification_token String?
+  email_verified           Boolean   @default(false)
+  resetToken               String?
+  resetTokenExpires        DateTime?
+  isBanned                 Boolean   @default(false)
+  profileImage             Bytes?
+  timeoutExpires           DateTime?
+  coin                     coin?
+  groups                   groups?   @relation(fields: [groupsNeve], references: [name], map: "User_groupsNeve_fkey")
+
+  @@index([groupsNeve], map: "User_groupsNeve_fkey")
+}

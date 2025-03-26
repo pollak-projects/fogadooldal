@@ -37,7 +37,7 @@
 
       <div class="p-4 bg-gray-800 rounded-lg balance flex items-center">
         <p class="text-xl mr-2">
-          Egyenleg: <span>{{ user?.coin[0].mennyiseg }}</span>
+          Egyenleg: <span>{{ store.coins }}</span>
         </p>
         <img src="/coin.svg" alt="Coin" class="coinkep" />
       </div>
@@ -80,25 +80,6 @@
       </div>
     </div>
 
-    <!-- Current Bets -->
-    <div
-      class="current-bets bg-gray-800 p-4 rounded-lg mb-6 w-96"
-      v-if="Object.values(activeBets).some((b) => b > 0)"
-    >
-      <h2 class="text-xl font-bold mb-2">Jelenlegi fogadás</h2>
-      <div class="flex flex-wrap gap-2">
-        <div
-          v-for="(amount, type) in activeBets"
-          :key="type"
-          v-if="amount > 0"
-          class="px-3 py-1 rounded-full text-sm"
-          :class="getBetClass(type)"
-        >
-          {{ type }}: ${{ amount }}
-        </div>
-      </div>
-    </div>
-
     <!-- History Section -->
     <div
       class="history-section bg-gray-800 p-4 rounded-lg w-96 max-h-32 overflow-y-auto"
@@ -114,16 +95,6 @@
         </span>
       </div>
     </div>
-
-    <!-- Audio Elements -->
-    <audio
-      ref="spinSound"
-      src="https://assets.mixkit.co/sfx/preview/mixkit-wheel-spin-1027.mp3"
-    ></audio>
-    <audio
-      ref="winSound"
-      src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"
-    ></audio>
   </div>
 </template>
 
@@ -150,8 +121,6 @@ const history = ref([]);
 const activeBets = ref({ Red: 0, Green: 0, Black: 0 });
 const selectedChip = ref(100);
 const chips = [10, 50, 100, 500];
-const spinSound = ref(null);
-const winSound = ref(null);
 const user = ref();
 const roundCounter = ref(1); // Track which round the wheel is on
 
@@ -205,7 +174,6 @@ const startTimer = () => {
 };
 
 const spinWheel = () => {
-  spinSound.value.play();
   const targetIndex = Math.floor(Math.random() * wheel.value.length);
   const fullSpins = 4;
   const totalSteps = fullSpins * wheel.value.length + targetIndex;
@@ -237,11 +205,23 @@ const selectChip = (chip) => {
 };
 
 const placeBet = (bet) => {
-  if (!bettingOpen.value || user.value.coin[0].mennyiseg < selectedChip.value)
-    return;
+  if (!bettingOpen.value || store.coins < selectedChip.value) return;
 
-  user.value.coin[0].mennyiseg -= selectedChip.value;
+  store.coins -= selectedChip.value;
   activeBets.value[bet.label] += selectedChip.value;
+
+  fetch("http://localhost:3300/coins/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userid: user.value.id,
+      mennyiseg: store.coins,
+    }),
+  }).then(async (res) => {
+    const data = await res.json();
+  });
 };
 
 const resolveBets = (winningColor) => {
@@ -253,8 +233,20 @@ const resolveBets = (winningColor) => {
   const winAmount = activeBets.value[winType] * multiplier;
 
   if (winAmount > 0) {
-    user.value.coin[0].mennyiseg += winAmount;
-    winSound.value.play();
+    store.coins += winAmount;
+
+    fetch("http://localhost:3300/coins/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userid: user.value.id,
+        mennyiseg: store.coins,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+    });
   }
 };
 

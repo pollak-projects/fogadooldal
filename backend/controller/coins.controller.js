@@ -30,9 +30,9 @@ router.post("/add", async (req, res) => {
 });
 
 router.put("/update", async (req, res) => {
-  const { id, mennyiseg, userid } = req.body;
+  const { userid, mennyiseg } = req.body;
 
-  await updateCoin(id, mennyiseg, userid);
+  await updateCoin(userid, mennyiseg);
 
   res.status(200).json({
     message: "Data successfully updated",
