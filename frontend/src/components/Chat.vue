@@ -436,7 +436,13 @@ const updateTimeoutRemaining = () => {
 };
 
 const isTimedOut = computed(() => {
-  return timeoutExpires.value && new Date() < new Date(timeoutExpires.value);
+  const data = timeoutExpires.value && new Date() < new Date(timeoutExpires.value);
+  console.log(data);
+  console.log(timeoutExpires.value);
+  console.log(new Date());
+  console.log(new Date(timeoutExpires.value));
+  console.log(new Date() < new Date(timeoutExpires.value));
+  return data;
 });
 
 watch(isTimedOut, (newVal) => {
@@ -523,6 +529,9 @@ onMounted(() => {
     }
     
     timeoutExpires.value = status.timeoutExpires || null;
+    console.log("--- socket.io timeout ---")
+    console.log(status.timeoutExpires);
+    
     if (timeoutExpires.value) {
       localStorage.setItem(`user_${userId.value}_timeout`, timeoutExpires.value);
       updateTimeoutRemaining();

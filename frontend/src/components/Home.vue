@@ -15,7 +15,7 @@ const toggleChat = () => {
   <div class="home-container">
     <div class="sidebar">
       <Button
-        v-if="!isChatOpen"
+        :style="'visibility: ' + (isChatOpen ? 'hidden' : 'visible')"
         @click="toggleChat"
         :label="isChatOpen ? '◄' : '►'"
         class="chat-toggle-button"
