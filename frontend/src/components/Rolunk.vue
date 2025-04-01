@@ -114,7 +114,7 @@ export default {
   margin: 0 auto 1.5rem;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid rgb(255, 121, 159);
+  border: 3px solid rgb(253, 32, 93);
   transition: transform 0.3s ease;
 }
 

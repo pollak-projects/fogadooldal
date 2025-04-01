@@ -1,19 +1,33 @@
 <script setup>
 import { Card, Button } from "primevue";
 import Chat from "../components/Chat.vue";
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const isChatOpen = ref(true);
+const isMobile = ref(false);
 
 const toggleChat = () => {
   isChatOpen.value = !isChatOpen.value;
 };
+
+const checkScreenSize = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+onMounted(() => {
+  checkScreenSize();
+  window.addEventListener("resize", checkScreenSize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", checkScreenSize);
+});
 </script>
 
 <template>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <div class="home-container">
-    <div class="sidebar">
+    <div class="sidebar" :class="{ 'mobile-hidden': !isChatOpen && isMobile }">
       <Button
         :style="'visibility: ' + (isChatOpen ? 'hidden' : 'visible')"
         @click="toggleChat"
@@ -31,8 +45,8 @@ const toggleChat = () => {
         <div class="marquee-container">
           <div class="marquee-content">
             <div class="marquee-text">
-              Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette, Crash
-              és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀🎡🍀
+              Üdvözöllek a játékok világában! Próbáld ki a Coinflip, Roulette,
+              Crash és Slot játékokat, és éld át az izgalmakat! 🎲🎰🚀🎡🍀
             </div>
           </div>
         </div>
@@ -164,9 +178,10 @@ const toggleChat = () => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 60px;
+  width: 300px;
   height: 100%;
   z-index: 1000;
+  transition: transform 0.3s ease;
 }
 
 .slide-fade-enter-active,
@@ -182,7 +197,7 @@ const toggleChat = () => {
 
 .chat-toggle-button {
   position: absolute;
-  left: 80%;
+  left: 100%;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1000;
@@ -190,8 +205,8 @@ const toggleChat = () => {
   color: black;
   border: none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -224,7 +239,7 @@ const toggleChat = () => {
   min-height: 100vh;
   position: relative;
   z-index: 1;
-  padding-left: 60px;
+  padding-left: 300px;
 }
 
 .main-content {
@@ -233,24 +248,21 @@ const toggleChat = () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  margin-left: 60px;
-  width: calc(100% - 60px);
+  width: calc(100% - 300px);
 }
 
 .cards-container {
   margin-top: 20px;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
   width: 100%;
-  padding: 20px 0;
-  flex-wrap: wrap;
+  max-width: 1200px;
+  padding: 20px;
 }
 
 .kartya {
-  width: 18rem;
-  min-width: 280px;
-  margin: 10px;
+  width: 100%;
   background-color: rgb(41, 32, 45);
   color: white;
   display: flex;
@@ -258,6 +270,8 @@ const toggleChat = () => {
   justify-content: space-between;
   min-height: 350px;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .kartya:hover {
@@ -268,7 +282,7 @@ const toggleChat = () => {
 
 .kartya img {
   width: 100%;
-  height: auto;
+  height: 180px;
   object-fit: cover;
 }
 
@@ -276,6 +290,7 @@ const toggleChat = () => {
   background-color: rgb(253, 32, 93);
   width: 100%;
   margin-top: 20px;
+  border: none;
 }
 
 .gomb:hover {
@@ -319,16 +334,16 @@ const toggleChat = () => {
   width: 100%;
 }
 
-
 .marquee-wrapper {
   width: 100%;
   overflow: hidden;
-  margin: 120px 0 10px;
+  margin: 20px 0;
+  padding: 0 20px;
 }
 
 .marquee-container {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
@@ -348,7 +363,7 @@ const toggleChat = () => {
   display: inline-block;
   padding-right: 100%;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
@@ -361,79 +376,91 @@ const toggleChat = () => {
   }
 }
 
+/* Responsive styles */
 @media (max-width: 1024px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .home-container {
+    padding-left: 250px;
+  }
+
+  .main-content {
+    width: calc(100% - 250px);
+  }
+
   .cards-container {
-    gap: 15px;
-  }
-  
-  .kartya {
-    width: calc(50% - 30px);
-  }
-  
-  .marquee-text {
-    font-size: 1.1rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
+  .sidebar {
+    width: 250px;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.mobile-hidden {
+    transform: translateX(-100%);
+  }
+
+  .sidebar:not(.mobile-hidden) {
+    transform: translateX(0);
+  }
+
   .home-container {
     padding-left: 0;
   }
-  
-  .sidebar {
-    display: none;
-  }
-  
+
   .main-content {
-    margin-left: 0;
     width: 100%;
     padding: 10px;
   }
-  
-  .cards-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .kartya {
-    width: 100%;
-    max-width: 350px;
-  }
-  
-  .marquee-wrapper {
-    margin-top: 80px;
-  }
-  
-  .marquee-container {
-    padding: 8px;
-  }
-  
-  .marquee-text {
-    font-size: 1rem;
-  }
-  
+
   .chat-toggle-button {
-    left: 50%;
-    transform: translateX(-50%);
-    top: 10px;
+    left: 250px;
+    top: 20px;
+    transform: none;
+  }
+
+  .marquee-wrapper {
+    margin-top: 60px;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;
+    max-width: 500px;
   }
 }
 
 @media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+  }
+
+  .chat-toggle-button {
+    left: calc(100% - 50px);
+  }
+
   .marquee-text {
     font-size: 0.9rem;
   }
-  
+
   .kartya {
     min-height: 320px;
   }
-  
+
   .cimke {
     font-size: 1.3rem;
   }
-  
+
   .szoveg p {
     font-size: 0.9rem;
+  }
+
+  .kartya img {
+    height: 150px;
   }
 }
 </style>

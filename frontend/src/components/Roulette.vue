@@ -1,55 +1,62 @@
 <template>
   <div
-    class="roulette-container text-white min-h-screen flex flex-col items-center p-6 pt-24 overflow-y-auto"
+    class="roulette-container text-white min-h-screen flex flex-col items-center p-4 pt-20 md:pt-24 overflow-y-auto"
   >
-    <h1 class="text-4xl font-bold mb-6 cim">Roulette</h1>
+    <h1 class="text-3xl md:text-4xl font-bold mb-4 md:mb-6 cim">Roulette</h1>
 
     <!-- Roulette Wheel -->
-    <div class="relative mb-8">
+    <div class="relative mb-6 md:mb-8 w-full max-w-[800px] px-2">
       <div
         class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
       >
         <div
-          class="w-0 h-0 border-l-12 border-r-12 border-b-24 border-transparent border-b-yellow-400"
+          class="w-0 h-0 border-l-8 md:border-l-12 border-r-8 md:border-r-12 border-b-16 md:border-b-24 border-transparent border-b-yellow-400"
         ></div>
       </div>
       <div
-        class="roulette-wheel flex overflow-hidden border-4 border-yellow-500 rounded-lg w-[800px] h-32 relative bg-gray-800"
+        class="roulette-wheel flex overflow-hidden border-4 border-yellow-500 rounded-lg w-full h-24 md:h-32 relative bg-gray-800 mx-auto"
       >
         <div class="flex" :style="wheelStyle">
           <div
             v-for="(item, index) in wheel"
             :key="index"
-            class="p-6 w-40 h-full flex items-center justify-center"
+            class="p-4 md:p-6 w-32 md:w-40 h-full flex items-center justify-center"
             :class="getColorClass(item)"
           ></div>
         </div>
       </div>
     </div>
 
-    <!-- Info Section -->
-    <div class="info-container flex gap-8 mb-8">
-      <div class="p-4 bg-gray-800 rounded-lg">
-        <p class="text-xl">
+    <!-- Info Section - Now always stacked vertically -->
+    <div
+      class="info-container flex flex-col gap-2 mb-6 w-full max-w-[800px] px-2"
+    >
+      <div class="p-3 md:p-4 bg-gray-800 rounded-lg text-center">
+        <p class="text-lg md:text-xl">
           Hátralévő idő: <span>{{ timer }}mp</span>
         </p>
       </div>
 
-      <div class="p-4 bg-gray-800 rounded-lg balance flex items-center">
-        <p class="text-xl mr-2">
+      <div
+        class="p-3 md:p-4 bg-gray-800 rounded-lg balance flex items-center justify-center"
+      >
+        <p class="text-lg md:text-xl mr-2">
           Egyenleg: <span>{{ store.coins }}</span>
         </p>
         <img src="/coin.svg" alt="Coin" class="coinkep" />
       </div>
     </div>
 
+    <!-- Rest of the template remains the same -->
     <!-- Chip Selector -->
-    <div class="chip-selector flex gap-4 mb-6">
+    <div
+      class="chip-selector flex gap-3 md:gap-4 mb-6 flex-wrap justify-center"
+    >
       <button
         v-for="chip in chips"
         :key="chip"
         @click="selectChip(chip)"
-        class="w-12 h-12 rounded-full flex items-center justify-center font-bold border-2 border-yellow-500"
+        class="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold border-2 border-yellow-500 text-sm md:text-base"
         :class="
           selectedChip === chip
             ? 'bg-yellow-500 text-black'
@@ -61,35 +68,38 @@
     </div>
 
     <!-- Betting Section -->
-    <div class="betting-section grid grid-cols-3 gap-4 mb-8 w-[800px]">
+    <div
+      class="betting-section grid grid-cols-3 gap-3 md:gap-4 mb-6 w-full max-w-[800px] px-2"
+    >
       <div
         v-for="bet in betOptions"
         :key="bet.multiplier"
-        class="bet-card p-4 rounded-lg text-center cursor-pointer transform transition hover:scale-105"
+        class="bet-card p-3 md:p-4 rounded-lg text-center cursor-pointer transform transition hover:scale-105"
         :class="[
           bet.color,
-          { 'ring-4 ring-yellow-500': activeBets[bet.label] },
+          { 'ring-2 md:ring-4 ring-yellow-500': activeBets[bet.label] },
           bet.hoverColor,
         ]"
         @click="placeBet(bet)"
       >
-        <p class="text-2xl font-bold mb-2"></p>
-        <!-- Removed label text -->
-        <p class="text-sm opacity-80">{{ bet.multiplier }}x</p>
-        <p class="mt-2 text-yellow-400">{{ activeBets[bet.label] || 0 }}</p>
+        <p class="text-xl md:text-2xl font-bold mb-1 md:mb-2"></p>
+        <p class="text-xs md:text-sm opacity-80">{{ bet.multiplier }}x</p>
+        <p class="mt-1 md:mt-2 text-yellow-400 text-sm md:text-base">
+          {{ activeBets[bet.label] || 0 }}
+        </p>
       </div>
     </div>
 
     <!-- History Section -->
     <div
-      class="history-section bg-gray-800 p-4 rounded-lg w-96 max-h-32 overflow-y-auto"
+      class="history-section bg-gray-800 p-3 md:p-4 rounded-lg w-full md:w-96 max-h-32 overflow-y-auto max-w-[800px]"
     >
-      <h2 class="text-xl font-bold mb-2">Előző körök:</h2>
-      <div class="flex flex-wrap gap-2">
+      <h2 class="text-lg md:text-xl font-bold mb-2">Előző körök:</h2>
+      <div class="flex flex-wrap gap-1 md:gap-2">
         <span
           v-for="(item, index) in limitedHistory"
           :key="index"
-          class="px-3 py-1 rounded-full text-sm"
+          class="px-2 py-1 rounded-full text-xs md:text-sm"
           :class="getColorClass(item)"
         >
         </span>
@@ -99,6 +109,7 @@
 </template>
 
 <script setup>
+// Script section remains exactly the same
 import { store } from "../config/store";
 import { ref, computed, onMounted } from "vue";
 
@@ -145,7 +156,9 @@ const betOptions = ref([
   },
 ]);
 const wheelStyle = computed(() => {
-  const rotation = (currentPosition.value % wheel.value.length) * 160;
+  const rotation =
+    (currentPosition.value % wheel.value.length) *
+    (window.innerWidth < 768 ? 128 : 160);
   const isSpinning = !bettingOpen.value;
 
   // Set transition speed based on round counter
@@ -282,37 +295,57 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
+/* Updated styles for the stacked info section */
+.info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+.info-container > div {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Rest of the styles remain the same */
 .roulette-container {
   max-height: 100vh !important;
   overflow-y: auto !important;
 }
-#app {
-  height: auto;
-  min-height: 100vh;
-  overflow-y: auto;
-}
 
-html,
-body {
-  height: auto;
-  min-height: 100vh;
-  overflow-y: auto;
-}
 .balance {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .coinkep {
-  width: 20px; /* Adjust the size of the coin image */
-  height: 20px;
-  margin-left: 5px; /* Space between the amount and the coin image */
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+}
+
+@media (min-width: 768px) {
+  .coinkep {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+  }
 }
 
 .cim {
-  margin-top: 50px;
+  margin-top: 30px;
 }
+
+@media (min-width: 768px) {
+  .cim {
+    margin-top: 50px;
+  }
+}
+
 .roulette-wheel {
   will-change: transform;
   overflow: hidden;
@@ -324,12 +357,17 @@ body {
 }
 
 .roulette-wheel div div {
-  min-width: 160px;
-  height: 128px;
+  height: 96px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   backface-visibility: hidden;
   transform: translateZ(0);
   flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .roulette-wheel div div {
+    height: 128px;
+  }
 }
 
 /* Black hover fix */
@@ -343,7 +381,7 @@ body {
 }
 
 .history-section::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .history-section::-webkit-scrollbar-track {
@@ -352,7 +390,17 @@ body {
 
 .history-section::-webkit-scrollbar-thumb {
   background: #6b7280;
-  border-radius: 4px;
+  border-radius: 3px;
+}
+
+@media (min-width: 768px) {
+  .history-section::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .history-section::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+  }
 }
 
 .bet-card {

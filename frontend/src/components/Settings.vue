@@ -1,12 +1,11 @@
 <template>
   <div class="settings-page">
     <div class="settings-container">
-      <h1 class="h1">Profil Beállítások</h1>
-      <br />
+      <h1 class="page-title">Profil Beállítások</h1>
       <Toast />
       <div class="profile-picture-section">
         <div class="avatar-wrapper">
-          <img :src="profileImage" alt="" class="profile-avatar" />
+          <img :src="profileImage" alt="Profile" class="profile-avatar" />
         </div>
         <label for="avatar-upload" class="upload-button">
           <input
@@ -30,8 +29,7 @@
 
       <form @submit.prevent="saveSettings" class="settings-form">
         <div class="form-section">
-          <h1 class="h1">Személyes adatok</h1>
-          <br />
+          <h2 class="section-title">Személyes adatok</h2>
           <div class="form-group">
             <label>Teljes név:</label>
             <input type="text" v-model="userData.name" required />
@@ -41,20 +39,17 @@
             <label>Email cím:</label>
             <input type="email" v-model="userData.email" required />
           </div>
-
-
         </div>
 
         <div class="form-section">
-          <h1 class="h1">Jelszó módosítás</h1>
-          <br />
-          <div class="form-group">
+          <h2 class="section-title">Jelszó módosítás</h2>
+          <div class="form-group password-group">
             <label>Új jelszó:</label>
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              v-model="userData.newPassword"
-            />
-            <div class="show-password float-right">
+            <div class="password-input-wrapper">
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                v-model="userData.newPassword"
+              />
               <img
                 :src="showPassword ? '/eye2.png' : '/hidden2.png'"
                 alt="Toggle Password Visibility"
@@ -74,7 +69,7 @@
           </div>
         </div>
 
-        <div class="Mentesgomb">
+        <div class="save-button-container">
           <button type="submit" class="save-button">Beállítások mentése</button>
         </div>
       </form>
@@ -87,7 +82,7 @@ import { ref, reactive } from "vue";
 import { useToast } from "primevue/usetoast";
 import Toast from "primevue/toast";
 import { RouterLink } from "vue-router";
-import { useUserStore } from "../config/store"; // Importáld a store-t
+import { useUserStore } from "../config/store";
 import { parseJwt } from "../lib/jwtparser.js";
 
 const userStore = useUserStore();
@@ -123,15 +118,17 @@ const saveSettings = async () => {
   try {
     const userId = localStorage.getItem("user_id");
 
-    // Profilkép feltöltése, ha van kiválasztva
     if (imgRef.value.files[0]) {
       const formData = new FormData();
       formData.append("profileImage", imgRef.value.files[0]);
 
-      const uploadResponse = await fetch(`http://localhost:3300/user/upload-profile-image/${userId}`, {
-        method: "POST",
-        body: formData,
-      });
+      const uploadResponse = await fetch(
+        `http://localhost:3300/user/upload-profile-image/${userId}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!uploadResponse.ok) {
         throw new Error("Hiba a profilkép feltöltésekor");
@@ -141,17 +138,19 @@ const saveSettings = async () => {
       userStore.setProfileImage(uploadData.profileImage);
     }
 
-    // További adatok frissítése
-    const response = await fetch(`http://localhost:3300/user/update/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: userData.name,
-        email: userData.email,
-      }),
-    });
+    const response = await fetch(
+      `http://localhost:3300/user/update/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: userData.name,
+          email: userData.email,
+        }),
+      }
+    );
 
     if (response.ok) {
       toast.add({
@@ -160,7 +159,6 @@ const saveSettings = async () => {
         life: 3000,
       });
 
-      // Frissítsd a felhasználó adatait a store-ban
       userStore.setUserData({
         ...userStore.userData,
         full_name: userData.name,
@@ -188,45 +186,70 @@ const saveSettings = async () => {
 </script>
 
 <style scoped>
-.reset-password-button {
-  background: rgb(255, 121, 191);
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-  width: 100%;
-  margin-top: 1rem;
+/* Base Styles */
+.settings-page {
+  background-color: rgb(46, 40, 54);
+  color: rgb(247, 233, 233);
+  min-height: 100vh;
+  padding: 1rem;
 }
 
-.reset-password-button:hover {
-  background: rgb(255, 32, 91);
+.settings-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
-.h1 {
+.page-title {
   font-weight: 800;
-  font-size: 25px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  font-size: 1.8rem;
+  margin: 1rem 0;
   text-align: center;
 }
 
-.password-toggle-icon {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  right: 10px;
-  margin-bottom: 10px;
-  margin-top: 10px;
+.section-title {
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin: 1.5rem 0 1rem;
+  text-align: center;
 }
 
-.Mentesgomb {
-  width: 100%;
+/* Profile Picture Section */
+.profile-picture-section {
   display: flex;
-  justify-content: right;
-  margin-bottom: 60px;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+}
+
+.upload-button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  background: rgb(253, 32, 93);
+  color: white;
+  border-radius: 5px;
+  transition: background 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.upload-button:hover {
+  background: rgb(255, 32, 91);
 }
 
 .upload-content {
@@ -236,74 +259,32 @@ const saveSettings = async () => {
 }
 
 .upload-icon {
-  width: 20px;
-  height: 20px;
-  position: relative;
+  width: 18px;
+  height: 18px;
 }
 
-.settings-page {
-  background-color: rgb(46, 40, 54);
-  color: rgb(247, 233, 233);
-}
-
-.settings-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.profile-picture-section {
+/* Form Styles */
+.settings-form {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.profile-avatar {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 1rem;
-  border: 3px solid #ddd;
-}
-
-.upload-button {
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  background: rgb(255, 121, 191);
-  color: black;
-  border-radius: 5px;
-  transition: background 0.3s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.upload-button:hover {
-  background: rgb(255, 32, 91);
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .form-section {
-  margin-top: -40px;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgb(46, 40, 54);
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  color: rgb(247, 233, 233);
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  font-size: 0.95rem;
 }
 
 input[type="text"],
@@ -312,41 +293,147 @@ input[type="password"],
 textarea,
 select {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
+  padding: 0.7rem;
+  border: 1px solid #444;
   border-radius: 4px;
   font-size: 1rem;
-  background-color: rgb(46, 40, 54);
+  background-color: rgba(255, 255, 255, 0.1);
   color: rgb(247, 233, 233);
+  transition: border-color 0.3s;
 }
 
-.checkbox-group label {
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: rgb(253, 32, 93);
+  outline: none;
+}
+
+/* Password Input */
+.password-group {
+  position: relative;
+}
+
+.password-input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.8rem;
 }
 
-.toggle-password {
-  margin-left: 0.5rem;
-  background: none;
-  border: none;
+.password-toggle-icon {
+  width: 22px;
+  height: 22px;
   cursor: pointer;
-  color: rgb(247, 233, 233);
+  position: absolute;
+  right: 10px;
+}
+
+/* Buttons */
+.reset-password-button {
+  background: rgb(253, 32, 93);
+  color: white;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.3s;
+  width: 100%;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.reset-password-button:hover {
+  background: rgb(255, 32, 91);
+}
+
+.save-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
 }
 
 .save-button {
-  background: rgb(255, 121, 191);
+  background: rgb(253, 32, 93);
   color: white;
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 1.8rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
   transition: background 0.3s;
+  width: 100%;
+  max-width: 300px;
 }
 
 .save-button:hover {
   background: rgb(255, 32, 91);
+}
+
+/* Responsive Adjustments */
+@media (min-width: 480px) {
+  .profile-avatar {
+    width: 140px;
+    height: 140px;
+  }
+
+  .upload-button {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .settings-container {
+    padding: 2rem;
+  }
+
+  .profile-picture-section {
+    flex-direction: row;
+    justify-content: center;
+    gap: 2.5rem;
+  }
+
+  .profile-avatar {
+    width: 150px;
+    height: 150px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .save-button {
+    max-width: none;
+    width: auto;
+    padding: 0.8rem 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .settings-container {
+    padding: 2.5rem;
+  }
+
+  .form-section {
+    padding: 1.8rem;
+  }
+
+  .profile-avatar {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (min-width: 992px) {
+  .settings-container {
+    padding: 3rem;
+  }
 }
 </style>
