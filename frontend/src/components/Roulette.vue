@@ -28,18 +28,14 @@
     </div>
 
     <!-- Info Section - Now always stacked vertically -->
-    <div
-      class="info-container flex flex-col gap-2 mb-6 w-full max-w-[800px] px-2"
-    >
+    <div class="info-container flex flex-col gap-2 mb-6 w-full max-w-[800px] px-2">
       <div class="p-3 md:p-4 bg-gray-800 rounded-lg text-center">
         <p class="text-lg md:text-xl">
           Hátralévő idő: <span>{{ timer }}mp</span>
         </p>
       </div>
 
-      <div
-        class="p-3 md:p-4 bg-gray-800 rounded-lg balance flex items-center justify-center"
-      >
+      <div class="p-3 md:p-4 bg-gray-800 rounded-lg balance flex items-center justify-center">
         <p class="text-lg md:text-xl mr-2">
           Egyenleg: <span>{{ store.coins }}</span>
         </p>
