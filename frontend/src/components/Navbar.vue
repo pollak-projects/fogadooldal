@@ -107,7 +107,7 @@
             {{ store.coins }}
           </div>
           <img
-            :src="userStore.profileImage"
+            :src="profileImage"
             class="profile-image rounded-full cursor-pointer profile-border"
             @click="toggleMenu"
           />
@@ -132,13 +132,23 @@ const menu = ref(null);
 const user = ref();
 const isMobile = ref(false);
 const mobileMenuOpen = ref(false);
+const profileImage = ref();
 
 const checkScreenSize = () => {
   isMobile.value = window.innerWidth < 992;
 };
 
+const getProfileImage = () => {
+  fetch(`http://localhost:3300/user/getImages?id=${localStorage.getItem("user_id")}`)
+  .then( async (res) => {
+    const data = await res.json()
+    profileImage.value = data.profileImage
+  })
+}
+
 onMounted(() => {
   checkScreenSize();
+  getProfileImage();
   window.addEventListener("resize", checkScreenSize);
 
   fetch(

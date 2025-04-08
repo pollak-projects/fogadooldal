@@ -8,7 +8,7 @@ export async function listAllUsers() {
 }
 
 
-export async function imageSaveToDB(image) {
+export async function imageSaveToDB(image, id) {
   const imageBlob = Buffer.from(image, "base64");
 
   try {
@@ -17,8 +17,7 @@ export async function imageSaveToDB(image) {
         id: id
       },
       data: {
-        image: imageBlob,
-        text: "PLACEHOLDER",
+        profileImage: imageBlob
       },
     });
     return result;
@@ -28,16 +27,15 @@ export async function imageSaveToDB(image) {
 }
 
 export async function imageGetFromDB(id) {
-  const data = await prisma.user.findMany({
+  const data = await prisma.user.findUnique({
     where: {
-      id: id
+      id: Number(id)
     },
   });
-  data.forEach((element) => {
+  
     //console.log(element.image);
-    let buffer = Buffer.from(element.image);
-    element.image = "data:image/png" + ";base64," + buffer.toString("base64");
-  });
+    let buffer = Buffer.from(data.profileImage);
+    data.profileImage = "data:image/png" + ";base64," + buffer.toString("base64");
 
   return data;
 }

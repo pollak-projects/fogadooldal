@@ -10,10 +10,10 @@
         <label for="avatar-upload" class="upload-button">
           <input
             type="file"
-            ref="imgRef"
+            ref="imgs"
             id="avatar-upload"
             accept="image/*"
-            @change="handleImageUpload"
+            @change="Save()"
             hidden
           />
           <span class="upload-content">
@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useToast } from "primevue/usetoast";
 import Toast from "primevue/toast";
 import { RouterLink } from "vue-router";
@@ -99,44 +99,67 @@ const userData = reactive({
   },
 });
 
-const imgRef = ref(null);
-const profileImage = ref(userStore.profileImage);
+const rawImg = ref();
+const imgs = ref();
+const reader = new FileReader();
+const profileImage = ref();
 
-const handleImageUpload = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      userStore.setProfileImage(e.target.result);
-      profileImage.value = e.target.result;
+
+
+const getProfileImage = () => {
+  fetch(`http://localhost:3300/user/getImages?id=${localStorage.getItem("user_id")}`)
+  .then( async (res) => {
+    const data = await res.json()
+    profileImage.value = data.profileImage
+  })
+}
+
+onMounted(() => {
+  getProfileImage();
+})
+
+function Save() {
+    reader.onload = async function (e) {
+        rawImg.value = reader.result;
+        console.log(rawImg.value.split(",")[1]);
+        await FileUpload(rawImg.value.split(",")[1]);
+        location.reload()
     };
-    reader.readAsDataURL(file);
-  }
-};
+    const fileInput = imgs.value
+    if (fileInput && fileInput.files[0]) {
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+async function FileUpload(file) {
+  console.log(file);
+  return new Promise((resolve, reject) => {
+    fetch(`http://localhost:3300/user/setPfp`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        id: Number(localStorage.getItem('user_id')),
+        file: file,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("Sikeres feltöltés");
+          resolve(response);
+        } else {
+          alert("Sikertelen feltöltés");
+        }
+      })
+      .catch((error) => console.error("Hiba kijelentkezés közben:", error));
+  });
+}
 
 const saveSettings = async () => {
   try {
     const userId = localStorage.getItem("user_id");
-
-    if (imgRef.value.files[0]) {
-      const formData = new FormData();
-      formData.append("profileImage", imgRef.value.files[0]);
-
-      const uploadResponse = await fetch(
-        `http://localhost:3300/user/upload-profile-image/${userId}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!uploadResponse.ok) {
-        throw new Error("Hiba a profilkép feltöltésekor");
-      }
-
-      const uploadData = await uploadResponse.json();
-      userStore.setProfileImage(uploadData.profileImage);
-    }
 
     const response = await fetch(
       `http://localhost:3300/user/update/${userId}`,

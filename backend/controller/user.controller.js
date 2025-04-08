@@ -54,10 +54,10 @@ router.get("/getImages", async (req, res) => {
   res.status(200).json(data);
 });
 
-router.post("/postImages", async (req, res) => {
-  const { file } = req.body;
+router.put("/setPfp", async (req, res) => {
+  const { file, id } = req.body;
   console.log(file);
-  const data = await imageSaveToDB(file);
+  const data = await imageSaveToDB(file, id);
   res.status(200).json(data);
 });
 
