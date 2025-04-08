@@ -174,10 +174,13 @@ const checkWin = () => {
           :disabled="spinning"
         />
       </div>
-      <h1 class="egyenlegSzoveg">Egyenleg:</h1>
-      <div class="egyenleg">
-        <h1>{{ store.coins }}</h1>
-        <img src="/coin.svg" alt="coin" class="coinkep" />
+      <div
+        class="p-3 md:p-4 bg-gray-800 rounded-lg balance flex items-center justify-center"
+      >
+        <p class="text-lg md:text-xl mr-2">
+          Egyenleg: <span>{{ store.coins }}</span>
+        </p>
+        <img src="/coin.svg" alt="Coin" class="coinkep" />
       </div>
       <button @click="spin" :disabled="spinning">
         {{ spinning ? "Pörgetés..." : "Pörgetés" }}
