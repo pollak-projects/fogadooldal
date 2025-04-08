@@ -167,11 +167,14 @@ const lost = () => {
         Cash Out
       </button>
     </div>
-    <h1>Egyenleg:</h1>
-    <span class="balance-container">
-      <span class="balance-amount">{{ store.coins }}</span>
-      <img src="/coin.svg" alt="coin" class="coinkep" />
-    </span>
+    <div
+      class="p-3 md:p-4 bg-gray-800 rounded-lg balance flex items-center justify-center"
+    >
+      <p class="text-lg md:text-xl mr-2">
+        Egyenleg: <span>{{ store.coins }}</span>
+      </p>
+      <img src="/coin.svg" alt="Coin" class="coinkep" />
+    </div>
     <div class="multiplier-display">
       <div
         class="multiplier-bar"

@@ -52,16 +52,13 @@
       <button class="play-again" @click="resetGame">ÚJ JÁTÉK</button>
     </div>
 
-    <div class="balance-container">
-      <div class="balance">
-        <p>
-          Egyenleg:
-          <span class="balance-amount-container">
-            <span class="balance-amount">{{ store.coins }}</span>
-            <img src="/coin.svg" alt="coin" class="coinkep" />
-          </span>
-        </p>
-      </div>
+    <div
+      class="p-3 md:p-4 bg-gray-800 rounded-lg balance flex items-center justify-center"
+    >
+      <p class="text-lg md:text-xl mr-2">
+        Egyenleg: <span>{{ store.coins }}</span>
+      </p>
+      <img src="/coin.svg" alt="Coin" class="coinkep" />
     </div>
   </div>
 </template>

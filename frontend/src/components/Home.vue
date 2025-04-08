@@ -28,12 +28,17 @@ onBeforeUnmount(() => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <div class="home-container">
     <div class="sidebar" :class="{ 'mobile-hidden': !isChatOpen && isMobile }">
-      <Button
-        :style="'visibility: ' + (isChatOpen ? 'hidden' : 'visible')"
-        @click="toggleChat"
-        :label="isChatOpen ? '◄' : '►'"
-        class="chat-toggle-button"
-      />
+      <transition name="fade">
+        <Button
+          v-if="!isChatOpen || isMobile"
+          @click="toggleChat"
+          class="chat-toggle-button"
+          :class="{ 'mobile-button': isMobile }"
+          icon="pi pi-arrow-right"
+          rounded
+          raised
+        />
+      </transition>
       <transition name="slide-fade">
         <Chat v-if="isChatOpen" @close-chat="toggleChat" />
       </transition>
@@ -196,30 +201,65 @@ onBeforeUnmount(() => {
 }
 
 .chat-toggle-button {
-  position: absolute;
-  left: 100%;
+  position: fixed;
   top: 50%;
+  left: 310px;
   transform: translateY(-50%);
-  z-index: 1000;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: black;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
 .chat-toggle-button:hover {
-  background-color: rgb(184, 184, 184) !important;
-  color: black !important;
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  border-color: black !important;
+  background-color: var(--primary-600) !important;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.chat-toggle-button:deep(.pi) {
+  font-size: 1.5rem;
+}
+
+.chat-toggle-button.mobile-button {
+  left: 10px !important;
+  top: 20px !important;
+  transform: none !important;
+  background-color: var(--primary-600) !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 80%;
+  }
+
+  .sidebar:not(.mobile-hidden) {
+    transform: translateX(0);
+  }
+
+  .home-container {
+    padding-left: 0;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .chat-toggle-button.mobile-button {
+    display: block !important;
+  }
 }
 
 .szoveg {
@@ -419,9 +459,8 @@ onBeforeUnmount(() => {
   }
 
   .chat-toggle-button {
-    left: 250px;
-    top: 20px;
-    transform: none;
+    left: 10px !important;
+    background-color: var(--primary-600) !important;
   }
 
   .marquee-wrapper {
