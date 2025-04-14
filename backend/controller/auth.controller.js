@@ -11,8 +11,6 @@ import { emailMegerosites } from "../services/emailsender.js";
 import { jelszoVisszaallitas } from "../services/emailsender.js";
 
 
-import { isAdmin } from "../utils/auth.js"; 
-
 // A kódod további része
 const router = express.Router();
 

@@ -1,1 +1,6 @@
-
+model coin {
+  id        Int  @id @default(autoincrement())
+  mennyiseg Int
+  userid    Int  @unique(map: "Coin_userid_key")
+  user      user @relation(fields: [userid], references: [id], map: "Coin_userid_fkey")
+}
