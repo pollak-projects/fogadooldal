@@ -3,13 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function listAllGroup() {
-  const data = await prisma.groups.findMany({
-    include: {
-      users: true,
-    },
-  });
-
-  return data;
+  return await prisma.groups.findMany();
 }
 
 export async function addGroup(name, write, read, update, del) {

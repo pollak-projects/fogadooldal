@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../index.js";
 
-test("POST /groups/update should pass", async () => {
+test("PUT /groups/update should pass", async () => {
   await request(app).post("/group/add").send({
     name: "test2",
     write: true,

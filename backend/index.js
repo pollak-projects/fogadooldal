@@ -4,11 +4,11 @@ import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import { router as userRouter } from "./controller/user.controller.js";
 // import { listAllUsers } from "./services/user.service.js";
-import { 
-  listAllUsers, 
-  deleteMessage, 
-  banUser, 
-  timeoutUser 
+import {
+  listAllUsers,
+  deleteMessage,
+  banUser,
+  timeoutUser,
 } from "./services/user.service.js";
 
 import cors from "cors";
@@ -39,7 +39,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(express.json({limit: "50mb"}));
+app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.set("view engine", "ejs");
@@ -54,45 +54,43 @@ app.use("/roulette", rouletteController);
 io.on("connection", (socket) => {
   console.log("Egy felhasználó csatlakozott:", socket.id);
 
+  socket.on("login", (userId) => {
+    socket.userId = Number(userId);
+    console.log("Felhasználó bejelentkezett, userId:", socket.userId);
+  });
 
-socket.on("login", (userId) => {
-  socket.userId = Number(userId); 
-  console.log("Felhasználó bejelentkezett, userId:", socket.userId);
-});
+  socket.on("chat message", async (msg) => {
+    if (!socket.userId || typeof socket.userId !== "number") {
+      return console.error("Érvénytelen userId:", socket.userId);
+    }
 
-  
-socket.on("chat message", async (msg) => {
-  if (!socket.userId || typeof socket.userId !== "number") {
-    return console.error("Érvénytelen userId:", socket.userId);
-  }
+    try {
+      const user = await listAllDataById(socket.userId);
+      if (user.isBanned) return;
+      if (user.timeoutExpires >= new Date()) return;
+      io.emit("chat message", {
+        text: msg,
+        user: user.username,
+        userId: user.id,
+        isAdmin: isAdmin(user),
+        messageId: Date.now(),
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  });
 
-  try {
-    const user = await listAllDataById(socket.userId);
-    if (user.isBanned) return;
-    if (user.timeoutExpires >= new Date() ) return;
-    io.emit("chat message", {
-      text: msg,
-      user: user.username,
-      userId: user.id,
-      isAdmin: isAdmin(user),
-      messageId: Date.now(),
-    });
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-});
-
-   socket.on("delete message", async (messageId) => {
-    if (!socket.userId || typeof socket.userId !== 'number') {
+  socket.on("delete message", async (messageId) => {
+    if (!socket.userId || typeof socket.userId !== "number") {
       console.error("Invalid userId:", socket.userId);
       return;
     }
 
     try {
       const user = await listAllDataById(socket.userId);
-      console.log(user)
+      console.log(user);
       if (isAdmin(user)) {
-        console.log("admin")
+        console.log("admin");
         // await deleteMessage(messageId);
         io.emit("message deleted", messageId);
       }
@@ -101,9 +99,8 @@ socket.on("chat message", async (msg) => {
     }
   });
 
-  
   socket.on("ban user", async (userId) => {
-    if (!socket.userId || typeof socket.userId !== 'number') {
+    if (!socket.userId || typeof socket.userId !== "number") {
       console.error("Invalid userId:", socket.userId);
       return;
     }
@@ -112,7 +109,7 @@ socket.on("chat message", async (msg) => {
       const user = await listAllDataById(socket.userId);
       if (isAdmin(user)) {
         await banUser(userId);
-        
+
         io.emit("user banned", userId);
       }
     } catch (error) {
@@ -120,9 +117,8 @@ socket.on("chat message", async (msg) => {
     }
   });
 
-  
   socket.on("timeout user", async (userId, minutes) => {
-    if (!socket.userId || typeof socket.userId !== 'number') {
+    if (!socket.userId || typeof socket.userId !== "number") {
       console.error("Invalid userId:", socket.userId);
       return;
     }
@@ -143,7 +139,6 @@ socket.on("chat message", async (msg) => {
     console.log("Egy felhasználó kilépett:", socket.id);
   });
 });
-
 
 app.get("/", async (req, res) => {
   const userData = await listAllUsers();
@@ -201,11 +196,9 @@ app.get("/groups", async (req, res) => {
 });
 
 // Szerver indítása
-server.listen(port, () => {
-  console.log(`App started at http://localhost:${port}`);
-});
-
-
+// server.listen(port, () => {
+//   console.log(`App started at http://localhost:${port}`);
+// });
 
 // index.js (Express middleware)
 app.param("id", (req, res, next, id) => {
@@ -216,6 +209,5 @@ app.param("id", (req, res, next, id) => {
   req.userId = userId; // Továbbítjuk a kontrollernek
   next();
 });
-
 
 export default app;

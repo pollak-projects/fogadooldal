@@ -6,13 +6,10 @@ import {
   updateUser,
   listAllDataById,
   imageGetFromDB,
-  imageSaveToDB
+  imageSaveToDB,
 } from "../services/user.service.js";
 import { PrismaClient } from "@prisma/client";
 import { encrypt } from "../lib/hash.js";
-
-
-
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -93,6 +90,22 @@ router.delete("/delete", async (req, res) => {
   }
 });
 
+router.delete("/delete/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUser = await prisma.user.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.status(204).send();
+  } catch (error) {
+    console.error("Hiba a felhasználó törlése során:", error);
+    res.status(500).json({ message: "Hiba a felhasználó törlése során!" });
+  }
+});
+
 // Felhasználó frissítése
 router.put("/update", async (req, res) => {
   try {
@@ -110,7 +123,6 @@ router.put("/update", async (req, res) => {
   }
 });
 
-
 router.put("/update/:id", async (req, res) => {
   const { id } = req.params;
   const { password } = req.body;
@@ -120,14 +132,16 @@ router.put("/update/:id", async (req, res) => {
     const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
       data: {
-        password: hashedPwd
+        password: hashedPwd,
       },
     });
 
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Hiba a felhasználó frissítésekor:", error);
-    res.status(500).json({ message: "Hiba történt a felhasználó frissítésekor" });
+    res
+      .status(500)
+      .json({ message: "Hiba történt a felhasználó frissítésekor" });
   }
 });
 

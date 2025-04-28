@@ -9,8 +9,13 @@ import {
 const router = express.Router();
 
 router.get("/getAll", async (req, res) => {
-  const data = await listAllGroup();
-  res.status(200).json(data);
+  try {
+    const data = await listAllGroup(); // Összes felhasználó lekérése
+    res.status(200).json(data); // Sikeres válasz
+  } catch (error) {
+    console.error("Hiba a felhasználók lekérésekor:", error);
+    res.status(500).json({ message: "Szerverhiba." });
+  }
 });
 
 router.post("/add", async (req, res) => {

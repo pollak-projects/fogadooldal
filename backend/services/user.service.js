@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { addCoin } from "./coins.service.js";
 
 const prisma = new PrismaClient();
 
@@ -7,17 +8,16 @@ export async function listAllUsers() {
   return await prisma.user.findMany();
 }
 
-
 export async function imageSaveToDB(image, id) {
   const imageBlob = Buffer.from(image, "base64");
 
   try {
     const result = await prisma.user.update({
-      where:{
-        id: id
+      where: {
+        id: id,
       },
       data: {
-        profileImage: imageBlob
+        profileImage: imageBlob,
       },
     });
     return result;
@@ -29,18 +29,16 @@ export async function imageSaveToDB(image, id) {
 export async function imageGetFromDB(id) {
   const data = await prisma.user.findUnique({
     where: {
-      id: Number(id)
+      id: Number(id),
     },
   });
-  
-    //console.log(element.image);
-    let buffer = Buffer.from(data.profileImage);
-    data.profileImage = "data:image/png" + ";base64," + buffer.toString("base64");
+
+  //console.log(element.image);
+  let buffer = Buffer.from(data.profileImage);
+  data.profileImage = "data:image/png" + ";base64," + buffer.toString("base64");
 
   return data;
 }
-
-
 
 export async function listAllDataById(id) {
   if (typeof id !== "number" || isNaN(id)) {
@@ -93,6 +91,10 @@ export async function addUser(username, password, email, full_name) {
       console.error(err);
       throw new Error();
     });
+  await addCoin(1000, user.id).catch((err) => {
+    console.error(err);
+    throw new Error();
+  });
   return user;
 }
 

@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../index.js";
 
-test("POST /groups/delete should pass", async () => {
+test("DELETE /groups/delete should pass", async () => {
   await request(app).post("/group/add").send({
     name: "test1",
     write: true,

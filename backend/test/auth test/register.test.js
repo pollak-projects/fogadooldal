@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../index.js";
 
-test("POST /auth/register should fail", async () => {
+test("POST /auth/register should pass", async () => {
   const response = await request(app).post("/auth/register").send({
     username: "test",
     full_name: "test",
@@ -9,5 +9,5 @@ test("POST /auth/register should fail", async () => {
     groupsNeve: "test",
     password: "test",
   });
-  expect(response.status).toBe(400);
+  expect(response.status).toBe(201);
 });

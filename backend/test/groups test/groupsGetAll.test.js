@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../index.js";
 
-test("POST /groups/getAll should pass", async () => {
-  const response = await request(app).get("/group/getAll").send();
+test("GET /groups/getAll should return 200", async () => {
+  const response = await request(app).get("/group/getAll");
   expect(response.status).toBe(200);
 });
